@@ -1,0 +1,27 @@
+<?php
+class lbForm {
+    private $field = array();
+
+    public function __construct() {
+        // Constructor vacío
+    }
+
+    public function addField($name, $field) {
+        $this->field[$name] = $field;
+    }
+
+    public function render($field) {
+        return $this->getField($field)->render();
+    }
+
+    public function label($field) {
+        return $this->getField($field)->renderLabel();
+    }
+
+    public function getField($name) {
+        $field = $this->field[$name]['type'];
+        $field->setName($name);
+        return $field;
+    }
+}
+?>
