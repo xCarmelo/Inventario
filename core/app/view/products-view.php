@@ -1,10 +1,13 @@
 <div class="row">
     <div class="col-md-12">
 
-        <h1>Productos</h1>
-        <div class="">
-            <a href="index.php?view=newproduct" class="btn btn-secondary">Agregar Producto</a>
+    <h1><i class="bi bi-box-seam"></i> Productos</h1>
+        <div class="mt-4">
+            <a href="index.php?view=newproduct" class="btn btn-primary">
+                <i class="bi bi-plus-lg me-2"></i> Agregar Producto
+            </a>
         </div>
+
         <br>
 
         <div class="card">
@@ -79,7 +82,13 @@
                                     </td>
                                     <td><?php echo $product->name; ?></td>
                                     <td><?php echo $product->presentation; ?></td>
-                                    <td><?php if ($product->is_active): ?><i class="fa fa-check"></i><?php endif; ?></td>
+                                    <td>
+                                        <?php if ($product->is_active): ?>
+                                            <i class="bi bi-check-lg text-success"></i> 
+                                        <?php else: ?>
+                                            <i class="bi bi-x-lg text-danger"></i> 
+                                        <?php endif; ?>
+                                    </td>
                                     <td style="width:120px;">
                                         <div class="btn-group" role="group">
                                             <a href="index.php?view=editproduct&id=<?php echo $product->id; ?>" class="btn btn-sm btn-warning"><i class="bi bi-pencil"></i></a>

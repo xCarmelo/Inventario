@@ -8,8 +8,8 @@ class ProductData {
         $this->price_out = "";
         $this->unit = "";
         $this->user_id = "";
-        $this->presentation = "0";
-        $this->created_at = "NOW()";
+        $this->presentation = "";
+        $this->created_at = date("Y-m-d H:i:s");
     }
 
     public function getCategory() {
@@ -19,7 +19,7 @@ class ProductData {
 public function add() {
     $con = Database::getCon();
     $stmt = $con->prepare("INSERT INTO " . self::$tablename . " (barcode, name, description, price_in, price_out, user_id, presentation, unit, category_id, inventary_min, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())");
-    $stmt->bind_param("ssssdisdii", $this->barcode, $this->name, $this->description, $this->price_in, $this->price_out, $this->user_id, $this->presentation, $this->unit, $this->category_id, $this->inventary_min);
+    $stmt->bind_param("ssssdissii", $this->barcode, $this->name, $this->description, $this->price_in, $this->price_out, $this->user_id, $this->presentation, $this->unit, $this->category_id, $this->inventary_min);
 
     if ($stmt->execute()) {
         header("Location: index.php?view=addproduct&result=success");
@@ -56,13 +56,13 @@ public function add() {
     public function update() {
         $con = Database::getCon();
         $stmt = $con->prepare("UPDATE " . self::$tablename . " SET barcode = ?, name = ?, price_in = ?, price_out = ?, unit = ?, presentation = ?, category_id = ?, inventary_min = ?, description = ?, is_active = ? WHERE id = ?");
-        $stmt->bind_param("ssssdisiisi", $this->barcode, $this->name, $this->price_in, $this->price_out, $this->unit, $this->presentation, $this->category_id, $this->inventary_min, $this->description, $this->is_active, $this->id);
+        $stmt->bind_param("sssssssiisi", $this->barcode, $this->name, $this->price_in, $this->price_out, $this->unit, $this->presentation, $this->category_id, $this->inventary_min, $this->description, $this->is_active, $this->id);
         
         if (!$stmt->execute()) {
             error_log("Error updating product: " . $stmt->error);
             echo "<script>console.error('Error updating product: " . $stmt->error . "');</script>";
         } else {
-            echo "<script>console.log('Product updated successfully');</script>";
+            echo "<script>console.log('Product updated successfully') location.reload();</script>";
         }
         
         $stmt->close();

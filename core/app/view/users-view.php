@@ -1,10 +1,11 @@
 <div class="container">
     <div class="row">
         <div class="col-12">
-            <h1>Lista de Usuarios</h1>
-            <a href="index.php?view=newuser" class="btn btn-secondary mb-3">
-                <i class='bi bi-user'></i> Nuevo Usuario
+            <h1 class="mb-5">Lista de Usuarios</h1>
+            <a href="index.php?view=newuser" class="btn btn-primary mb-3">
+                <i class="bi bi-person-plus-fill me-2"></i> Nuevo Usuario
             </a>
+
 
             <div class="card">
                 <div class="card-header">USUARIOS</div>

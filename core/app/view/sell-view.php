@@ -1,8 +1,8 @@
 <div class="row">
 <div class="row">
     <div class="col-12">
-        <h1>Venta</h1>
-        <p><b>Buscar producto por nombre o por código:</b></p>
+    <h1><i class="bi bi-cash-coin"></i> Venta</h1>
+        <p class="mt-4"><b>Buscar producto por nombre o por código:</b></p>
         <form id="searchp">
             <div class="row">
                 <div class="col-md-6 col-12 mb-2 mb-md-0">

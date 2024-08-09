@@ -1,9 +1,9 @@
 <div class="container">
     <div class="row">
         <div class="col-12">
-            <h1><i class='glyphicon glyphicon-shopping-cart'></i> COMPRAS</h1>
+            <h1><i class="bi bi-cart"></i> COMPRAS</h1>
             <div class="clearfix"></div>
-            <div class="card mt-4">
+            <div class="card mt-5">
                 <div class="card-header">
                     COMPRAS
                 </div>
@@ -14,7 +14,7 @@
 
                     if (count($products) > 0) {
                     ?>
-                    <div class="table-responsive">
+                    <div class="table-responsive"> 
                         <table class="table table-bordered table-hover">
                             <thead>
                                 <tr>

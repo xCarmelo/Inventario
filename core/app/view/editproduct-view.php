@@ -109,7 +109,7 @@ if($product!=null):
                     <div class="form-group">
                         <label for="presentation" class="col-lg-3 control-label">Presentación</label>
                         <div class="col-md-8">
-                            <input type="number" name="presentation" class="form-control" id="presentation" value="<?php echo $product->presentation; ?>" placeholder="Presentación del Producto" title="Ingresa una presentación válida">
+                            <input type="text" name="presentation" class="form-control" id="presentation" value="<?php echo $product->presentation; ?>" placeholder="Presentación del Producto" title="Ingresa una presentación válida">
                         </div>
                     </div>
 

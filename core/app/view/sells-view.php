@@ -1,6 +1,6 @@
 <div class="row">
     <div class="col-md-12">
-        <h1><i class='glyphicon glyphicon-shopping-cart'></i> Lista de Ventas</h1>
+    <h1><i class="bi bi-cart"></i> Lista de Ventas</h1>
         <div class="clearfix"></div>
 
         <?php
@@ -9,10 +9,12 @@
         if(count($products) > 0){
         ?>
 
-        <div class="card">
-            <div class="card-header">
-                VENTAS
-            </div>
+        <div class="card mt-5">
+        <div class="card-header">
+            VENTAS
+        </div>
+
+
             <div class="card-body">
                 <div class="table-responsive">
                     <table class="table table-bordered table-hover">

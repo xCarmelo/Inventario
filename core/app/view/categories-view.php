@@ -1,11 +1,11 @@
 <div class="container">
     <div class="row">
         <div class="col-md-12">
-            <h1>Categorías</h1>
-            <div class="mb-3">
-                <a href="index.php?view=newcategory" class="btn btn-secondary btn-sm">
-                    <i class="fa fa-th-list"></i> Nueva Categoría
-                </a>
+        <h1><i class="bi bi-list-task"></i> Categorías</h1>
+            <div class="mb-3 mt-5">
+            <a href="index.php?view=newcategory" class="btn btn-primary btn-sm">
+                <i class="bi bi-plus-lg"></i> Nueva Categoría
+            </a>
             </div>
             <div class="card">
                 <div class="card-header">

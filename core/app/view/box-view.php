@@ -1,15 +1,15 @@
 <div class="row">
     <div class="col-md-12">
-        <h1><i class='fa fa-archive'></i> Caja</h1>
-        <div class="btn-group pull-right">
+        <h1><i class="bi bi-archive"></i> Caja</h1>
+        <div class="btn-group pull-right mt-5">
             <a href="./index.php?view=boxhistory" class="btn btn-primary mr-2 rounded">
-                <i class="fa fa-clock-o"></i> Historial
+                <i class="bi bi-clock-history"></i> Historial
             </a>
             <button class="btn btn-success mx-4 rounded" data-bs-toggle="modal" data-bs-target="#confirmProcessModal">
-                Procesar Ventas <i class="fa fa-arrow-right"></i>
+                Procesar Ventas <i class="bi bi-arrow-right"></i>
             </button>
             <button class="btn btn-info rounded" data-bs-toggle="modal" data-bs-target="#initialBalanceModal">
-                Saldo Inicial <i class="fa fa-money"></i>
+                Saldo Inicial <i class="bi bi-cash-coin"></i>
             </button>
         </div>
         <div class="clearfix"></div>
@@ -78,7 +78,6 @@
     </div>
 </div>
 
-<!-- Modal de Confirmación -->
 <div class="modal fade" id="confirmProcessModal" tabindex="-1" aria-labelledby="confirmProcessModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -97,7 +96,6 @@
     </div>
 </div>
 
-<!-- Modal de Saldo Inicial -->
 <div class="modal fade" id="initialBalanceModal" tabindex="-1" aria-labelledby="initialBalanceModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -154,4 +152,4 @@
             $('#totalDisplay').text(grandTotal.toFixed(2));
         }
     });
-</script>
+</script> 

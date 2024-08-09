@@ -78,12 +78,6 @@ $categories = CategoryData::getAll();
                             <input type="number" name="inventary_min" class="form-control" id="inventary_min" placeholder="Mínima en Inventario (Default 10)" title="Ingresa un número positivo" pattern="[0-9]+">
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label for="q" class="col-lg-2 control-label">Inventario inicial:</label>
-                        <div class="col-md-6">
-                            <input type="number" name="q" class="form-control" id="q" placeholder="Inventario inicial" title="Ingresa un número positivo" pattern="[0-9]+">
-                        </div>
-                    </div>
 
                     <div class="form-group">
                         <div class="col-lg-offset-2 col-lg-10">

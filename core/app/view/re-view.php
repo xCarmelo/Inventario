@@ -1,8 +1,8 @@
 <div class="container">
     <div class="row">
         <div class="col-12">
-            <h1>Realizar Compra</h1>
-            <p><b>Buscar producto por nombre o por código:</b></p>
+            <h1><i class="bi bi-cart-check"></i> Realizar Compra</h1>
+            <p class="mt-5"><b>Buscar producto por nombre o por código:</b></p>
             <form>
                 <div class="row">
                     <div class="col-md-6 col-12 mb-2 mb-md-0">

@@ -1,7 +1,7 @@
 <div class="container">
     <div class="row">
         <div class="col-12">
-            <h1><i class="glyphicon glyphicon-stats"></i> Inventario de Productos</h1>
+        <h1><i class="bi bi-boxes"></i> Inventario de Productos</h1>
             <div class="d-flex justify-content-end mb-3">
             </div>
             <div class="clearfix"></div>

@@ -7,10 +7,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="msapplication-TileColor" content="#ffffff">
     <meta name="theme-color" content="#ffffff">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="assets/node_modules/bootstrap-icons/font/bootstrap-icons.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/simplebar/6.0.0/simplebar.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.23.0/themes/prism.css">
-    <link rel="stylesheet" type="text/css" href="assets/bootstrap-icons/bootstrap-icons.css">
     <link href="assets/css/style.css" rel="stylesheet">  
     <link rel="stylesheet" href="assets/css/stylesj.css">
     <link rel="icon" type="image/jpg" href="assets/img/logo.jpg">

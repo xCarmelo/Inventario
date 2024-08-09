@@ -1,12 +1,13 @@
 <div class="container">
     <div class="row">
-        <div class="col-12">
-            <h1>Directorio de Proveedores</h1>
-            <div class="d-flex justify-content-between mb-3">
-                <a href="index.php?view=newprovider" class="btn btn-secondary">
-                    <i class='fa fa-truck'></i> Nuevo Proveedor
-                </a>
-            </div>
+    <div class="col-12">
+        <h1><i class="bi bi-building"></i> Directorio de Proveedores</h1>
+        <div class="d-flex justify-content-between mb-3 mt-5">
+            <a href="index.php?view=newprovider" class="btn btn-primary">
+                <i class="bi bi-truck me-2"></i> Nuevo Proveedor
+            </a>
+        </div>
+    </div>
 
             <div class="card">
                 <div class="card-header">
