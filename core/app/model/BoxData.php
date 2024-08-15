@@ -7,10 +7,14 @@
         $this->email = "";
         $this->image = ""; 
         $this->password = "";
+        // Establecer la zona horaria deseada (reemplaza 'America/Managua' con tu zona horaria)
+        date_default_timezone_set('America/Managua'); 
+    
+        $this->created_at = date("Y-m-d H:i:s");
     }
 
     public function add(){
-        $sql = "INSERT INTO " . self::$tablename . " (created_at) VALUES (NOW())";
+        $sql = "INSERT INTO " . self::$tablename . " (created_at) VALUES ($this->create_at)";
         $con = Database::getCon();
         $stmt = $con->prepare($sql);
         $stmt->execute();

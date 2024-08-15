@@ -8,8 +8,12 @@ class OperationData {
         $this->q = "";
         $this->cut_id = "";
         $this->operation_type_id = "";
-        $this->created_at = "NOW()";
         $this->new_price = "";
+
+        // Establecer la zona horaria deseada (reemplaza 'America/Managua' con tu zona horaria)
+        date_default_timezone_set('America/Managua'); 
+    
+        $this->created_at = date("Y-m-d H:i:s");
     }
 
     public function add(){

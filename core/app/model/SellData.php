@@ -3,6 +3,9 @@ class SellData {
     public static $tablename = "sell";
 
     public function __construct() {
+        // Establecer la zona horaria deseada (reemplaza 'America/Managua' con tu zona horaria)
+        date_default_timezone_set('America/Managua'); 
+    
         $this->created_at = date("Y-m-d H:i:s");
     }
 

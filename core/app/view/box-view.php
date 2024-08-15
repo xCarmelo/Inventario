@@ -50,7 +50,7 @@
                                     $total = 0;
                                     foreach ($operations as $operation) {
                                         $product = $operation->getProduct();
-                                        $total += $sell->total;
+                                        $total = $sell->total;
                                     }
                                     $total_total += $total;
                                     echo "<b>C$ " . number_format($total, 2, ".", ",") . "</b>";
@@ -90,7 +90,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                <a id="confirmProcessBtn" class="btn btn-success" href="#">Procesar</a>
+                <a id="confirmProcessBtn" class="btn btn-success" href="./index.php?view=processbox">Procesar</a>
             </div>
         </div>
     </div>

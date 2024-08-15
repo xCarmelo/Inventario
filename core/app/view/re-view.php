@@ -31,7 +31,8 @@
                             <tr>
                                 <th>Código</th>
                                 <th>Nombre</th>
-                                <th>Unidad</th>
+                                <th>Descripcion</th>
+                                <th>Presentacion</th>
                                 <th>Precio unitario</th>
                                 <th>En inventario</th>
                                 <th>Cantidad</th>
@@ -48,7 +49,8 @@
                                 <tr class="<?php if($q <= $product->inventary_min){ echo 'table-danger'; } ?>">
                                     <td><?php echo $product->id; ?></td>
                                     <td><?php echo $product->name; ?></td>
-                                    <td><?php echo $product->unit; ?></td>
+                                    <td><?php echo $product->description; ?></td>
+                                    <td><?php echo $product->presentation; ?></td>
                                     <td><b>C$<?php echo $product->price_in; ?></b></td>
                                     <td><?php echo $q; ?></td>
                                     <td>

@@ -4,11 +4,15 @@ class ProductData {
 
     public function __construct() {
         $this->name = "";
-        $this->price_in = "";
-        $this->price_out = "";
+        $this->price_in = 0.0;
+        $this->price_out = 0.0;
         $this->unit = "";
-        $this->user_id = "";
+        $this->user_id = 0;
         $this->presentation = "";
+        $this->description = "";
+        // Establecer la zona horaria deseada (reemplaza 'America/Managua' con tu zona horaria)
+        date_default_timezone_set('America/Managua'); 
+    
         $this->created_at = date("Y-m-d H:i:s");
     }
 
@@ -16,71 +20,124 @@ class ProductData {
         return CategoryData::getById($this->category_id);
     }
 
-public function add() {
-    $con = Database::getCon();
-    $stmt = $con->prepare("INSERT INTO " . self::$tablename . " (barcode, name, description, price_in, price_out, user_id, presentation, unit, category_id, inventary_min, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())");
-    $stmt->bind_param("ssssdissii", $this->barcode, $this->name, $this->description, $this->price_in, $this->price_out, $this->user_id, $this->presentation, $this->unit, $this->category_id, $this->inventary_min);
+    public function add() {
+        $con = Database::getCon();
+        $stmt = $con->prepare(
+            "INSERT INTO " . self::$tablename . " 
+            (barcode, name, description, price_in, price_out, user_id, presentation, unit, category_id, inventary_min, created_at) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, $this->created_at)"
+        );
+        
+        $category_id = $this->category_id ?? null;
+        $inventary_min = $this->inventary_min ?? null;
 
-    if ($stmt->execute()) {
-        header("Location: index.php?view=addproduct&result=success");
-    } else {
-        header("Location: index.php?view=addproduct&result=error");
+        $stmt->bind_param("sssddissii", 
+            $this->barcode, $this->name, $this->description, $this->price_in, 
+            $this->price_out, $this->user_id, $this->presentation, $this->unit, 
+            $category_id, $inventary_min
+        );
+
+        if ($stmt->execute()) {
+            header("Location: index.php?view=products");
+        } else {
+            error_log("Error adding product: " . $stmt->error);
+            header("Location: index.php?view=products");
+        }
+
+        $stmt->close();
+        exit();
     }
-    $stmt->close();
-    exit(); // Asegurarse de que el script se detiene después de redirigir
-}
-
-    
 
     public function add_with_image() {
         $con = Database::getCon();
-        $stmt = $con->prepare("INSERT INTO " . self::$tablename . " (barcode, image, name, description, price_in, price_out, user_id, presentation, unit, category_id, inventary_min) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-        $stmt->bind_param("ssssdisdiis", $this->barcode, $this->image, $this->name, $this->description, $this->price_in, $this->price_out, $this->user_id, $this->presentation, $this->unit, $this->category_id, $this->inventary_min);
-        $stmt->execute();
+        $stmt = $con->prepare(
+            "INSERT INTO " . self::$tablename . " 
+            (barcode, image, name, description, price_in, price_out, user_id, presentation, unit, category_id, inventary_min, created_at) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())"
+        );
+
+        $category_id = $this->category_id ?? null;
+        $inventary_min = $this->inventary_min ?? null;
+
+        $stmt->bind_param("ssssddissii", 
+            $this->barcode, $this->image, $this->name, $this->description, 
+            $this->price_in, $this->price_out, $this->user_id, $this->presentation, 
+            $this->unit, $category_id, $inventary_min
+        );
+
+        if ($stmt->execute()) {
+            header("Location: index.php?view=products");
+        } else {
+            error_log("Error adding product with image: " . $stmt->error);
+            header("Location: index.php?view=addproduct&result=error");
+        }
+
+        $stmt->close();
+        exit();
     }
 
     public static function delById($id) {
         $con = Database::getCon();
         $stmt = $con->prepare("DELETE FROM " . self::$tablename . " WHERE id = ?");
         $stmt->bind_param("i", $id);
-        $stmt->execute();
+        if (!$stmt->execute()) {
+            error_log("Error deleting product by id: " . $stmt->error);
+        }
+        $stmt->close();
     }
 
     public function del() {
         $con = Database::getCon();
         $stmt = $con->prepare("DELETE FROM " . self::$tablename . " WHERE id = ?");
         $stmt->bind_param("i", $this->id);
-        $stmt->execute();
+        if (!$stmt->execute()) {
+            error_log("Error deleting product: " . $stmt->error);
+        }
+        $stmt->close();
     }
 
     public function update() {
         $con = Database::getCon();
-        $stmt = $con->prepare("UPDATE " . self::$tablename . " SET barcode = ?, name = ?, price_in = ?, price_out = ?, unit = ?, presentation = ?, category_id = ?, inventary_min = ?, description = ?, is_active = ? WHERE id = ?");
-        $stmt->bind_param("sssssssiisi", $this->barcode, $this->name, $this->price_in, $this->price_out, $this->unit, $this->presentation, $this->category_id, $this->inventary_min, $this->description, $this->is_active, $this->id);
-        
+        $stmt = $con->prepare(
+            "UPDATE " . self::$tablename . " 
+            SET barcode = ?, name = ?, price_in = ?, price_out = ?, unit = ?, 
+            presentation = ?, category_id = ?, inventary_min = ?, 
+            description = ?, is_active = ? WHERE id = ?"
+        );
+        $stmt->bind_param("ssddssiisii", 
+            $this->barcode, $this->name, $this->price_in, $this->price_out, 
+            $this->unit, $this->presentation, $this->category_id, 
+            $this->inventary_min, $this->description, $this->is_active, $this->id
+        );
+
         if (!$stmt->execute()) {
             error_log("Error updating product: " . $stmt->error);
             echo "<script>console.error('Error updating product: " . $stmt->error . "');</script>";
         } else {
-            echo "<script>console.log('Product updated successfully') location.reload();</script>";
+            echo "<script>console.log('Product updated successfully'); location.reload();</script>";
         }
-        
+
         $stmt->close();
     }
-    
 
     public function del_category() {
         $con = Database::getCon();
         $stmt = $con->prepare("UPDATE " . self::$tablename . " SET category_id = NULL WHERE id = ?");
         $stmt->bind_param("i", $this->id);
-        $stmt->execute();
+        if (!$stmt->execute()) {
+            error_log("Error removing product category: " . $stmt->error);
+        }
+        $stmt->close();
     }
 
     public function update_image() {
         $con = Database::getCon();
         $stmt = $con->prepare("UPDATE " . self::$tablename . " SET image = ? WHERE id = ?");
         $stmt->bind_param("si", $this->image, $this->id);
-        $stmt->execute();
+        if (!$stmt->execute()) {
+            error_log("Error updating product image: " . $stmt->error);
+        }
+        $stmt->close();
     }
 
     public static function getById($id) {

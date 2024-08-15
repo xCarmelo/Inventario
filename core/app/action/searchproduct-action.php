@@ -27,15 +27,16 @@
 
                             foreach ($products as $product):
                                 $q = OperationData::getQYesF($product->id);
-                                $product_id_to_find = $product->id; // Usar el ID del producto para buscar
+                                $product_id_to_find = $product->id;
 
-                                $newprice = number_format($product->price_out); // Precio por defecto
-                                
+                                // Convertir el precio a un entero en PHP
+                                $newprice = intval($product->price_out); 
+
                                 if (isset($_SESSION["cart"]) && is_array($_SESSION["cart"])) {
                                     $cart = $_SESSION["cart"];
                                     foreach ($cart as $item) {
                                         if ($item["product_id"] == $product_id_to_find) {
-                                            $newprice = $item["newprice"];
+                                            $newprice = intval($item["newprice"]);
                                             break;
                                         }
                                     }
@@ -49,26 +50,23 @@
                                         <td><?php echo $product->unit; ?></td>
                                         <td>C$ <?php echo number_format($product->price_out); ?></td>
                                         <td>
-                                            <input id="newprice" type="number" value="<?php echo $newprice; ?>" placeholder="<?php echo number_format($newprice); ?>" pattern="^[1-9]\d*$">
+                                            <input id="newprice" type="number" value="<?php echo $newprice; ?>" placeholder="<?php echo $newprice; ?>" pattern="^[1-9]\d*$">
                                         </td>
                                         <td><?php echo $q; ?></td>
                                         <td style="width:250px;">
                                             <form method="post" action="index.php?view=addtocart">
-                                                <input id="priceProduct" type="hidden" name="newprice" value="<?php echo $newprice; ?>" placeholder="<?php echo number_format($product->price_out); ?>">
+                                                <input id="priceProduct" type="hidden" name="newprice" value="<?php echo $newprice; ?>">
                                                 <input type="hidden" name="product_id" value="<?php echo $product->id; ?>">
                                                 <div class="input-group">
                                                     <script>
                                                         $(document).ready(function() {
-                                                            const newPriceInput = document.getElementById("newprice");
+                                                            const newPriceInput = $("#newprice");
 
-                                                            $("#newprice").on("keydown", function(event) {
-                                                                if ($(this).val().length === 1) {
-                                                                    $("#priceProduct").val($("#priceProduct").attr("placeholder"));
-                                                                }
-                                                            });
+                                                            // Establecer el valor inicial del campo oculto
+                                                            $("#priceProduct").val(newPriceInput.val());
 
-                                                            newPriceInput.addEventListener("keyup", function() {
-                                                                let newPrice = $("#newprice").val();
+                                                            newPriceInput.on("keyup", function() {
+                                                                let newPrice = parseInt(newPriceInput.val(), 10); // Convertir a entero
                                                                 let priceProductInput = $("#priceProduct");
 
                                                                 if (newPrice > 0) {

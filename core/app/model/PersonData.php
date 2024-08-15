@@ -9,10 +9,15 @@ class PersonData {
     public $password;
     public $created_at;
 
-    public function __construct() {}
+    public function __construct() {
+        // Establecer la zona horaria deseada (reemplaza 'America/Managua' con tu zona horaria)
+        date_default_timezone_set('America/Managua'); 
+    
+        $this->created_at = date("Y-m-d H:i:s");
+    }
 
     public function add_client() {
-        $sql = "INSERT INTO " . self::$tablename . " (name, lastname, address1, email1, phone1, kind, created_at) VALUES (?, ?, ?, ?, ?, 1, NOW())";
+        $sql = "INSERT INTO " . self::$tablename . " (name, lastname, address1, email1, phone1, kind, created_at) VALUES (?, ?, ?, ?, ?, 1, $this->created_at)";
         $con = Database::getCon();
         $stmt = $con->prepare($sql);
         $stmt->bind_param("sssss", $this->name, $this->lastname, $this->address1, $this->email1, $this->phone1);

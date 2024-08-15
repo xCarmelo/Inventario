@@ -10,29 +10,31 @@ $categories = CategoryData::getAll();
                 NUEVO PRODUCTO  
             </div>
             <div class="card-body">
-
                 <form class="form-horizontal" method="post" enctype="multipart/form-data" id="addproduct" action="index.php?view=addproduct" role="form">
-
+                    
                     <div class="form-group">
                         <label for="image" class="col-lg-2 control-label">Imagen</label>
                         <div class="col-md-6">
                             <input type="file" name="image" id="image" placeholder="">
                         </div>
                     </div>
+                    
                     <div class="form-group">
-                        <label for="barcode" class="col-lg-2 control-label">Codigo de Barras*</label>
+                        <label for="barcode" class="col-lg-2 control-label">Código de Barras*</label>
                         <div class="col-md-6">
-                            <input type="text" name="barcode" id="barcode" class="form-control" placeholder="Codigo de Barras del Producto" title="Ingresa un código de barras válido">
+                            <input type="text" name="barcode" id="barcode" class="form-control" placeholder="Código de Barras del Producto" title="Ingresa un código de barras válido" required>
                         </div>
                     </div>
+                    
                     <div class="form-group">
                         <label for="name" class="col-lg-2 control-label">Nombre*</label>
                         <div class="col-md-6">
-                            <input type="text" name="name" required class="form-control" id="name" placeholder="Nombre del Producto" title="Ingresa el nombre del producto">
+                            <input type="text" name="name" required class="form-control" id="name" placeholder="Nombre del Producto" title="Ingresa el nombre del producto" required>
                         </div>
                     </div>
+                    
                     <div class="form-group">
-                        <label for="category_id" class="col-lg-2 control-label">Categoria</label>
+                        <label for="category_id" class="col-lg-2 control-label">Categoría</label>
                         <div class="col-md-6">
                             <select name="category_id" class="form-control">
                                 <option value="">-- NINGUNA --</option>
@@ -42,40 +44,46 @@ $categories = CategoryData::getAll();
                             </select>
                         </div>
                     </div>
+                    
                     <div class="form-group">
-                        <label for="description" class="col-lg-2 control-label">Descripcion</label>
+                        <label for="description" class="col-lg-2 control-label">Descripción</label>
                         <div class="col-md-6">
-                            <textarea name="description" class="form-control" id="description" placeholder="Descripcion del Producto" title="Ingresa una descripción del producto"></textarea>
+                            <textarea name="description" class="form-control" id="description" placeholder="Descripción del Producto" title="Ingresa una descripción del producto"></textarea>
                         </div>
                     </div>
+                    
                     <div class="form-group">
                         <label for="price_in" class="col-lg-2 control-label">Precio de Entrada*</label>
                         <div class="col-md-6">
-                            <input type="number" name="price_in" required class="form-control" id="price_in" placeholder="Precio de entrada" title="Ingresa el precio de entrada como un número">
+                            <input type="number" name="price_in" required class="form-control" id="price_in" placeholder="Precio de entrada" title="Ingresa el precio de entrada como un número" min="0" step="0.01">
                         </div>
                     </div>
+                    
                     <div class="form-group">
                         <label for="price_out" class="col-lg-2 control-label">Precio de Salida*</label>
                         <div class="col-md-6">
-                            <input type="number" name="price_out" required class="form-control" id="price_out" placeholder="Precio de salida" title="Ingresa un número positivo" pattern="[0-9]+">
+                            <input type="number" name="price_out" required class="form-control" id="price_out" placeholder="Precio de salida" title="Ingresa un número positivo" min="0" step="0.01">
                         </div>
                     </div>
+                    
                     <div class="form-group">
                         <label for="unit" class="col-lg-2 control-label">Unidad*</label>
                         <div class="col-md-6">
                             <input type="text" name="unit" required class="form-control" id="unit" placeholder="Unidad del Producto">
                         </div>
                     </div>
+                    
                     <div class="form-group">
                         <label for="presentation" class="col-lg-2 control-label">Presentación</label>
                         <div class="col-md-6">
                             <input type="text" name="presentation" class="form-control" id="presentation" placeholder="Presentación del Producto">
                         </div>
                     </div>
+                    
                     <div class="form-group">
-                        <label for="inventary_min" class="col-lg-2 control-label">Mínima en inventario:</label>
+                        <label for="inventary_min" class="col-lg-2 control-label">Mínima en Inventario</label>
                         <div class="col-md-6">
-                            <input type="number" name="inventary_min" class="form-control" id="inventary_min" placeholder="Mínima en Inventario (Default 10)" title="Ingresa un número positivo" pattern="[0-9]+">
+                            <input type="number" name="inventary_min" class="form-control" id="inventary_min" placeholder="Mínima en Inventario (Default 10)" title="Ingresa un número positivo" min="0" step="1">
                         </div>
                     </div>
 
@@ -87,7 +95,6 @@ $categories = CategoryData::getAll();
                 </form>
             </div>
         </div>
-
     </div>
 </div>
 
@@ -131,7 +138,6 @@ $categories = CategoryData::getAll();
         </div>
     </div>
 </div>
-
 
 <script>
 $(document).ready(function() {

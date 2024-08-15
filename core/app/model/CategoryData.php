@@ -9,6 +9,14 @@ class CategoryData {
     public $password;
     public $created_at;
 
+    public function __construct()
+    {
+        // Establecer la zona horaria deseada (reemplaza 'America/Managua' con tu zona horaria)
+        date_default_timezone_set('America/Managua'); 
+    
+        $this->created_at = date("Y-m-d H:i:s");
+    }
+
     public function add() {
         $con = Database::getCon();
         $stmt = $con->prepare("INSERT INTO " . self::$tablename . " (name, created_at) VALUES (?, ?)");

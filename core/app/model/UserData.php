@@ -8,7 +8,10 @@ class UserData {
         $this->email = "";
         $this->image = "";
         $this->password = "";
-        $this->created_at = "NOW()";
+        // Establecer la zona horaria deseada (reemplaza 'America/Managua' con tu zona horaria)
+        date_default_timezone_set('America/Managua'); 
+    
+        $this->created_at = date("Y-m-d H:i:s");
     }
 
     public function add() {
