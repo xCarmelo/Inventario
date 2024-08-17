@@ -37,13 +37,13 @@
                             $px = $page - 1;
                             if ($px > 0) :
                             ?>
-                                <a class="btn btn-sm btn-default" href="<?php echo "index.php?view=inventary&limit=$limit&page=" . ($px); ?>"><i class="glyphicon glyphicon-chevron-left"></i> Atras </a>
+                                <a class="btn btn-sm btn-warning" href="<?php echo "index.php?view=inventary&limit=$limit&page=" . ($px); ?>"><i class="bi bi-chevron-left"></i> Atras </a> 
                             <?php endif; ?>
                             <?php
                             $px = $page + 1;
                             if ($px <= $npaginas) :
                             ?>
-                                <a class="btn btn-sm btn-default" href="<?php echo "index.php?view=inventary&limit=$limit&page=" . ($px); ?>">Adelante <i class="glyphicon glyphicon-chevron-right"></i></a>
+                                <a class="btn btn-sm btn-primary ms-3" href="<?php echo "index.php?view=inventary&limit=$limit&page=" . ($px); ?>">Adelante <i class="bi bi-chevron-right"></i></a> 
                             <?php endif; ?>
                         </div>
                         <div class="clearfix"></div>
@@ -53,6 +53,7 @@
                                 <thead>
                                     <tr>
                                         <th>Codigo</th>
+                                        <th>Imagen</th>
                                         <th>Nombre</th>
                                         <th>Disponible</th>
                                         <th>Acciones</th>
@@ -68,6 +69,11 @@
                                                         echo "table-warning";
                                                     } ?>">
                                             <td><?php echo $product->id; ?></td>
+                                            <td>
+                                                <?php if ($product->image != ""): ?>
+                                                <img src="storage/products/<?php echo $product->image; ?>" style="width:64px;" class="custom-modal-trigger">
+                                                <?php endif; ?>
+                                            </td>
                                             <td><?php echo $product->name; ?></td>
                                             <td><?php echo $q; ?></td>
                                             <td style="width:93px;">
@@ -106,3 +112,34 @@
         </div>
     </div>
 </div>
+
+<!-- Modal para Ampliar Imágenes -->
+<div class="modal fade custom-img-modal" id="imgModal" tabindex="-1" aria-labelledby="imgModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body">
+                <img id="modalImage" src="" alt="Imagen del producto" class="img-fluid">
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript para el Modal de Imágenes -->
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    var images = document.getElementsByClassName('custom-modal-trigger');
+    var modal = new bootstrap.Modal(document.getElementById('imgModal'));
+    var modalImage = document.getElementById('modalImage');
+
+    for (var i = 0; i < images.length; i++) {
+        images[i].addEventListener('mouseover', function() {
+            modalImage.src = this.src;
+            modal.show();
+        });
+
+        images[i].addEventListener('mouseleave', function() {
+            modal.hide();
+        });
+    }
+});
+</script>

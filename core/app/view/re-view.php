@@ -30,9 +30,9 @@
                         <thead>
                             <tr>
                                 <th>Código</th>
+                                <th>Imagen</th>
                                 <th>Nombre</th>
                                 <th>Descripcion</th>
-                                <th>Presentacion</th>
                                 <th>Precio unitario</th>
                                 <th>En inventario</th>
                                 <th>Cantidad</th>
@@ -48,6 +48,11 @@
                             <form method="post" action="index.php?view=addtore">
                                 <tr class="<?php if($q <= $product->inventary_min){ echo 'table-danger'; } ?>">
                                     <td><?php echo $product->id; ?></td>
+                                    <td>
+                                        <?php if ($product->image != ""): ?>
+                                            <img src="storage/products/<?php echo $product->image; ?>" style="width:64px;" class="custom-modal-trigger">
+                                        <?php endif; ?>
+                                    </td>
                                     <td><?php echo $product->name; ?></td>
                                     <td><?php echo $product->description; ?></td>
                                     <td><?php echo $product->presentation; ?></td>
@@ -215,6 +220,17 @@
     </div>
 </div>
 
+<!-- Modal para Ampliar Imágenes -->
+<div class="modal fade custom-img-modal" id="imgModal" tabindex="-1" aria-labelledby="imgModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body">
+                <img id="modalImage" src="" alt="Imagen del producto" class="img-fluid">
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
     $(document).ready(function() {
         function showAlert(message, type) {
@@ -261,4 +277,24 @@
             });
         });
     });
+</script>
+
+<!-- JavaScript para el Modal de Imágenes -->
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    var images = document.getElementsByClassName('custom-modal-trigger');
+    var modal = new bootstrap.Modal(document.getElementById('imgModal'));
+    var modalImage = document.getElementById('modalImage');
+
+    for (var i = 0; i < images.length; i++) {
+        images[i].addEventListener('mouseover', function() {
+            modalImage.src = this.src;
+            modal.show();
+        });
+
+        images[i].addEventListener('mouseleave', function() {
+            modal.hide();
+        });
+    }
+});
 </script>

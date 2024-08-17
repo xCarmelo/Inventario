@@ -31,12 +31,12 @@ if(count($_POST)>0){
 			if($image->processed){
 				$product->image = $image->file_dst_name;
 				$product->update_image();
-			}
+			} 
 		}
 	}
 
 	setcookie("prdupd","true");
-	print "<script>window.location='index.php?view=editproduct&id=$_POST[product_id]';</script>";
+	print "<script>window.location='index.php?view=products';</script>";
 
 
 }

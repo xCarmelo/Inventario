@@ -7,7 +7,7 @@ if(count($_POST)>0){
 	$user->address1 = $_POST["address1"];
 	$user->email1 = $_POST["email1"];
 	$user->phone1 = $_POST["phone1"];
-	$user->update;
+	$user->update();
 
 
 print "<script>window.location='index.php?view=clients';</script>";

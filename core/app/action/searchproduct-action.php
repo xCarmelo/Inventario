@@ -12,7 +12,7 @@
                     <table class="table table-bordered table-hover">
                         <thead>
                             <tr>
-                                <th>Código</th>
+                                <th>Imagen</th>
                                 <th>Nombre</th>
                                 <th>Unidad</th>
                                 <th>Precio unitario</th>
@@ -45,7 +45,11 @@
                                 if ($q > 0):
                                     ?>
                                     <tr class="<?php echo ($q <= $product->inventary_min) ? 'table-danger' : ''; ?>">
-                                        <td style="width:80px;"><?php echo $product->id; ?></td>
+                                    <td>
+                                        <?php if ($product->image != ""): ?>
+                                            <img src="storage/products/<?php echo $product->image; ?>" style="width:64px;" class="custom-modal-trigger">
+                                        <?php endif; ?>
+                                    </td>
                                         <td><?php echo $product->name; ?></td>
                                         <td><?php echo $product->unit; ?></td>
                                         <td>C$ <?php echo number_format($product->price_out); ?></td>
@@ -100,3 +104,32 @@
         </div>
     </div>
 <?php endif; ?>
+
+<!-- Modal para Ampliar Imágenes -->
+<div class="modal fade custom-img-modal" id="imgModal" tabindex="-1" aria-labelledby="imgModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body">
+                <img id="modalImage" src="" alt="Imagen del producto" class="img-fluid">
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    var images = document.getElementsByClassName('custom-modal-trigger');
+    var modal = new bootstrap.Modal(document.getElementById('imgModal'));
+    var modalImage = document.getElementById('modalImage');
+
+    for (var i = 0; i < images.length; i++) {
+        images[i].addEventListener('mouseover', function() {
+            modalImage.src = this.src;
+            modal.show();
+        });
+
+        images[i].addEventListener('mouseleave', function() {
+            modal.hide();
+        });
+    }
+</script>

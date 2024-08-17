@@ -53,6 +53,7 @@ $user = $sell->getUser();
 		<th>Codigo</th>
 		<th>Cantidad</th>
 		<th>Nombre del Producto</th>
+		<th>Descripcion</th>
 		<th>Precio Unitario</th>
 		<th>Precio vendido</th>
 		<th>Total</th>
@@ -66,6 +67,7 @@ $user = $sell->getUser();
 	<td><?php echo $product->id ;?></td>
 	<td><?php echo $operation->q ;?></td>
 	<td><?php echo $product->name ;?></td>
+	<td><?php echo $product->description ;?></td>
 	<td>C$ <?php echo number_format($product->price_out,2,".",",") ;?></td>
 	<td>C$ <?php echo number_format($operation->new_price,2,".",",") ;?></td>
 	<td><b>C$ <?php echo number_format($operation->q*$operation->new_price,2,".",",");$total+=$operation->q*$product->price_out;?></b></td>

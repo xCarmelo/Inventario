@@ -23,7 +23,7 @@
     <label for="lastname" class="col-lg-2 control-label">Apellido*</label>
     <div class="col-md-6">
         <input type="text" name="lastname" value="<?php echo $user->lastname;?>" class="form-control" id="lastname" placeholder="Apellido" pattern="[A-Za-záéíóúÁÉÍÓÚñÑ\s]+" title="Ingresa un apellido válido (solo letras y espacios)" required>
-    </div>
+    </div> 
 </div>
 <div class="form-group">
     <label for="address1" class="col-lg-2 control-label">Dirección*</label>

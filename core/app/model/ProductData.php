@@ -53,7 +53,7 @@ class ProductData {
         $stmt = $con->prepare(
             "INSERT INTO " . self::$tablename . " 
             (barcode, image, name, description, price_in, price_out, user_id, presentation, unit, category_id, inventary_min, created_at) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())"
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, $this->created_at)"
         );
 
         $category_id = $this->category_id ?? null;
@@ -114,7 +114,7 @@ class ProductData {
             error_log("Error updating product: " . $stmt->error);
             echo "<script>console.error('Error updating product: " . $stmt->error . "');</script>";
         } else {
-            echo "<script>console.log('Product updated successfully'); location.reload();</script>";
+            echo "<script>console.log('Product updated successfully');</script>";
         }
 
         $stmt->close();

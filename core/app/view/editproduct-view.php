@@ -2,8 +2,9 @@
 $product = ProductData::getById($_GET["id"]);
 $categories = CategoryData::getAll();
 
-if($product!=null):
+if($product!=null): 
 ?>
+
 <div class="row">
     <div class="col-md-12">
         <h1><?php echo $product->name ?> <small>Editar Producto</small></h1>
@@ -24,23 +25,24 @@ if($product!=null):
             </div>
         </div>
 
-        <?php if(isset($_COOKIE["prdupd"])):?>
+        <!-- Mostrar modal si se ha actualizado el producto -->
+        <?php if (isset($_GET['updated'])): ?>
             <script>
                 $(document).ready(function(){
                     $('#updateModal').modal('show');
                     setTimeout(function(){
                         window.location.href = 'index.php?view=products'; // Cambia 'products' a la vista o URL que deseas redirigir
-                    }, 2000); // Redirigir después de 4 segundos
+                    }, 2000); // Redirigir después de 2 segundos
                 });
             </script>
-            <?php setcookie("prdupd","",time()-18600); endif; ?>
+        <?php endif; ?>
 
         <div class="card">
             <div class="card-header">
                 EDITAR PRODUCTO
             </div>
             <div class="card-body">
-                <form class="form-horizontal" method="post" id="addproduct" enctype="multipart/form-data" action="index.php?view=updateproduct" role="form">
+                <form class="form-horizontal" method="post" id="addproduct" enctype="multipart/form-data" action="index.php?view=updateproduct&id=<?php echo $product->id; ?>" role="form">
                     <div class="form-group">
                         <label for="image" class="col-lg-3 control-label">Imagen*</label>
                         <div class="col-md-8">
@@ -72,7 +74,7 @@ if($product!=null):
                             <select name="category_id" class="form-control">
                                 <option value="">-- NINGUNA --</option>
                                 <?php foreach($categories as $category):?>
-                                    <option value="<?php echo $category->id;?>" <?php if($product->category_id!=null&& $product->category_id==$category->id){ echo "selected";}?>><?php echo $category->name;?></option>
+                                    <option value="<?php echo $category->id;?>" <?php if($product->category_id!=null && $product->category_id==$category->id){ echo "selected";}?>><?php echo $category->name;?></option>
                                 <?php endforeach;?>
                             </select>
                         </div>
@@ -88,7 +90,7 @@ if($product!=null):
                     <div class="form-group">
                         <label for="price_in" class="col-lg-3 control-label">Precio de Entrada*</label>
                         <div class="col-md-8">
-                            <input type="number" name="price_in" class="form-control" value="<?php echo $product->price_in; ?>" id="price_in" placeholder="Precio de entrada" required title="Ingresa un precio válido">
+                            <input type="number" name="price_in" class="form-control" value="<?php echo $product->price_in; ?>" id="price_in" placeholder="Precio de entrada" required title="Ingresa un precio válido" step="0.01">
                         </div>
                     </div>
 
@@ -104,7 +106,7 @@ if($product!=null):
                         <div class="col-md-8">
                             <input type="text" name="unit" class="form-control" id="unit" value="<?php echo $product->unit; ?>" placeholder="Unidad del Producto" required title="Ingresa una unidad válida">
                         </div>
-                    </div>
+                    </div> 
 
                     <div class="form-group">
                         <label for="presentation" class="col-lg-3 control-label">Presentación</label>
@@ -158,3 +160,11 @@ if($product!=null):
 </script>
 
 <?php endif; ?>
+
+<?php
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Lógica para actualizar el producto
+    $product_id = $_POST['product_id'];
+    exit();
+}
+?>

@@ -8,6 +8,9 @@ class PersonData {
     public $image;
     public $password;
     public $created_at;
+    public $address1;
+    public $email1;
+    public $phone1;
 
     public function __construct() {
         // Establecer la zona horaria deseada (reemplaza 'America/Managua' con tu zona horaria)
@@ -17,13 +20,17 @@ class PersonData {
     }
 
     public function add_client() {
-        $sql = "INSERT INTO " . self::$tablename . " (name, lastname, address1, email1, phone1, kind, created_at) VALUES (?, ?, ?, ?, ?, 1, $this->created_at)";
+        $sql = "INSERT INTO " . self::$tablename . " (name, lastname, address1, email1, phone1, kind, created_at) VALUES (?, ?, ?, ?, ?, 1, ?)";
         $con = Database::getCon();
         $stmt = $con->prepare($sql);
-        $stmt->bind_param("sssss", $this->name, $this->lastname, $this->address1, $this->email1, $this->phone1);
+        if ($stmt === false) {
+            die("Error en la preparación de la consulta: " . $con->error);
+        }
+        $stmt->bind_param("ssssss", $this->name, $this->lastname, $this->address1, $this->email1, $this->phone1, $this->created_at);
         $stmt->execute();
         return $stmt;
     }
+    
 
     public function add_provider() {
         $sql = "INSERT INTO " . self::$tablename . " (name, lastname, address1, email1, phone1, kind, created_at) VALUES (?, ?, ?, ?, ?, 2, NOW())";
