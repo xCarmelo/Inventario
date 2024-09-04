@@ -22,7 +22,9 @@
                                     <th>Producto</th>
                                     <th>Total</th>
                                     <th>Fecha</th>
+                                    <?php if($_SESSION['is_admin'] === 1): ?>
                                     <th></th>
+                                    <?php endif; ?>
                                 </tr>
                             </thead>
                             <tbody>
@@ -46,9 +48,12 @@
                                         ?>
                                     </td>
                                     <td><?php echo $sell->created_at; ?></td>
+                                    
+                                    <?php if ($_SESSION['is_admin'] === 1):?>
                                     <td style="width:30px;">
                                         <button class="btn btn-xs btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal-<?php echo $sell->id; ?>"><i class="bi bi-trash"></i></button>
                                     </td>
+                                    <?php endif;?>
                                 </tr>
 
                                 <!-- Modal -->

@@ -7,15 +7,24 @@
         <h1>Editar Categoria</h1>
         <br>
         <div class="card">
-            <div class="card-header">
+            <div class="card-header"> 
                 EDITAR CATEGORIA
             </div>
             <div class="card-body">
                 <form class="form-horizontal" method="post" id="updatecategory" action="index.php?view=updatecategory" role="form">
                     <div class="form-group">
-                        <label for="inputEmail1" class="col-lg-2 control-label">Nombre*</label>
-                        <div class="col-md-6">
-                            <input type="text" name="name" value="<?php echo htmlspecialchars($user->name, ENT_QUOTES, 'UTF-8'); ?>" class="form-control" id="name" placeholder="Nombre" required>
+                        <label for="categoria" class="col-lg-2 control-label">Nombre*</label>
+                        <div class="col-md-6 mt-3">
+                            <input type="text" name="categoria" value="<?php echo htmlspecialchars($user->name, ENT_QUOTES, 'UTF-8'); ?>" class="form-control" id="name" placeholder="Nombre" required pattern="^[a-zA-Z0-9áéíóúñÁÉÍÓÚÑ\s]{3,30}$" title="La categoría debe contener entre 3 y 30 caracteres alfanuméricos." />
+                            <div class="input-group mt-3 mb-3">
+                                <div class="input-group-append">
+                                    <?php if(isset($_SESSION['error_msg'])) { ?>
+                                    <div class="alert alert-danger mt-3">
+                                        <?php echo $_SESSION['error_msg']; unset($_SESSION['error_msg']); ?>
+                                    </div>
+                                    <?php } ?>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="form-group">
@@ -86,15 +95,11 @@ $(document).ready(function() {
         console.error("Hubo un error al actualizar la categoría.");
     }
 
-    // Redirigir a la lista de categorías cuando se cierra el modal de éxito
-    var successModalEl = document.getElementById('successModal');
-    successModalEl.addEventListener('hide.bs.modal', function () {
-        window.location.href = 'index.php?view=categories';
-    });
-
-    // Redirigir a la lista de categorías cuando se hace clic en el botón "Cerrar" del modal de éxito
+    // Cerrar el modal de éxito cuando se hace clic en el botón "Cerrar"
     $('#successCloseBtn').click(function() {
-        window.location.href = 'index.php?view=categories';
+        var successModal = bootstrap.Modal.getInstance(document.getElementById('successModal'));
+        successModal.hide();
     });
 });
+
 </script>

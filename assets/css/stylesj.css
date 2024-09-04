@@ -31,7 +31,7 @@
   /*modulo de venta*/
   .card-header {
     background-color: var(--cui-dark);
-    color: white;
+    color: white
     text-align: center;
     font-size: 1.5em;
 }
@@ -79,10 +79,48 @@ i{
 .sidebar-nav .nav-link{
 }
 
+/*color de fondo del sidebar*/
+#sidebar{
+  background-color: #0C1C26;
+}
 
+.sidebar-brand {
+  background-color: #0C1C26; /* Reemplaza #tu_color_aqui con el color deseado */
+} 
 
-.logaut{
+.sidebar-nav .nav-link{
+  color: white;
+  background-color: #0C1C26;
+}
 
+ul .nav-submenu{
+  background-color: #142F40;
+}
+
+.nav-subitem .nav-link{
+  background-color: #142F40;
+  color: white;
+}
+
+/*border de sidebar en menu*/
+.simplebar-content-wrapper{
+  border-left:2px solid white;
+  border-radius: 15px;
+}
+
+/*border del logo*/
+.logo-border{
+  box-shadow:  0px 0px 33px 1px white;
+}
+
+/*footer de sidebar*/
+.p-4{
+  padding: 0 !important;
+}
+
+/*color de title*/
+.card-header{
+  color: white;
 }
 
 .logaut__link{
@@ -140,7 +178,7 @@ i{
 }
 
 .nav-submenu{
-  background-color: #303c54;
+  background-color: #0C1C26; 
 }
 
 @media only screen and (max-width: 767px) {
@@ -198,4 +236,15 @@ i{
   max-width: 100%;
   max-height: 80vh;
   border-radius: 10px;
+}
+
+/*estilos para los mensajes de error de validacion de la vista cliente */
+.is-invalid {
+  border-color: #dc3545;
+}
+
+.invalid-feedback {
+  color: #dc3545;
+  font-size: 0.875rem;
+  margin: 0.25rem 0 0;
 }

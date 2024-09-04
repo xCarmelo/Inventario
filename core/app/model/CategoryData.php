@@ -5,7 +5,7 @@ class CategoryData {
     public $name;
     public $lastname;
     public $email;
-    public $image;
+    public $image; 
     public $password;
     public $created_at;
 
@@ -18,52 +18,83 @@ class CategoryData {
     }
 
     public function add() {
-        $con = Database::getCon();
-        $stmt = $con->prepare("INSERT INTO " . self::$tablename . " (name, created_at) VALUES (?, ?)");
-        $stmt->bind_param("ss", $this->name, $this->created_at);
-        
-        if ($stmt->execute()) {
-            header("Location: index.php?view=newcategory&result=success");
-        } else {
-            header("Location: index.php?view=newcategory&result=error");
-        }
-        $stmt->close();
-        $con->close();
-        exit;
-    }    
+        try {
+            $con = Database::getCon();
+            $stmt = $con->prepare("INSERT INTO " . self::$tablename . " (name, created_at) VALUES (?, ?)");
     
+            if ($stmt === false) {
+                throw new Exception("Error preparando la consulta");
+            }
+    
+            $stmt->bind_param("ss", $this->name, $this->created_at);
+    
+            if (!$stmt->execute()) {
+                throw new Exception("Error ejecutando la consulta " . "");
+            }
+    
+            $stmt->close();
+            return ['success' => true];
+    
+        } catch (Exception $e) {
+            // Devolver el mensaje de error
+            return ['success' => false, 'error_msg' => "Error al agregar la categoria"];
+        }
+    }
     
 
     public static function delById($id) {
+        // 1. Validar el ID
+        if (!is_numeric($id) || $id <= 0) {
+            // Manejar el error (lanzar una excepción, registrar un mensaje, etc.)
+            throw new InvalidArgumentException("ID inválido."); 
+        }
+    
         $con = Database::getCon();
+    
+        // 2. Opcional: Verificar si el registro existe (si es necesario)
+        $stmt_check = $con->prepare("SELECT id FROM " . self::$tablename . " WHERE id = ?");
+        $stmt_check->bind_param("i", $id);
+        $stmt_check->execute();
+        $result = $stmt_check->get_result();
+        if ($result->num_rows == 0) {
+            throw new Exception("El registro no existe."); 
+        }
+    
+        // 3. Proceder con la eliminación
         $stmt = $con->prepare("DELETE FROM " . self::$tablename . " WHERE id = ?");
         $stmt->bind_param("i", $id);
         $stmt->execute();
+    
+        // ... (Manejo de errores de la base de datos si es necesario)
+    
+        $stmt->close();
+        $con->close();
     }
 
     public function del() {
         $con = Database::getCon();
         $stmt = $con->prepare("DELETE FROM " . self::$tablename . " WHERE id = ?");
         $stmt->bind_param("i", $this->id);
-        $stmt->execute();
+        if (!$stmt->execute()) {
+            throw new Exception("Error al eliminar la categoría.");
+        }
     }
+    
 
     public function update() {
         $con = Database::getCon();
         $stmt = $con->prepare("UPDATE " . self::$tablename . " SET name = ? WHERE id = ?");
         $stmt->bind_param("si", $this->name, $this->id);
-    
+        
         if ($stmt->execute()) {
-            header("Location: index.php?view=editcategory&id=" . $this->id . "&result=success");
+            $stmt->close();
+            return ['success' => true];
         } else {
-            header("Location: index.php?view=editcategory&id=" . $this->id . "&result=error");
+            $stmt->close();
+            return ['success' => false, 'error' => "Error al actualizar la categoria"];
         }
-        $stmt->close();
-        $con->close();
-        exit;
     }
     
-
     public static function getById($id) {
         $con = Database::getCon();
         $stmt = $con->prepare("SELECT * FROM " . self::$tablename . " WHERE id = ?");
@@ -110,5 +141,20 @@ class CategoryData {
         }
         return $array;
     }
+
+    public static function searchCategory($q) {
+        $con = Database::getCon();
+        $stmt = $con->prepare("SELECT * FROM " . self::$tablename . " WHERE name = ?");
+        $stmt->bind_param("s", $q);
+        $stmt->execute();
+        
+        $result = $stmt->get_result();
+        if ($result->num_rows > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
 }
 ?>

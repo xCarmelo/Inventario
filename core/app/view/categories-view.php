@@ -1,34 +1,113 @@
 <div class="container">
     <div class="row">
         <div class="col-md-12">
-        <h1><i class="bi bi-list-task"></i> Categorías</h1>
+            <h1><i class="bi bi-list-task"></i> Categorías</h1>
+            <?php if($_SESSION['is_admin'] === 1): ?>
             <div class="mb-3 mt-5">
-            <a href="index.php?view=newcategory" class="btn btn-primary btn-sm">
-                <i class="bi bi-plus-lg"></i> Nueva Categoría
-            </a>
-            </div>
+                <a href="index.php?view=newcategory" class="btn btn-primary btn-sm">
+                    <i class="bi bi-plus-lg"></i> Nueva Categoría
+                </a> 
+            </div> 
+            <?php endif; ?>
             <div class="card">
                 <div class="card-header">
                     CATEGORÍAS
-                </div>
+                </div> 
                 <div class="card-body">
                     <?php
+                    $page = isset($_GET['page']) ? $_GET['page'] : 1;
+                    $limit = isset($_GET['limit']) ? $_GET['limit'] : 10;
+
                     $categories = CategoryData::getAll();
                     if (count($categories) > 0) {
-                        echo '<table class="table table-bordered table-hover">';
-                        echo '<thead><tr><th>Nombre</th><th></th></tr></thead>';
-                        foreach ($categories as $category) {
-                            echo '<tr>';
-                            echo '<td>'. $category->name. '</td>';
-                            echo '<td>';
-                            echo '<div class="btn-group" role="group">';
-                            echo '<a href="index.php?view=editcategory&id='. $category->id. '" class="btn btn-sm btn-warning"><i class="bi bi-pencil-fill"></i></a>';
-                            echo '<button class="btn btn-sm btn-danger ms-1" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" data-href="index.php?view=delcategory&id='. $category->id. '"><i class="bi bi-trash-fill"></i></button>';
-                            echo '</div>';
-                            echo '</td>';
-                            echo '</tr>';
-                        }
-                        echo '</table>';
+                        $totalCategories = count($categories);
+                        $totalPages = ceil($totalCategories / $limit);
+                        $offset = ($page - 1) * $limit;
+                        $curr_categories = array_slice($categories, $offset, $limit);
+                    ?>
+
+                    <!-- Selección del límite de categorías y número de página -->
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div>
+                            <form method="GET" action="index.php">
+                                <input type="hidden" name="view" value="categories">
+                                <label for="limit">Mostrar </label>
+                                <select name="limit" id="limit" onchange="this.form.submit()">
+                                    <option value="5" <?php echo ($limit == 5) ? 'selected' : ''; ?>>5</option>
+                                    <option value="10" <?php echo ($limit == 10) ? 'selected' : ''; ?>>10</option>
+                                    <option value="20" <?php echo ($limit == 20) ? 'selected' : ''; ?>>20</option>
+                                    <option value="50" <?php echo ($limit == 50) ? 'selected' : ''; ?>>50</option>
+                                </select>
+                                categorías por página
+                            </form>
+                        </div>
+                        <div>
+                            <span>Estás en la página <?php echo $page; ?> de <?php echo $totalPages; ?></span>
+                        </div>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover">
+                            <thead>
+                                <tr><th>Nombre</th><th></th></tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($curr_categories as $category): ?>
+                                <tr>
+                                    <td><?php echo $category->name; ?></td>
+                                    <td>
+                                        <div class="btn-group" role="group">
+                                            <?php if($_SESSION['is_admin'] === 1): ?>
+                                            <a href="index.php?view=editcategory&id=<?php echo $category->id; ?>" class="btn btn-sm btn-warning">
+                                                <i class="bi bi-pencil-fill"></i>
+                                            </a>
+                                            <button class="btn btn-sm btn-danger ms-1" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" data-href="index.php?view=delcategory&id=<?php echo $category->id; ?>">
+                                                <i class="bi bi-trash-fill"></i>
+                                            </button>
+                                            <?php endif; ?>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Paginación centrada debajo de la tabla -->
+                    <div class="d-flex justify-content-center mt-3">
+                        <nav aria-label="Page navigation">
+                            <ul class="pagination">
+                                <?php if ($page > 1): ?>
+                                    <li class="page-item">
+                                        <a class="page-link" href="index.php?view=categories&limit=<?php echo $limit; ?>&page=1">««</a>
+                                    </li>
+                                    <li class="page-item">
+                                        <a class="page-link" href="index.php?view=categories&limit=<?php echo $limit; ?>&page=<?php echo $page - 1; ?>">‹</a>
+                                    </li>
+                                <?php endif; ?>
+
+                                <?php
+                                $startPage = max(1, $page - 2);
+                                $endPage = min($totalPages, $page + 2);
+                                for ($i = $startPage; $i <= $endPage; $i++): ?>
+                                    <li class="page-item <?php echo ($i == $page) ? 'active' : ''; ?>">
+                                        <a class="page-link" href="index.php?view=categories&limit=<?php echo $limit; ?>&page=<?php echo $i; ?>"><?php echo $i; ?></a>
+                                    </li>
+                                <?php endfor; ?>
+
+                                <?php if ($page < $totalPages): ?>
+                                    <li class="page-item">
+                                        <a class="page-link" href="index.php?view=categories&limit=<?php echo $limit; ?>&page=<?php echo $page + 1; ?>">›</a>
+                                    </li>
+                                    <li class="page-item">
+                                        <a class="page-link" href="index.php?view=categories&limit=<?php echo $limit; ?>&page=<?php echo $totalPages; ?>">»»</a>
+                                    </li>
+                                <?php endif; ?>
+                            </ul>
+                        </nav>
+                    </div>
+
+                    <?php
                     } else {
                         echo '<p class="alert alert-danger">No hay categorías</p>';
                     }
@@ -58,6 +137,24 @@
     </div>
 </div>
 
+<!-- Modal para mensajes de éxito o error -->
+<div class="modal fade" id="resultModal" tabindex="-1" aria-labelledby="resultModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="resultModalLabel">Resultado</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p id="resultMessage"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
     $(document).ready(function() {
         $('#confirmDeleteModal').on('show.bs.modal', function (event) {
@@ -67,5 +164,18 @@
             var modal = $(this);
             modal.find('#confirmDeleteBtn').attr('href', url);
         });
+
+        // Mostrar el resultado según los parámetros de la URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const successMessage = urlParams.get('success');
+        const errorMessage = urlParams.get('error');
+
+        if (successMessage) {
+            $('#resultMessage').text(successMessage);
+            $('#resultModal').modal('show');
+        } else if (errorMessage) {
+            $('#resultMessage').text(errorMessage);
+            $('#resultModal').modal('show');
+        }
     });
 </script>

@@ -7,8 +7,10 @@ class Database {
         $this->user = "root";
         $this->pass = "";
         $this->host = "localhost";
-        $this->ddbb = "fiore_di_carmelo";
+        $this->ddbb = "mundocatolico";
     }
+    //mundocatolico
+    //fiore_di_carmelo
 
     public function connect() {
         $con = new mysqli($this->host, $this->user, $this->pass, $this->ddbb);

@@ -40,15 +40,43 @@ $products = ProductData::getAll();
                             <?php if ($_GET["sd"] != "" && $_GET["ed"] != ""): ?>
                                 <?php
                                 $operations = array();
-
                                 if ($_GET["product_id"] == "") {
                                     $operations = OperationData::getAllByDateOfficial($_GET["sd"], $_GET["ed"]);
                                 } else {
                                     $operations = OperationData::getAllByDateOfficialBP($_GET["product_id"], $_GET["sd"], $_GET["ed"]);
                                 }
+                                
+                                $page = isset($_GET['page']) ? $_GET['page'] : 1;
+                                $limit = isset($_GET['limit']) ? $_GET['limit'] : 10;
+                                $totalOperations = count($operations);
+                                $totalPages = ceil($totalOperations / $limit);
+                                $offset = ($page - 1) * $limit;
+                                $curr_operations = array_slice($operations, $offset, $limit);
                                 ?>
 
-                                <?php if (count($operations) > 0): ?>
+                                <?php if (count($curr_operations) > 0): ?>
+                                    <!-- Selección del límite de operaciones y número de página -->
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <div>
+                                            <form method="GET" action="index.php">
+                                                <input type="hidden" name="view" value="reports">
+                                                <input type="hidden" name="sd" value="<?php echo $_GET['sd']; ?>">
+                                                <input type="hidden" name="ed" value="<?php echo $_GET['ed']; ?>">
+                                                <label for="limit">Mostrar </label>
+                                                <select name="limit" id="limit" onchange="this.form.submit()">
+                                                    <option value="5" <?php echo ($limit == 5) ? 'selected' : ''; ?>>5</option>
+                                                    <option value="10" <?php echo ($limit == 10) ? 'selected' : ''; ?>>10</option>
+                                                    <option value="20" <?php echo ($limit == 20) ? 'selected' : ''; ?>>20</option>
+                                                    <option value="50" <?php echo ($limit == 50) ? 'selected' : ''; ?>>50</option>
+                                                </select>
+                                                operaciones por página
+                                            </form>
+                                        </div>
+                                        <div>
+                                            <span>Estás en la página <?php echo $page; ?> de <?php echo $totalPages; ?></span>
+                                        </div>
+                                    </div>
+
                                     <div class="table-responsive">
                                         <table class="table table-bordered">
                                             <thead>
@@ -61,7 +89,7 @@ $products = ProductData::getAll();
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <?php foreach ($operations as $operation): ?>
+                                                <?php foreach ($curr_operations as $operation): ?>
                                                     <tr>
                                                         <td><?php echo $operation->id; ?></td>
                                                         <td><?php echo $operation->getProduct()->name; ?></td>
@@ -72,6 +100,40 @@ $products = ProductData::getAll();
                                                 <?php endforeach; ?>
                                             </tbody>
                                         </table>
+                                    </div>
+
+                                    <!-- Paginación centrada debajo de la tabla -->
+                                    <div class="d-flex justify-content-center mt-3">
+                                        <nav aria-label="Page navigation">
+                                            <ul class="pagination">
+                                                <?php if ($page > 1): ?>
+                                                    <li class="page-item">
+                                                        <a class="page-link" href="index.php?view=reports&sd=<?php echo $_GET['sd']; ?>&ed=<?php echo $_GET['ed']; ?>&limit=<?php echo $limit; ?>&page=1">««</a>
+                                                    </li>
+                                                    <li class="page-item">
+                                                        <a class="page-link" href="index.php?view=reports&sd=<?php echo $_GET['sd']; ?>&ed=<?php echo $_GET['ed']; ?>&limit=<?php echo $limit; ?>&page=<?php echo $page - 1; ?>">‹</a>
+                                                    </li>
+                                                <?php endif; ?>
+
+                                                <?php
+                                                $startPage = max(1, $page - 2);
+                                                $endPage = min($totalPages, $page + 2);
+                                                for ($i = $startPage; $i <= $endPage; $i++): ?>
+                                                    <li class="page-item <?php echo ($i == $page) ? 'active' : ''; ?>">
+                                                        <a class="page-link" href="index.php?view=reports&sd=<?php echo $_GET['sd']; ?>&ed=<?php echo $_GET['ed']; ?>&limit=<?php echo $limit; ?>&page=<?php echo $i; ?>"><?php echo $i; ?></a>
+                                                    </li>
+                                                <?php endfor; ?>
+
+                                                <?php if ($page < $totalPages): ?>
+                                                    <li class="page-item">
+                                                        <a class="page-link" href="index.php?view=reports&sd=<?php echo $_GET['sd']; ?>&ed=<?php echo $_GET['ed']; ?>&limit=<?php echo $limit; ?>&page=<?php echo $page + 1; ?>">›</a>
+                                                    </li>
+                                                    <li class="page-item">
+                                                        <a class="page-link" href="index.php?view=reports&sd=<?php echo $_GET['sd']; ?>&ed=<?php echo $_GET['ed']; ?>&limit=<?php echo $limit; ?>&page=<?php echo $totalPages; ?>">»»</a>
+                                                    </li>
+                                                <?php endif; ?>
+                                            </ul>
+                                        </nav>
                                     </div>
                                 <?php else: ?>
                                     <div class="jumbotron">

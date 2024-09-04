@@ -3,11 +3,11 @@
 if(count($_POST)>0){
 	$product = ProductData::getById($_POST["product_id"]);
 
-	$product->barcode = $_POST["barcode"];
+	$product->barcode = null;
 	$product->name = $_POST["name"];
 	$product->price_in = $_POST["price_in"];
 	$product->price_out = $_POST["price_out"];
-	$product->unit = $_POST["unit"];
+	$product->unit = null;
 
   $product->description = $_POST["description"];
   $product->presentation = $_POST["presentation"];

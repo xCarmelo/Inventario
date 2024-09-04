@@ -56,17 +56,29 @@
 <!---------------------------------------------------------------------------------------------- -->
 
 <?php else:?>
-<div class="sidebar sidebar-dark sidebar-fixed" id="sidebar">
+<div class="sidebar sidebar-fixed" id="sidebar">
 <div class="sidebar-brand d-none d-md-flex">
 <div class="sidebar-brand-full" width="118" height="46" alt="Logo">
-<h4><a href="./" style="color: white; text-decoration: none;">Fiore di Carmelo</a> <button class="btn btn__menu" id="sidebarToggle"><i class="bi bi_menu bi__menu--active bi-list"></i></button></h4>
+<div class="d-flex align-items-center justify-content-center p-1"> 
+    <img src="assets/img/logoMC.jpg" alt="" class="img-fluid rounded-circle me-4 logo-border" style="max-height: 100px;"> 
+</div>
+<h4>
+<div class="d-flex justify-content-center align-items-center"> 
+    <a href="./" style="color: white; text-decoration: none;" class="ms-2">M. C. San Agustin</a>
+    <button class="btn btn__menu" id="sidebarToggle"><i class="bi bi_menu bi__menu--active bi-list"></i></button>
+</div>
+</h4>
 </div>
 <div class="sidebar-brand-narrow" width="46" height="46" alt="Logo">
-<h4><a href="./" style="color: white;">I<b>L</b></a></h4>
 </div>
 </div>
 
-<h4 class="logo_menu"><a href="./" style="color: white; text-decoration: none;">Fiore di Carmelo</a> <button class="btn btn__menu" id="sidebarToggle"><i class="bi bi_menu bi__menu--active bi-list"></i></button></h4>
+<h4 class=" d-flex align-items-center logo_menu"> 
+    <div class="me-auto logo_menu">  
+        <img src="assets/img/logoMC.jpg" alt="" class="img-fluid rounded-circle logo-border" style="max-height: 70px;"> 
+    </div>
+    <button class="btn btn__menu logo_menu" id="sidebarToggle"><i class="bi bi_menu bi__menu--active bi-list"></i></button>
+</h4>
 <ul class="sidebar-nav" data-simplebar>
     <li class="nav-item"><a class="nav-link" href="./">
         <i class="bi bi-house"></i> INICIO</a></li>
@@ -100,11 +112,13 @@
             <i class="bi bi-people"></i> CLIENTES
           </a>
         </li>
+        <?php if($_SESSION['is_admin'] === 1): ?>
         <li class="nav-subitem">
           <a class="nav-link" href="./?view=providers">
             <i class="bi bi-truck"></i> PROVEEDORES
           </a>
         </li>
+        <?php endif; ?>
       </ul>
     </li>
     
@@ -148,7 +162,7 @@
         </li>
       </ul>
     </li>
-
+    <?php if($_SESSION['is_admin'] === 1): ?>
     <li class="nav-item">
       <a class="nav-link nav-group-toggle" href="#" data-bs-toggle="collapse" data-bs-target="#administracion-submenu" aria-expanded="false" aria-controls="administracion-submenu">
         <i class="bi bi-gear"></i> ADMINISTRACION
@@ -159,16 +173,12 @@
             <i class="bi bi-person"></i> USUARIOS
           </a>
         </li>
-        <li class="nav-subitem">
-          <a class="nav-link" href="./?view=settings&opt=all">
-            <i class="bi bi-sliders"></i> AJUSTES
-          </a>
-        </li>
+    <?php endif; ?>
       </ul>
     </li>
 
   </ul>
-  <div class="p-4" style="width: 100%; height: 30px; background: #303c54"></div>
+  <div class="p-4" style="width: 100%; height: 30px; background: #0C1C26"></div>
 </div>
 
 <div class="wrapper d-flex flex-column min-vh-100 bg-light">
@@ -199,13 +209,23 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/simplebar/6.0.0/simplebar.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.1/chart.min.js"></script>
 <script>
-$(document).ready(function() {
+$(document).ready(function(){
+  $('.nav-group-toggle').on('click', function(){
+    // Cierra cualquier submenú abierto
+    $('.nav-submenu').collapse('hide');
+    // Abre el submenú relacionado con el enlace clicado si no está abierto
+    if (!$(this).next('.nav-submenu').hasClass('show')) {
+      $(this).next('.nav-submenu').collapse('show');
+    }
+  });
+
   $('.bi_menu').on('click', function(event) {
     $("#sidebar").toggleClass("sidebar__active");
     $(".content").toggleClass("content-full-width");
   });
 });
 </script>
+
 
 </body>
 </html>

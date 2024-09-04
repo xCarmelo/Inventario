@@ -1,53 +1,42 @@
 <div class="container">
     <div class="row">
         <div class="col-12">
-        <h1><i class="bi bi-boxes"></i> Inventario de Productos</h1>
-            <div class="d-flex justify-content-end mb-3">
-            </div>
+            <h1><i class="bi bi-boxes"></i> Inventario de Productos</h1>
             <div class="clearfix"></div>
             <br>
             <div class="card">
                 <div class="card-header">INVENTARIO</div>
+
+                <?php
+                $limit = isset($_GET['limit']) ? intval($_GET['limit']) : 10;
+                $page = isset($_GET['page']) ? intval($_GET['page']) : 1;
+                $offset = ($page - 1) * $limit;
+                $products = ProductData::getAll();
+                $totalProducts = count($products);
+                $totalPages = ceil($totalProducts / $limit);
+                $curr_products = array_slice($products, $offset, $limit);
+                ?>
+
+                <div class="d-flex justify-content-between align-items-center mt-3 ms-3">
+                    <div>
+                        <form method="get" class="d-inline">
+                            <input type="hidden" name="view" value="inventary">
+                            <b>Mostrar:</b>
+                            <select name="limit" class="form-select d-inline-block w-auto" onchange="this.form.submit()">
+                                <option value="10" <?php echo $limit == 10 ? 'selected' : ''; ?>>10 por página</option>
+                                <option value="25" <?php echo $limit == 25 ? 'selected' : ''; ?>>25 por página</option>
+                                <option value="50" <?php echo $limit == 50 ? 'selected' : ''; ?>>50 por página</option>
+                            </select>
+                            <b class="me-3">Productos por página</b>
+                        </form>
+                    </div>
+                    <div class="me-3">
+                        <span>Estas en la pagina: <?php echo $page; ?> de <?php echo $totalPages; ?></span>
+                    </div>
+                </div>
+
                 <div class="card-body">
-                    <?php
-                    $page = 1;
-                    if (isset($_GET["page"])) {
-                        $page = $_GET["page"];
-                    }
-                    $limit = 10;
-                    if (isset($_GET["limit"]) && $_GET["limit"] != "" && $_GET["limit"] != $limit) {
-                        $limit = $_GET["limit"];
-                    }
-                    $products = ProductData::getAll();
-                    if (count($products) > 0) {
-                        if ($page == 1) {
-                            $curr_products = ProductData::getAllByPage($products[0]->id, $limit);
-                        } else {
-                            $curr_products = ProductData::getAllByPage($products[($page - 1) * $limit]->id, $limit);
-                        }
-                        $npaginas = floor(count($products) / $limit);
-                        $spaginas = count($products) % $limit;
-                        if ($spaginas > 0) {
-                            $npaginas++;
-                        }
-                    ?>
-                        <h3>Pagina <?php echo $page . " de " . $npaginas; ?></h3>
-                        <div class="d-flex justify-content-end mb-3">
-                            <?php
-                            $px = $page - 1;
-                            if ($px > 0) :
-                            ?>
-                                <a class="btn btn-sm btn-warning" href="<?php echo "index.php?view=inventary&limit=$limit&page=" . ($px); ?>"><i class="bi bi-chevron-left"></i> Atras </a> 
-                            <?php endif; ?>
-                            <?php
-                            $px = $page + 1;
-                            if ($px <= $npaginas) :
-                            ?>
-                                <a class="btn btn-sm btn-primary ms-3" href="<?php echo "index.php?view=inventary&limit=$limit&page=" . ($px); ?>">Adelante <i class="bi bi-chevron-right"></i></a> 
-                            <?php endif; ?>
-                        </div>
-                        <div class="clearfix"></div>
-                        <br>
+                    <?php if ($totalProducts > 0): ?>
                         <div class="table-responsive">
                             <table class="table table-bordered table-hover">
                                 <thead>
@@ -60,53 +49,67 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <?php foreach ($curr_products as $product) :
-                                        $q = OperationData::getQYesF($product->id);
-                                    ?>
-                                        <tr class="<?php if ($q <= $product->inventary_min / 2) {
-                                                        echo "table-danger";
-                                                    } elseif ($q <= $product->inventary_min) {
-                                                        echo "table-warning";
-                                                    } ?>">
+                                    <?php foreach ($curr_products as $product): ?>
+                                        <tr class="<?php if (OperationData::getQYesF($product->id) <= $product->inventary_min) echo "table-warning"; ?>">
                                             <td><?php echo $product->id; ?></td>
                                             <td>
-                                                <?php if ($product->image != ""): ?>
-                                                <img src="storage/products/<?php echo $product->image; ?>" style="width:64px;" class="custom-modal-trigger">
+                                                <?php if ($product->image): ?>
+                                                    <img src="storage/products/<?php echo $product->image; ?>" style="width:64px;" class="custom-modal-trigger">
                                                 <?php endif; ?>
                                             </td>
                                             <td><?php echo $product->name; ?></td>
-                                            <td><?php echo $q; ?></td>
+                                            <td><?php echo OperationData::getQYesF($product->id); ?></td>
                                             <td style="width:93px;">
-                                                <a href="index.php?view=history&product_id=<?php echo $product->id; ?>" class="btn btn-success btn-sm"><i class="glyphicon glyphicon-time"></i> Historial</a>
+                                                <a href="index.php?view=history&product_id=<?php echo $product->id; ?>" class="btn btn-success btn-sm">
+                                                    <i class="glyphicon glyphicon-time"></i> Historial
+                                                </a>
                                             </td>
                                         </tr>
                                     <?php endforeach; ?>
                                 </tbody>
                             </table>
                         </div>
-                        <div class="d-flex justify-content-end mb-3">
-                            <?php
-                            for ($i = 0; $i < $npaginas; $i++) {
-                                echo "<a href='index.php?view=inventary&limit=$limit&page=" . ($i + 1) . "' class='btn btn-default btn-sm'>" . ($i + 1) . "</a> ";
-                            }
-                            ?>
+
+                        <!-- Paginación centrada debajo de la tabla -->
+                        <div class="d-flex justify-content-center mt-3">
+                            <nav aria-label="Page navigation">
+                                <ul class="pagination">
+                                    <?php if ($page > 1): ?>
+                                        <li class="page-item">
+                                            <a class="page-link" href="index.php?view=inventary&limit=<?php echo $limit; ?>&page=1">««</a>
+                                        </li>
+                                        <li class="page-item">
+                                            <a class="page-link" href="index.php?view=inventary&limit=<?php echo $limit; ?>&page=<?php echo $page - 1; ?>">‹</a>
+                                        </li>
+                                    <?php endif; ?>
+
+                                    <?php
+                                    $startPage = max(1, $page - 2);
+                                    $endPage = min($totalPages, $page + 2);
+                                    for ($i = $startPage; $i <= $endPage; $i++): ?>
+                                        <li class="page-item <?php echo ($i == $page) ? 'active' : ''; ?>">
+                                            <a class="page-link" href="index.php?view=inventary&limit=<?php echo $limit; ?>&page=<?php echo $i; ?>"><?php echo $i; ?></a>
+                                        </li>
+                                    <?php endfor; ?>
+
+                                    <?php if ($page < $totalPages): ?>
+                                        <li class="page-item">
+                                            <a class="page-link" href="index.php?view=inventary&limit=<?php echo $limit; ?>&page=<?php echo $page + 1; ?>">›</a>
+                                        </li>
+                                        <li class="page-item">
+                                            <a class="page-link" href="index.php?view=inventary&limit=<?php echo $limit; ?>&page=<?php echo $totalPages; ?>">»»</a>
+                                        </li>
+                                    <?php endif; ?>
+                                </ul>
+                            </nav>
                         </div>
-                        <form class="form-inline">
-                            <label for="limit">Limite</label>
-                            <input type="hidden" name="view" value="inventary">
-                            <input type="number" value=<?php echo $limit ?> name="limit" style="width:60px;" class="form-control">
-                        </form>
-                        <div class="clearfix"></div>
-                    <?php
-                    } else {
-                    ?>
+
+                    <?php else: ?>
                         <div class="jumbotron">
                             <h2>No hay productos</h2>
-                            <p>No se han agregado productos a la base de datos, puedes agregar uno dando click en el boton <b>"Agregar Producto"</b>.</p>
+                            <p>No se han agregado productos a la base de datos, puedes agregar uno dando click en el botón <b>"Agregar Producto"</b>.</p>
                         </div>
-                    <?php
-                    }
-                    ?>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>

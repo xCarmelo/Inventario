@@ -1,36 +1,34 @@
 <?php
 
+if (!isset($_SESSION["user_id"])) {
+    $user = $_POST['username'];
+    $pass = sha1(md5($_POST['password']));
 
-if(!isset($_SESSION["user_id"])) {
-$user = $_POST['username'];
-$pass = sha1(md5($_POST['password']));
+    $base = new Database();
+    $con = $base->connect();
 
-$base = new Database();
-$con = $base->connect();
- $sql = "select * from user where (email= \"".$user."\" or username= \"".$user."\") and password= \"".$pass."\" and is_active=1";
-//print $sql;
-$query = $con->query($sql);
-$found = false;
-$userid = null;
-while($r = $query->fetch_array()){
-	$found = true ;
-	$userid = $r['id'];
-}
+    // Consulta preparada
+    $stmt = $con->prepare("SELECT id, is_admin FROM user WHERE (email = ? OR username = ?) AND password = ? AND is_active = 1");
+    $stmt->bind_param("sss", $user, $user, $pass);
+    $stmt->execute();
+    $stmt->bind_result($userid,$isAdmin);
 
-if($found==true) {
-//	session_start();
-//	print $userid;
-	$_SESSION['user_id']=$userid ;
-//	setcookie('userid',$userid);
-//	print $_SESSION['userid'];
-	print "Cargando ... $user";
-	print "<script>window.location='index.php?view=home';</script>";
-}else {
-	print "<script>window.location='index.php?view=login';</script>";
-}
+    $found = false;
+    if ($stmt->fetch()) {
+        $found = true;
+    }
 
-}else{
-	print "<script>window.location='index.php?view=home';</script>";
-	
+    $stmt->close();
+
+    if ($found) {
+        $_SESSION['user_id'] = $userid;
+		$_SESSION['is_admin'] = $isAdmin;
+        echo "Cargando ... $user $isAdmin";
+        echo "<script>window.location='index.php?view=home';</script>";
+    } else {
+        echo "<script>window.location='index.php?view=login';</script>";
+    }
+} else {
+    echo "<script>window.location='index.php?view=home';</script>";
 }
 ?>

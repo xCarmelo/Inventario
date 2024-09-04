@@ -1,120 +1,130 @@
 <div class="row">
     <div class="col-md-12">
-
-    <h1><i class="bi bi-box-seam"></i> Productos</h1>
+        <h1><i class="bi bi-box-seam"></i> Productos</h1>
+        <?php if($_SESSION['is_admin'] === 1): ?>
         <div class="mt-4">
             <a href="index.php?view=newproduct" class="btn btn-primary">
                 <i class="bi bi-plus-lg me-2"></i> Agregar Producto
             </a>
         </div>
-
+        <?php endif; ?>
         <br>
-
         <div class="card">
             <div class="card-header">
                 PRODUCTOS
             </div>
             <div class="card-body">
-
                 <?php
-                $page = 1;
-                if (isset($_GET["page"])) {
-                    $page = $_GET["page"];
-                }
-                $limit = 10;
-                if (isset($_GET["limit"]) && $_GET["limit"] != "" && $_GET["limit"] != $limit) {
-                    $limit = $_GET["limit"];
-                }
+                $page = isset($_GET['page']) ? $_GET['page'] : 1;
+                $limit = isset($_GET['limit']) ? $_GET['limit'] : 10;
 
                 $products = ProductData::getAll();
                 if (count($products) > 0) {
-
-                    if ($page == 1) {
-                        $curr_products = ProductData::getAllByPage($products[0]->id, $limit);
-                    } else {
-                        $curr_products = ProductData::getAllByPage($products[($page - 1) * $limit]->id, $limit);
-                    }
-                    $npaginas = floor(count($products) / $limit);
-                    $spaginas = count($products) % $limit;
-
-                    if ($spaginas > 0) {
-                        $npaginas++;
-                    }
+                    $totalProducts = count($products);
+                    $totalPages = ceil($totalProducts / $limit);
+                    $offset = ($page - 1) * $limit;
+                    $curr_products = ProductData::getAllByPage($products[$offset]->id, $limit);
                 ?>
 
-                <h3>Pagina <?php echo $page . " de " . $npaginas; ?></h3>
-                <div class="d-flex justify-content-end mb-3">
-                    <?php
-                    $px = $page - 1;
-                    if ($px > 0):
-                    ?>
-                    <a class="btn btn-sm btn-warning mb-2" href="<?php echo "index.php?view=products&limit=$limit&page=" . ($px); ?>"><i class="bi bi-chevron-left"></i> Atras </a> 
-                    <?php endif; ?>
-
-                    <?php
-                    $px = $page + 1;
-                    if ($px <= $npaginas):
-                    ?>
-                    <a class="btn btn-sm btn-primary ms-2 mb-2" href="<?php echo "index.php?view=products&limit=$limit&page=" . ($px); ?>">Adelante <i class="bi bi-chevron-right"></i></a> 
-                    <?php endif; ?>
+                <!-- Selección del límite de productos y número de página -->
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div>
+                        <form method="GET" action="index.php">
+                            <input type="hidden" name="view" value="products">
+                            <label for="limit">Mostrar </label>
+                            <select name="limit" id="limit" onchange="this.form.submit()">
+                                <option value="5" <?php echo ($limit == 5) ? 'selected' : ''; ?>>5</option>
+                                <option value="10" <?php echo ($limit == 10) ? 'selected' : ''; ?>>10</option>
+                                <option value="20" <?php echo ($limit == 20) ? 'selected' : ''; ?>>20</option>
+                                <option value="50" <?php echo ($limit == 50) ? 'selected' : ''; ?>>50</option>
+                            </select>
+                            productos por página
+                        </form>
+                    </div>
+                    <div>
+                        <span>Estás en la página <?php echo $page; ?> de <?php echo $totalPages; ?></span>
+                    </div>
                 </div>
-                <div class="clearfix"></div>
+
                 <div class="table-responsive">
                     <table class="table table-bordered table-hover">
                         <thead>
-                            <tr> 
+                            <tr>
                                 <th>Codigo</th>
                                 <th>Imagen</th>
                                 <th>Nombre</th>
                                 <th>Descripcion</th>
                                 <th>Activo</th>
+                                <?php if($_SESSION['is_admin'] === 1): ?>
                                 <th>Acciones</th>
+                                <?php endif; ?>
                             </tr>
                         </thead>
                         <tbody>
                             <?php foreach ($curr_products as $product): ?>
-                                <tr>
-                                    <td><?php echo $product->barcode; ?></td>
-                                    <td>
-                                        <?php if ($product->image != ""): ?>
-                                            <img src="storage/products/<?php echo $product->image; ?>" style="width:64px;" class="custom-modal-trigger">
-                                        <?php endif; ?>
-                                    </td>
-                                    <td><?php echo $product->name; ?></td>
-                                    <td><?php echo $product->description; ?></td>
-                                    <td>
-                                        <?php if ($product->is_active): ?>
-                                            <i class="bi bi-check-lg text-success"></i> 
-                                        <?php else: ?>
-                                            <i class="bi bi-x-lg text-danger"></i> 
-                                        <?php endif; ?>
-                                    </td>
-                                    <td style="width:120px;">
-                                        <div class="btn-group" role="group">
-                                            <a href="index.php?view=editproduct&id=<?php echo $product->id; ?>" class="btn btn-sm btn-warning"><i class="bi bi-pencil"></i></a>
-                                            <button class="btn btn-sm btn-danger ms-1" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" data-href="index.php?view=delproduct&id=<?php echo $product->id; ?>"><i class="bi bi-trash"></i></button>
-                                        </div>
-                                    </td>
-                                </tr>
+                            <tr>
+                                <td><?php echo $product->barcode; ?></td>
+                                <td>
+                                    <?php if ($product->image != ""): ?>
+                                        <img src="storage/products/<?php echo $product->image; ?>" style="width:64px;" class="custom-modal-trigger">
+                                    <?php endif; ?>
+                                </td>
+                                <td><?php echo $product->name; ?></td>
+                                <td><?php echo $product->description; ?></td>
+                                <td>
+                                    <?php if ($product->is_active): ?>
+                                        <i class="bi bi-check-lg text-success"></i> 
+                                    <?php else: ?>
+                                        <i class="bi bi-x-lg text-danger"></i> 
+                                    <?php endif; ?>
+                                </td>
+                                <?php if($_SESSION['is_admin'] === 1): ?>
+                                <td style="width:120px;">
+                                    <div class="btn-group" role="group">
+                                        <a href="index.php?view=editproduct&id=<?php echo $product->id; ?>" class="btn btn-sm btn-warning"><i class="bi bi-pencil"></i></a>
+                                        <button class="btn btn-sm btn-danger ms-1" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" data-href="index.php?view=delproduct&id=<?php echo $product->id; ?>"><i class="bi bi-trash"></i></button>
+                                    </div>
+                                </td>
+                                <?php endif; ?>
+                            </tr>
                             <?php endforeach; ?>
                         </tbody>
                     </table>
                 </div>
 
-                <div class="btn-group pull-right">
-                    <?php
-                    for ($i = 0; $i < $npaginas; $i++) {
-                        echo "<a href='index.php?view=products&limit=$limit&page=" . ($i + 1) . "' class='btn btn-secondary btn-sm'>" . ($i + 1) . "</a> ";
-                    }
-                    ?>
-                </div>
-                <form class="form-inline">
-                    <label for="limit">Limite</label>
-                    <input type="hidden" name="view" value="products">
-                    <input type="number" value="<?php echo $limit ?>" name="limit" style="width:60px;" class="form-control">
-                </form>
+                <!-- Paginación centrada debajo de la tabla -->
+                <div class="d-flex justify-content-center mt-3">
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination">
+                            <?php if ($page > 1): ?>
+                                <li class="page-item">
+                                    <a class="page-link" href="index.php?view=products&limit=<?php echo $limit; ?>&page=1">««</a>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link" href="index.php?view=products&limit=<?php echo $limit; ?>&page=<?php echo $page - 1; ?>">‹</a>
+                                </li>
+                            <?php endif; ?>
 
-                <div class="clearfix"></div>
+                            <?php
+                            $startPage = max(1, $page - 2);
+                            $endPage = min($totalPages, $page + 2);
+                            for ($i = $startPage; $i <= $endPage; $i++): ?>
+                                <li class="page-item <?php echo ($i == $page) ? 'active' : ''; ?>">
+                                    <a class="page-link" href="index.php?view=products&limit=<?php echo $limit; ?>&page=<?php echo $i; ?>"><?php echo $i; ?></a>
+                                </li>
+                            <?php endfor; ?>
+
+                            <?php if ($page < $totalPages): ?>
+                                <li class="page-item">
+                                    <a class="page-link" href="index.php?view=products&limit=<?php echo $limit; ?>&page=<?php echo $page + 1; ?>">›</a>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link" href="index.php?view=products&limit=<?php echo $limit; ?>&page=<?php echo $totalPages; ?>">»»</a>
+                                </li>
+                            <?php endif; ?>
+                        </ul>
+                    </nav>
+                </div>
 
                 <?php
                 } else {
@@ -126,11 +136,8 @@
                 <?php
                 }
                 ?>
-
             </div>
         </div>
-
-        <br><br><br><br><br><br><br><br><br><br>
     </div>
 </div>
 
@@ -159,6 +166,24 @@
         <div class="modal-content">
             <div class="modal-body">
                 <img id="modalImage" src="" alt="Imagen del producto" class="img-fluid">
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para mensajes de éxito o error -->
+<div class="modal fade" id="resultModal" tabindex="-1" aria-labelledby="resultModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="resultModalLabel">Resultado</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p id="resultMessage"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cerrar</button>
             </div>
         </div>
     </div>

@@ -11,7 +11,7 @@ class PersonData {
     public $address1;
     public $email1;
     public $phone1;
-
+ 
     public function __construct() {
         // Establecer la zona horaria deseada (reemplaza 'America/Managua' con tu zona horaria)
         date_default_timezone_set('America/Managua'); 
@@ -19,7 +19,7 @@ class PersonData {
         $this->created_at = date("Y-m-d H:i:s");
     }
 
-    public function add_client() {
+    public function add_client() { 
         $sql = "INSERT INTO " . self::$tablename . " (name, lastname, address1, email1, phone1, kind, created_at) VALUES (?, ?, ?, ?, ?, 1, ?)";
         $con = Database::getCon();
         $stmt = $con->prepare($sql);

@@ -2,18 +2,31 @@
     <div class="col-md-12">
         <h1>Nueva Categoria</h1>
         <br>
-        <div class="card">
-            <div class="card-header">
+
+        <div id="error-messages" class="alert alert-danger" style="display: none;">
+            <ul></ul> 
+        </div>
+    <div class="card">
+        <div class="card-header">
                 NUEVA CATEGORIA
-            </div>
+        </div>
+
             <div class="card-body">
                 <form class="form-horizontal" method="post" id="addcategory" action="index.php?view=addcategory" role="form">
-                    <div class="form-group">
-                        <label for="inputEmail1" class="col-lg-2 control-label">Nombre*</label>
-                        <div class="col-md-6">
-                            <input type="text" name="name" required class="form-control" id="name" placeholder="Nombre">
+                <div class="form-group">
+                    <label for="inputEmail1" class="col-lg-2 control-label">Nombre*</label>
+                    <div class="col-md-6 mt-3">
+                        <input type="text" name="categoria" required pattern="^[a-zA-Z0-9áéíóúñÁÉÍÓÚÑ\s]{3,30}$" title="La categoría debe contener entre 3 y 30 caracteres alfanuméricos." class="form-control" />
+                    <div class="input-group mt-3 mb-3">
+                        <div class="input-group-append ">
+                            <?php if(isset($_SESSION['error_msg'])) { ?>
+                            <div class="alert alert-danger mt-3">
+                            <?php echo $_SESSION['error_msg']; unset($_SESSION['error_msg']); ?>
                         </div>
-                    </div>
+                    <?php } ?>
+                </div>
+            </div>
+
                     <div class="form-group">
                         <div class="col-lg-offset-2 col-lg-10">
                             <button type="submit" class="btn btn-primary">Agregar Categoria</button>
@@ -39,7 +52,7 @@
                 La categoría se agregó correctamente.
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="successCloseBtn">Cerrar</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                 <a href="index.php?view=categories" class="btn btn-primary">Continuar</a>
             </div>
         </div>
@@ -79,15 +92,15 @@ $(document).ready(function() {
         errorModal.show();
     }
 
-    // Redirigir a la lista de categorías cuando se cierra el modal de éxito
-    var successModalEl = document.getElementById('successModal');
-    successModalEl.addEventListener('hide.bs.modal', function () {
-        window.location.href = 'index.php?view=categories';
-    });
-
-    // Redirigir a la lista de categorías cuando se hace clic en el botón "Cerrar" del modal de éxito
-    $('#successCloseBtn').click(function() { 
-        window.location.href = 'index.php?view=categories';
-    });
+    // Mostrar errores de validación o de la base de datos
+    <?php if (isset($_SESSION['error_msg'])) { ?>
+        var errorMessages = $("#error-messages");
+        var errorList = errorMessages.find("ul");
+        errorList.append("<li><?php echo $_SESSION['error_msg']; ?></li>");
+        <?php unset($_SESSION['error_msg']); ?>
+        errorMessages.show();
+    <?php } ?>
 });
+
+
 </script>

@@ -1,19 +1,48 @@
+<?php
+// Configuración de paginación
+$limit = isset($_GET['limit']) ? (int)$_GET['limit'] : 10;
+$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+$offset = ($page - 1) * $limit;
+
+// Obtener la lista de ventas
+$sells = SellData::getSells(); // Asegúrate de que este método devuelva todos los datos necesarios para paginar
+
+// Calcular el total de páginas
+$total = count($sells);
+$totalPages = ceil($total / $limit);
+$sells = array_slice($sells, $offset, $limit); // Paginación de los datos
+
+// Mostrar la información de la página actual y el total de páginas
+?>
+
 <div class="row">
     <div class="col-md-12">
-    <h1><i class="bi bi-cart"></i> Lista de Ventas</h1>
+        <h1><i class="bi bi-cart"></i> Lista de Ventas</h1>
         <div class="clearfix"></div>
 
-        <?php
-        $products = SellData::getSells();
+     
 
-        if(count($products) > 0){
-        ?>
+        <?php if (count($sells) > 0) { ?>
 
         <div class="card mt-5">
-        <div class="card-header">
-            VENTAS
-        </div>
+            <div class="card-header">
+                VENTAS
+            </div> 
 
+            <div class="d-flex justify-content-between mb-3 mt-3 ms-3">
+            <div>
+                <b>Mostrar:</b>
+                <select id="limitSelect" class="form-select d-inline-block w-auto">
+                    <option value="10" <?php echo $limit == 10 ? 'selected' : ''; ?>>10</option>
+                    <option value="25" <?php echo $limit == 25 ? 'selected' : ''; ?>>25</option>
+                    <option value="50" <?php echo $limit == 50 ? 'selected' : ''; ?>>50</option>
+                </select>
+                <b>Ventas por página</b>
+            </div>
+            <div>
+                <p class="mb-0 me-3">Estas en la página <?php echo $page; ?> de <?php echo $totalPages; ?></p>
+            </div>
+        </div>
 
             <div class="card-body">
                 <div class="table-responsive">
@@ -24,11 +53,13 @@
                                 <th>Producto</th>
                                 <th>Total</th>
                                 <th>Fecha</th>
+                                <?php if ($_SESSION['is_admin'] === 1) { ?>
                                 <th></th>
+                                <?php } ?>
                             </tr>
                         </thead>
                         <tbody>
-                            <?php foreach($products as $sell): ?>
+                            <?php foreach ($sells as $sell) { ?>
                             <tr>
                                 <td style="width:30px;">
                                     <a href="index.php?view=onesell&id=<?php echo $sell->id; ?>" class="btn btn-xs btn-link"><i class="bi bi-eye"></i></a>
@@ -46,6 +77,8 @@
                                     ?>
                                 </td>
                                 <td><?php echo $sell->created_at; ?></td>
+
+                                <?php if ($_SESSION['is_admin'] === 1) { ?>
                                 <td style="width:30px;">
                                     <button 
                                         class="btn btn-xs btn-danger" 
@@ -55,8 +88,9 @@
                                         <i class="bi bi-trash"></i>
                                     </button>
                                 </td>
+                                <?php } ?>
                             </tr>
-                            <?php endforeach; ?>
+                            <?php } ?>
                         </tbody>
                     </table>
                 </div>
@@ -64,16 +98,46 @@
             </div>
         </div>
 
-        <?php
-        } else {
-        ?>
+ <!-- Paginación centrada debajo de la tabla -->
+ <div class="d-flex justify-content-center mt-3">
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination">
+                            <?php if ($page > 1): ?>
+                                <li class="page-item">
+                                    <a class="page-link" href="index.php?view=products&limit=<?php echo $limit; ?>&page=1">««</a>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link" href="index.php?view=products&limit=<?php echo $limit; ?>&page=<?php echo $page - 1; ?>">‹</a>
+                                </li>
+                            <?php endif; ?>
+
+                            <?php
+                            $startPage = max(1, $page - 2);
+                            $endPage = min($totalPages, $page + 2);
+                            for ($i = $startPage; $i <= $endPage; $i++): ?>
+                                <li class="page-item <?php echo ($i == $page) ? 'active' : ''; ?>">
+                                    <a class="page-link" href="index.php?view=products&limit=<?php echo $limit; ?>&page=<?php echo $i; ?>"><?php echo $i; ?></a>
+                                </li>
+                            <?php endfor; ?>
+
+                            <?php if ($page < $totalPages): ?>
+                                <li class="page-item">
+                                    <a class="page-link" href="index.php?view=products&limit=<?php echo $limit; ?>&page=<?php echo $page + 1; ?>">›</a>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link" href="index.php?view=products&limit=<?php echo $limit; ?>&page=<?php echo $totalPages; ?>">»»</a>
+                                </li>
+                            <?php endif; ?>
+                        </ul>
+                    </nav>
+                </div>
+
+        <?php } else { ?>
         <div class="jumbotron">
             <h2>No hay ventas</h2>
             <p>No se ha realizado ninguna venta.</p>
         </div>
-        <?php
-        }
-        ?>
+        <?php } ?>
 
         <!-- Modal de Confirmación -->
         <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
@@ -97,11 +161,15 @@
         <script>
             $(document).ready(function() {
                 $('#confirmDeleteModal').on('show.bs.modal', function (event) {
-                    var button = $(event.relatedTarget); // Botón que activó el modal
-                    var url = button.data('href'); // Extraer la URL del atributo data-href
-
+                    var button = $(event.relatedTarget);
+                    var url = button.data('href');
                     var modal = $(this);
                     modal.find('#confirmDeleteBtn').attr('href', url);
+                });
+
+                $('#limitSelect').on('change', function() {
+                    var limit = $(this).val();
+                    window.location.href = "?view=sells&page=1&limit=" + limit;
                 });
             });
         </script>

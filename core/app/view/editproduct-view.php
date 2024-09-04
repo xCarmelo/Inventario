@@ -5,10 +5,11 @@ $categories = CategoryData::getAll();
 if($product!=null): 
 ?>
 
-<div class="row">
-    <div class="col-md-12">
-        <h1><?php echo $product->name ?> <small>Editar Producto</small></h1>
-
+<div class="card">
+    <div class="card-header text-white">
+        <?php echo $product->name ?> <small>Editar Producto</small>
+    </div>
+    <div class="card-body">
         <!-- Modal -->
         <div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="updateModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
@@ -20,6 +21,7 @@ if($product!=null):
                         La información del producto se ha actualizado exitosamente.
                     </div>
                     <div class="modal-footer">
+                        <!-- Puedes añadir botones aquí si es necesario -->
                     </div>
                 </div>
             </div>
@@ -37,112 +39,73 @@ if($product!=null):
             </script>
         <?php endif; ?>
 
-        <div class="card">
-            <div class="card-header">
-                EDITAR PRODUCTO
+        <form class="row g-3" method="post" enctype="multipart/form-data" action="index.php?view=updateproduct&id=<?php echo $product->id; ?>" role="form">
+            <div class="col-md-6">
+                <label for="image" class="form-label">Imagen*</label>
+                <input type="file" name="image" id="image" accept="image/*" class="form-control" placeholder="">
+                <?php if($product->image!=""):?>
+                    <br>
+                    <img src="storage/products/<?php echo $product->image;?>" class="img-thumbnail" style="max-width: 150px;">
+                <?php endif;?>
             </div>
-            <div class="card-body">
-                <form class="form-horizontal" method="post" id="addproduct" enctype="multipart/form-data" action="index.php?view=updateproduct&id=<?php echo $product->id; ?>" role="form">
-                    <div class="form-group">
-                        <label for="image" class="col-lg-3 control-label">Imagen*</label>
-                        <div class="col-md-8">
-                            <input type="file" name="image" id="image" accept="image/*" class="form-control" placeholder="">
-                            <?php if($product->image!=""):?>
-                                <br>
-                                <img src="storage/products/<?php echo $product->image;?>" class="img-thumbnail" style="max-width: 150px;">
-                            <?php endif;?>
-                        </div>
-                    </div>
 
-                    <div class="form-group">
-                        <label for="barcode" class="col-lg-3 control-label">Código de barras*</label>
-                        <div class="col-md-8">
-                            <input type="text" name="barcode" class="form-control" id="barcode" value="<?php echo $product->barcode; ?>" placeholder="Código de barras del Producto" required pattern="[0-9]+" title="Ingresa un código de barras válido (solo números)">
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="name" class="col-lg-3 control-label">Nombre*</label>
-                        <div class="col-md-8">
-                            <input type="text" name="name" class="form-control" id="name" value="<?php echo $product->name; ?>" placeholder="Nombre del Producto" required>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="category_id" class="col-lg-3 control-label">Categoría</label>
-                        <div class="col-md-8">
-                            <select name="category_id" class="form-control">
-                                <option value="">-- NINGUNA --</option>
-                                <?php foreach($categories as $category):?>
-                                    <option value="<?php echo $category->id;?>" <?php if($product->category_id!=null && $product->category_id==$category->id){ echo "selected";}?>><?php echo $category->name;?></option>
-                                <?php endforeach;?>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="description" class="col-lg-3 control-label">Descripción</label>
-                        <div class="col-md-8">
-                            <textarea name="description" class="form-control" id="description" placeholder="Descripción del Producto" required title="Ingresa una descripción válida"><?php echo $product->description;?></textarea>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="price_in" class="col-lg-3 control-label">Precio de Entrada*</label>
-                        <div class="col-md-8">
-                            <input type="number" name="price_in" class="form-control" value="<?php echo $product->price_in; ?>" id="price_in" placeholder="Precio de entrada" required title="Ingresa un precio válido" step="0.01">
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="price_out" class="col-lg-3 control-label">Precio de Salida*</label>
-                        <div class="col-md-8">
-                            <input type="number" name="price_out" class="form-control" id="price_out" value="<?php echo $product->price_out; ?>" placeholder="Precio de salida" required title="Ingresa un precio válido">
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="unit" class="col-lg-3 control-label">Unidad*</label>
-                        <div class="col-md-8">
-                            <input type="text" name="unit" class="form-control" id="unit" value="<?php echo $product->unit; ?>" placeholder="Unidad del Producto" required title="Ingresa una unidad válida">
-                        </div>
-                    </div> 
-
-                    <div class="form-group">
-                        <label for="presentation" class="col-lg-3 control-label">Presentación</label>
-                        <div class="col-md-8">
-                            <input type="text" name="presentation" class="form-control" id="presentation" value="<?php echo $product->presentation; ?>" placeholder="Presentación del Producto" title="Ingresa una presentación válida">
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="inventary_min" class="col-lg-3 control-label">Mínima en inventario:</label>
-                        <div class="col-md-8">
-                            <input type="number" name="inventary_min" class="form-control" value="<?php echo $product->inventary_min;?>" id="inventary_min" placeholder="Mínima en Inventario (Default 10)" required title="Ingresa un valor numérico">
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="is_active" class="col-lg-3 control-label">¿Está activo?</label>
-                        <div class="col-md-8">
-                            <div class="checkbox">
-                                <label>
-                                    <input type="checkbox" name="is_active" <?php if($product->is_active){ echo "checked";}?>> 
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <div class="col-lg-offset-3 col-lg-8">
-                            <input type="hidden" name="product_id" value="<?php echo $product->id; ?>">
-                            <button type="submit" class="btn btn-success">Actualizar Producto</button>
-                        </div>
-                    </div>
-                </form>
+            <div class="col-md-6">
+                <label for="name" class="form-label">Nombre*</label>
+                <input type="text" name="name" class="form-control" id="name" value="<?php echo $product->name; ?>" placeholder="Nombre del Producto" required>
+                
+                <div class="col-md-12 mt-5">
+                    <label for="category_id" class="form-label">Categoría</label>
+                    <select name="category_id" class="form-control">
+                        <option value="">-- NINGUNA --</option>
+                        <?php foreach($categories as $category):?>
+                            <option value="<?php echo $category->id;?>" <?php if($product->category_id!=null && $product->category_id==$category->id){ echo "selected";}?>><?php echo $category->name;?></option>
+                        <?php endforeach;?>
+                    </select>
+                </div>
             </div>
-        </div>
-        <br><br>
+
+            <div class="col-md-6">
+                <label for="price_in" class="form-label">Precio de Entrada*</label>
+                <input type="number" name="price_in" class="form-control" value="<?php echo $product->price_in; ?>" id="price_in" placeholder="Precio de entrada" required title="Ingresa un precio válido" step="0.01">
+            </div>
+
+            <div class="col-md-6">
+                <label for="price_out" class="form-label">Precio de Salida*</label>
+                <input type="number" name="price_out" class="form-control" id="price_out" value="<?php echo $product->price_out; ?>" placeholder="Precio de salida" required title="Ingresa un precio válido">
+            </div>
+
+            <div class="col-md-6">
+                <label for="presentation" class="form-label">Presentación</label>
+                <input type="text" name="presentation" class="form-control" id="presentation" value="<?php echo $product->presentation; ?>" placeholder="Presentación del Producto" title="Ingresa una presentación válida">
+            </div>
+
+            <div class="col-md-6">
+                <label for="inventary_min" class="form-label">Mínima en inventario:</label>
+                <input type="number" name="inventary_min" class="form-control" value="<?php echo $product->inventary_min;?>" id="inventary_min" placeholder="Mínima en Inventario (Default 10)" required title="Ingresa un valor numérico">
+            </div>
+            
+            <div class="col-md-6">
+                <label for="description" class="form-label">Descripción</label>
+                <textarea name="description" class="form-control" id="description" placeholder="Descripción del Producto" required title="Ingresa una descripción válida"><?php echo $product->description;?></textarea>
+            </div>
+
+            <div class="col-md-6">
+                <label for="is_active" class="form-label">¿Está activo?</label>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="is_active" <?php if($product->is_active){ echo "checked";}?>> 
+                </div>
+            </div>
+
+
+            <div class="col-12">
+                <p class="alert alert-info">* Campos obligatorios</p>
+            </div>
+
+            <div class="col-12">
+                <input type="hidden" name="product_id" value="<?php echo $product->id; ?>">
+                <button type="submit" class="btn btn-success">Actualizar Producto</button>
+            </div>
+        </form>
     </div>
 </div>
 

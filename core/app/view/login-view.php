@@ -17,20 +17,15 @@ if(isset($_SESSION["user_id"]) && $_SESSION["user_id"]!=""){
 
     		</div>
     	<?php setcookie("password_updated","",time()-18600);
-    	 endif; ?>
+    	 endif; ?>	
 
-
-
-
-
-
-<div class="card">
-                              <div class="card-header" data-background-color="green">
-                                  <h4 class="title">Acceder al Inventario</h4>
-                              </div>
+				<div class="card">
+                    <div class="card-header" data-background-color="green">
+                        <h4 class="title">Acceder al Inventario</h4>
+                    </div>
                 <div class="card-content">
  
- <form accept-charset="UTF-8" role="form" method="post" action="index.php?view=processlogin">
+ 				<form accept-charset="UTF-8" role="form" method="post" action="index.php?view=processlogin">
                     <fieldset>
 			    	  	<div class="form-group">
 			    		    <input class="form-control" placeholder="Usuario" name="mail" type="text">
@@ -44,10 +39,6 @@ if(isset($_SESSION["user_id"]) && $_SESSION["user_id"]!=""){
 
                 </div>
               </div>
-
-
-
-
 		</div>
 	</div>
 	</div>

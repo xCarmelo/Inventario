@@ -1,7 +1,7 @@
 <?php class BoxData {
     public static $tablename = "box";
 
-    public function __construct(){
+    public function __construct(){ 
         $this->name = "";
         $this->lastname = "";
         $this->email = "";
@@ -13,13 +13,21 @@
         $this->created_at = date("Y-m-d H:i:s");
     }
 
-    public function add(){
-        $sql = "INSERT INTO " . self::$tablename . " (created_at) VALUES ($this->create_at)";
+    public function add() {
+        $sql = "INSERT INTO " . self::$tablename . " (created_at) VALUES (?)";
         $con = Database::getCon();
         $stmt = $con->prepare($sql);
-        $stmt->execute();
-        return array($stmt, $con->insert_id);
+        
+        if ($stmt) {
+            $stmt->bind_param('s', $this->created_at); // Asegúrate de vincular los parámetros correctamente
+            $stmt->execute();
+            return array($stmt, $con->insert_id);
+        } else {
+            // Manejar el error de la preparación de la declaración
+            return array(false, null);
+        }
     }
+    
 
     public static function delById($id){
         $sql = "DELETE FROM " . self::$tablename . " WHERE id=?";
