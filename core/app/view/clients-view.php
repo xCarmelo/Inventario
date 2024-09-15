@@ -25,7 +25,7 @@
                         $offset = ($page - 1) * $limit;
                         $curr_clients = array_slice($clients, $offset, $limit);
                     ?>
-
+ 
                     <!-- Selección del límite de clientes y número de página -->
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <div>
@@ -148,6 +148,25 @@
     </div>
 </div> 
 
+<!-- Modal para mensajes de éxito o error -->
+<div class="modal fade" id="resultModal" tabindex="-1" aria-labelledby="resultModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="resultModalLabel">Resultado</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p id="resultMessage"></p>
+            </div>
+            <div class="modal-footer"> 
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <script>
     $(document).ready(function() {
         $('#confirmDeleteModal').on('show.bs.modal', function (event) {
@@ -157,5 +176,18 @@
             var modal = $(this);
             modal.find('#confirmDeleteBtn').attr('href', url);
         });
+
+         // Mostrar el resultado según los parámetros de la URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const successMessage = urlParams.get('success');
+        const errorMessage = urlParams.get('error');
+
+        if (successMessage) {
+            $('#resultMessage').text(successMessage);
+            $('#resultModal').modal('show');
+        } else if (errorMessage) {
+            $('#resultMessage').text(errorMessage);
+            $('#resultModal').modal('show');
+        }
     });
 </script>

@@ -35,14 +35,24 @@ class OperationData {
         return $stmt;
     }
 
-    public function del(){
+    public function del() {
+        $con = Database::getCon(); // Obtiene la conexión a la base de datos
         $sql = "DELETE FROM " . self::$tablename . " WHERE id=?";
-        $con = Database::getCon();
-        $stmt = $con->prepare($sql);
-        $stmt->bind_param("i", $this->id);
-        $stmt->execute();
-        return $stmt;
+        $stmt = $con->prepare($sql); // Prepara la consulta SQL
+        
+        if ($stmt === false) {
+            throw new Exception("Error en la preparación de la consulta"); // Lanza una excepción si hay un error
+        }
+        
+        $stmt->bind_param("i", $this->id); // Asocia el parámetro ID
+        
+        if (!$stmt->execute()) { // Ejecuta la consulta y verifica si hubo un error
+            throw new Exception("Error al eliminar el registro");
+        }
+        
+        return $stmt; // Devuelve la declaración ejecutada
     }
+    
 
     public function update(){
         $sql = "UPDATE " . self::$tablename . " SET product_id=?, q=? WHERE id=?";
@@ -106,7 +116,7 @@ class OperationData {
         return ProductData::getById($this->product_id);
     }
 
-    public function getOperationtype(){ 
+    public function getOperationtype(){  
         return OperationTypeData::getById($this->operation_type_id);
     }
 

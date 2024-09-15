@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <title>Fiore di Carmelo</title>
+  <title>M. C. San Agustin</title>
     <base href="./">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.23.0/themes/prism.css">
     <link href="assets/css/style.css" rel="stylesheet">  
     <link rel="stylesheet" href="assets/css/stylesj.css">
-    <link rel="icon" type="image/jpg" href="assets/img/logo.jpg">
+    <link rel="icon" type="image/jpg" href="assets/img/logoMC.jpg">
     <script type="text/javascript" src="assets/node_modules/jquery/dist/jquery.min.js"></script>
 </head>
 <body>

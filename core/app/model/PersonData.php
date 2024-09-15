@@ -23,8 +23,9 @@ class PersonData {
         $sql = "INSERT INTO " . self::$tablename . " (name, lastname, address1, email1, phone1, kind, created_at) VALUES (?, ?, ?, ?, ?, 1, ?)";
         $con = Database::getCon();
         $stmt = $con->prepare($sql);
+        
         if ($stmt === false) {
-            die("Error en la preparación de la consulta: " . $con->error);
+            die("Error en la preparación de la consulta");
         }
         $stmt->bind_param("ssssss", $this->name, $this->lastname, $this->address1, $this->email1, $this->phone1, $this->created_at);
         $stmt->execute();
@@ -32,14 +33,19 @@ class PersonData {
     }
     
 
-    public function add_provider() {
-        $sql = "INSERT INTO " . self::$tablename . " (name, lastname, address1, email1, phone1, kind, created_at) VALUES (?, ?, ?, ?, ?, 2, NOW())";
+    public function add_provider() { 
+        $sql = "INSERT INTO " . self::$tablename . " (name, lastname, address1, email1, phone1, kind, created_at) VALUES (?, ?, ?, ?, ?, 2, ?)";
         $con = Database::getCon();
         $stmt = $con->prepare($sql);
-        $stmt->bind_param("sssss", $this->name, $this->lastname, $this->address1, $this->email1, $this->phone1);
+
+        if ($stmt === false) {
+            die("Error en la preparación de la consulta");
+        }
+        $stmt->bind_param("ssssss", $this->name, $this->lastname, $this->address1, $this->email1, $this->phone1, $this->created_at);
         $stmt->execute();
         return $stmt;
     }
+    
 
     public static function delById($id) {
         $sql = "DELETE FROM " . self::$tablename . " WHERE id=?";
@@ -51,13 +57,39 @@ class PersonData {
     }
 
     public function del() {
-        $sql = "DELETE FROM " . self::$tablename . " WHERE id=?";
         $con = Database::getCon();
+    
+        // Primero, actualizamos el campo person_id a NULL para que se pueda eliminar el proveedor
+        $updateSql = "UPDATE sell SET person_id = NULL WHERE person_id = ?";
+        $updateStmt = $con->prepare($updateSql);
+    
+        if ($updateStmt === false) {
+            throw new Exception("Error en la preparación de la consulta");
+        }
+    
+        $updateStmt->bind_param("i", $this->id);
+    
+        if (!$updateStmt->execute()) {
+            throw new Exception("Error al eliminar el proveedor");
+        }
+
+        //luego si podemos elimnar
+    
+        $sql = "DELETE FROM " . self::$tablename . " WHERE id=?";
         $stmt = $con->prepare($sql);
+        if ($stmt === false) {
+            throw new Exception("Error en la preparación de la consulta");
+        }
+        
         $stmt->bind_param("i", $this->id);
-        $stmt->execute();
+        
+        if (!$stmt->execute()) {
+            throw new Exception("Error al eliminar el proveedor");
+        }
+        
         return $stmt;
     }
+    
 
     public function update() {
         $sql = "UPDATE " . self::$tablename . " SET name=?, email1=?, address1=?, lastname=?, phone1=? WHERE id=?";

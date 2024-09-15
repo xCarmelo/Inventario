@@ -1,7 +1,7 @@
 <?php if (!empty($_GET["product"]) && $_GET["product"] !== ""): ?>
     <div class="card mt-5">
         <div class="card-header mt-1">
-            <span>Resultados de la Búsqueda</span>
+            <span>Resultados de la Búsqueda</span> 
         </div>
         <div class="card-body">
             <?php

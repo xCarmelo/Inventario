@@ -12,7 +12,7 @@ if(isset($_SESSION["cart"])){
 		foreach($cart as $c){
 
 			///
-			$q = OperationData::getQYesF($c["product_id"]);
+			$q = OperationData::getQYesF($c["product_id"]); 
 			if($c["q"]<=$q){
 				if(isset($_POST["is_oficial"])){
 				$qyf =OperationData::getQYesF($c["product_id"]); /// son los productos que puedo facturar

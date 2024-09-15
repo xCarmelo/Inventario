@@ -9,42 +9,44 @@
             <div class="card-body">
             <form class="form-horizontal" method="post" id="addproduct" action="index.php?view=addclient" role="form">
                 <div class="row">
-                    <div class="col-md-4">
+                    <div class="col-md-6">
                         <label for="validationCustom01" class="form-label">Nombre*</label>
                         <input value="<?php echo isset($_SESSION['form_data']['name']) ? $_SESSION['form_data']['name'] : ''; ?>" type="text" name="name" class="form-control <?php echo isset($_SESSION['errors']['name']) ? 'is-invalid' : ''; ?>" id="validationCustom01" placeholder="Nombre" pattern="^[A-Za-záéíóúÁÉÍÓÚñÑ\s]{2,80}$" title="Ingresa un nombre válido (solo letras, espacios y acentos) de al menos 2 caracteres" required>
                         <div class="invalid-feedback">
                             <?php echo isset($_SESSION['errors']['name']) ? $_SESSION['errors']['name'] : ''; ?>
                         </div>
-                    </div>
+                    </div> 
 
-                    <div class="col-md-4">
+                    <div class="col-md-6">
                         <label for="validationCustom02" class="form-label">Apellido*</label>
                         <input value="<?php echo isset($_SESSION['form_data']['lastname']) ? $_SESSION['form_data']['lastname'] : ''; ?>" type="text" name="lastname" class="form-control <?php echo isset($_SESSION['errors']['lastname']) ? 'is-invalid' : ''; ?>" id="validationCustom02" placeholder="Apellido" pattern="^[A-Za-záéíóúÁÉÍÓÚñÑ\s]{2,50}$" title="Ingresa un apellido válido (solo letras, espacios y acentos) de al menos 2 caracteres" required>
                         <div class="invalid-feedback">
                             <?php echo isset($_SESSION['errors']['lastname']) ? $_SESSION['errors']['lastname'] : ''; ?>
                         </div>
                     </div>
+                </div> 
 
-                    <div class="col-md-4">
+                <div class="row">
+                    <div class="col-md-6 mt-2">
                         <label for="validationCustom03" class="form-label">Dirección*</label>
                         <input value="<?php echo isset($_SESSION['form_data']['address1']) ? $_SESSION['form_data']['address1'] : ''; ?>" type="text" name="address1" class="form-control <?php echo isset($_SESSION['errors']['address1']) ? 'is-invalid' : ''; ?>" id="validationCustom03" placeholder="Dirección" pattern="^[A-Za-záéíóúÁÉÍÓÚñÑ0-9\s,-]{5,50}$" title="Ingresa una dirección válida (solo letras, números, espacios, guiones y comas) de al menos 5 caracteres" required>
                         <div class="invalid-feedback">
                             <?php echo isset($_SESSION['errors']['address1']) ? $_SESSION['errors']['address1'] : ''; ?>
                         </div>
                     </div>
-                </div>
 
-                <div class="row">
-                    <div class="col-md-4">
-                        <label for="validationCustom04" class="form-label mt-2">Email*</label>
+                    <div class="col-md-6 mt-2">
+                        <label for="validationCustom04" class="form-label">Email*</label>
                         <input value="<?php echo isset($_SESSION['form_data']['email1']) ? $_SESSION['form_data']['email1'] : ''; ?>" type="email" name="email1" class="form-control <?php echo isset($_SESSION['errors']['email1']) ? 'is-invalid' : ''; ?>" id="validationCustom04" placeholder="Email" required>
                         <div class="invalid-feedback">
                             <?php echo isset($_SESSION['errors']['email1']) ? $_SESSION['errors']['email1'] : ''; ?>
                         </div>
                     </div>
+                </div>
 
-                    <div class="col-md-4">
-                        <label for="validationCustom05" class="form-label mt-2">Teléfono*</label>
+                <div class="row">
+                    <div class="col-md-6 mt-2">
+                        <label for="validationCustom05" class="form-label">Teléfono*</label>
                         <input value="<?php echo isset($_SESSION['form_data']['phone1']) ? $_SESSION['form_data']['phone1'] : ''; ?>" type="text" name="phone1" class="form-control <?php echo isset($_SESSION['errors']['phone1']) ? 'is-invalid' : ''; ?>" id="validationCustom05" placeholder="Teléfono" pattern="[0-9]{8}" title="Ingresa un número de teléfono válido (8 dígitos)" required>
                         <div class="invalid-feedback">
                             <?php echo isset($_SESSION['errors']['phone1']) ? $_SESSION['errors']['phone1'] : ''; ?>
@@ -57,14 +59,8 @@
                     <div class="col-lg-offset-2 col-lg-10">
                         <button type="submit" class="btn btn-primary">Agregar Cliente</button>
                     </div>
-                </div>
-        </form>
-
-<?php
-// Limpiar los errores y los datos de sesión después de usarlos
-unset($_SESSION['errors']);
-unset($_SESSION['form_data']);
-?>
+                </div> 
+            </form>
 
         </div>
         </div>
@@ -104,28 +100,39 @@ unset($_SESSION['form_data']);
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <ul>
+                    <ul> 
                         <?php foreach ($_SESSION['errors'] as $error) : ?>
                             <li><?php echo $error; ?></li>
                         <?php endforeach; ?>
-                    </ul>
+                    </ul> 
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                </div>
+                </div> 
             </div>
         </div>
     </div>
 
-    <?php unset($_SESSION['errors']); ?>
 <?php endif; ?>
 
 <script>
     $(document).ready(function() {
         // Mostrar el modal de éxito si está presente
-        $('#successModal').modal('show');
+        var successModal = $('#successModal');
+        if (successModal.length > 0) {
+            successModal.modal('show');
+        }
 
         // Mostrar el modal de error si está presente
-        $('#errorModal').modal('show');
+        var errorModal = $('#errorModal');
+        if (errorModal.length > 0) {
+            errorModal.modal('show');
+        }
     });
 </script>
+
+<?php
+// Limpiar los errores y los datos de sesión después de usarlos
+unset($_SESSION['errors']);
+unset($_SESSION['form_data']);
+?>

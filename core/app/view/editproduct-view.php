@@ -1,133 +1,190 @@
-<?php
+<?php 
 $product = ProductData::getById($_GET["id"]);
 $categories = CategoryData::getAll();
-
-if($product!=null): 
 ?>
 
-<div class="card">
-    <div class="card-header text-white">
-        <?php echo $product->name ?> <small>Editar Producto</small>
-    </div>
-    <div class="card-body">
-        <!-- Modal -->
-        <div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="updateModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="updateModalLabel">Producto Actualizado</h5>
+<div class="row">
+    <div class="col-md-12"> 
+        <h1>Editar Producto</h1>
+
+        <div class="card">
+            <div class="card-header text-white">Editar Producto</div>
+            <div class="card-body">
+                <form class="row g-3" method="post" enctype="multipart/form-data" id="editproduct" action="index.php?view=updateproduct" role="form">
+                <div class="col-md-6">
+                    <label for="image" class="form-label">Imagen</label>
+                    <input type="file" name="image" id="image" class="form-control <?php echo isset($_SESSION['errors']['image']) ? 'is-invalid' : ''; ?>">
+                    <div class="invalid-feedback">
+                        <?php echo isset($_SESSION['errors']['image']) ? $_SESSION['errors']['image'] : ''; ?>
                     </div>
-                    <div class="modal-body">
-                        La información del producto se ha actualizado exitosamente.
-                    </div>
-                    <div class="modal-footer">
-                        <!-- Puedes añadir botones aquí si es necesario -->
+
+                    <div class="form-group">
+                        <label for="current_image">Imagen actual</label>
+                        <div class="mb-3">
+                            <?php if (!empty($product->image)):?>
+                                <img src="storage/products/<?php echo $product->image; ?>" alt="Imagen del producto" class="img-thumbnail" style="max-width: 200px;">
+                            <?php else: ?>
+                                <p>No hay imagen disponible para este producto.</p>
+                            <?php endif; ?>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
 
-        <!-- Mostrar modal si se ha actualizado el producto -->
-        <?php if (isset($_GET['updated'])): ?>
-            <script>
-                $(document).ready(function(){
-                    $('#updateModal').modal('show');
-                    setTimeout(function(){
-                        window.location.href = 'index.php?view=products'; // Cambia 'products' a la vista o URL que deseas redirigir
-                    }, 2000); // Redirigir después de 2 segundos
-                });
-            </script>
-        <?php endif; ?>
+                <div class="col-md-6">
+                    <label for="name" class="form-label">Nombre*</label>
+                    <input type="text" name="name" id="name" class="form-control <?php echo isset($_SESSION['errors']['name']) ? 'is-invalid' : ''; ?>" value="<?php echo isset($_SESSION['form_data']['name']) ? $_SESSION['form_data']['name'] : $product->name; ?>" placeholder="Nombre del Producto" pattern="^[A-Za-záéíóúÁÉÍÓÚñÑ\s0-9]{2,80}$" title="Ingresa el nombre del producto" required>
+                    <div class="invalid-feedback">
+                        <?php echo isset($_SESSION['errors']['name']) ? $_SESSION['errors']['name'] : ''; ?>
+                    </div>
+                    <div class="col-md-12 mt-5">
+                        <label for="category_id" class="form-label">Categoría</label>
+                        <select name="category_id" class="form-control <?php echo isset($_SESSION['errors']['category_id']) ? 'is-invalid' : ''; ?>">
+                            <option value="0">-- NINGUNA --</option>
+                            <?php foreach($categories as $category): ?>
+                                <option value="<?php echo $category->id;?>" <?php echo (isset($_SESSION['form_data']['category_id']) ? $_SESSION['form_data']['category_id'] : $product->category_id) == $category->id ? 'selected' : ''; ?>>
+                                    <?php echo $category->name;?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                        <div class="invalid-feedback">
+                            <?php echo isset($_SESSION['errors']['category_id']) ? $_SESSION['errors']['category_id'] : ''; ?>
+                        </div>
+                    </div>
+    
+                    <div class="col-md-12 mt-5">
+                        <label for="price_in" class="form-label">Precio de Entrada*</label>
+                        <input type="text" id="miNumero" name="price_in" id="price_in" class="form-control <?php echo isset($_SESSION['errors']['price_in']) ? 'is-invalid' : ''; ?>" value="<?php echo isset($_SESSION['form_data']['price_in']) ? $_SESSION['form_data']['price_in'] : $product->price_in; ?>" placeholder="Precio de entrada" min="0" step="0.01" title="Ingresa el precio de entrada como un número" required>
+                        <div class="invalid-feedback">
+                            <?php echo isset($_SESSION['errors']['price_in']) ? $_SESSION['errors']['price_in'] : ''; ?>
+                        </div>
+                    </div>
+                </div>
 
-        <form class="row g-3" method="post" enctype="multipart/form-data" action="index.php?view=updateproduct&id=<?php echo $product->id; ?>" role="form">
-            <div class="col-md-6">
-                <label for="image" class="form-label">Imagen*</label>
-                <input type="file" name="image" id="image" accept="image/*" class="form-control" placeholder="">
-                <?php if($product->image!=""):?>
-                    <br>
-                    <img src="storage/products/<?php echo $product->image;?>" class="img-thumbnail" style="max-width: 150px;">
-                <?php endif;?>
-            </div>
 
-            <div class="col-md-6">
-                <label for="name" class="form-label">Nombre*</label>
-                <input type="text" name="name" class="form-control" id="name" value="<?php echo $product->name; ?>" placeholder="Nombre del Producto" required>
+                <div class="col-md-6">
+                    <label for="price_out" class="form-label">Precio de Salida*</label>
+                    <input type="text" id="miNumero" name="price_out" id="price_out" class="form-control <?php echo isset($_SESSION['errors']['price_out']) ? 'is-invalid' : ''; ?>" value="<?php echo isset($_SESSION['form_data']['price_out']) ? $_SESSION['form_data']['price_out'] : $product->price_out; ?>" placeholder="Precio de salida" min="0" step="0.01" title="Ingresa un número positivo" required>
+                    <div class="invalid-feedback">
+                        <?php echo isset($_SESSION['errors']['price_out']) ? $_SESSION['errors']['price_out'] : ''; ?>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <label for="presentation" class="form-label">Presentación</label>
+                    <input type="text" name="presentation" id="presentation" class="form-control <?php echo isset($_SESSION['errors']['presentation']) ? 'is-invalid' : ''; ?>" value="<?php echo isset($_SESSION['form_data']['presentation']) ? $_SESSION['form_data']['presentation'] : $product->presentation; ?>" placeholder="Presentación del Producto">
+                    <div class="invalid-feedback">
+                        <?php echo isset($_SESSION['errors']['presentation']) ? $_SESSION['errors']['presentation'] : ''; ?>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <label for="inventary_min" class="form-label">Mínima en Inventario</label>
+                    <input type="number" name="inventary_min" id="inventary_min" class="form-control <?php echo isset($_SESSION['errors']['inventary_min']) ? 'is-invalid' : ''; ?>" value="<?php echo isset($_SESSION['form_data']['inventary_min']) ? $_SESSION['form_data']['inventary_min'] : $product->inventary_min; ?>" placeholder="Mínima en Inventario">
+                    <div class="invalid-feedback">
+                        <?php echo isset($_SESSION['errors']['inventary_min']) ? $_SESSION['errors']['inventary_min'] : ''; ?>
+                    </div> 
+                </div>
+ 
+                <div class="col-md-6">
+                    <label for="is_active" class="form-label">¿Está activo?</label>
+                    <div class="form-check">
+                        <input class="form-check-input <?php echo isset($_SESSION['errors']['is_active']) ? 'is-invalid' : ''; ?>" type="checkbox" name="is_active" <?php if($product->is_active){ echo "checked";}?>>
+                        <div class="invalid-feedback">
+                            <?php if (isset($_SESSION['errors']['is_active'])) { ?>
+                                <?= $_SESSION['errors']['is_active'] ?>
+                            <?php } ?>
+                        </div>
+                    </div>
+                </div> 
+
+                <div class="col-md-12">
+                    <label for="description" class="form-label">Descripción</label>
+                    <textarea name="description" id="description" class="form-control <?php echo isset($_SESSION['errors']['description']) ? 'is-invalid' : ''; ?>" placeholder="Descripción del Producto"><?php echo isset($_SESSION['form_data']['description']) ? $_SESSION['form_data']['description'] : $product->description; ?></textarea>
+                    <div class="invalid-feedback">
+                        <?php echo isset($_SESSION['errors']['description']) ? $_SESSION['errors']['description'] : ''; ?>
+                    </div>
+                </div>
+
+                <div class="col-12">
+                    <p class="alert alert-info">* Campos obligatorios</p>
+                </div>
                 
-                <div class="col-md-12 mt-5">
-                    <label for="category_id" class="form-label">Categoría</label>
-                    <select name="category_id" class="form-control">
-                        <option value="">-- NINGUNA --</option>
-                        <?php foreach($categories as $category):?>
-                            <option value="<?php echo $category->id;?>" <?php if($product->category_id!=null && $product->category_id==$category->id){ echo "selected";}?>><?php echo $category->name;?></option>
-                        <?php endforeach;?>
-                    </select>
+                <div class="col-12">
+                    <input type="hidden" name="product_id" value="<?php echo $product->id; ?>">
+                    <button type="submit" class="btn btn-primary">Actualizar Producto</button>
                 </div>
-            </div>
-
-            <div class="col-md-6">
-                <label for="price_in" class="form-label">Precio de Entrada*</label>
-                <input type="number" name="price_in" class="form-control" value="<?php echo $product->price_in; ?>" id="price_in" placeholder="Precio de entrada" required title="Ingresa un precio válido" step="0.01">
-            </div>
-
-            <div class="col-md-6">
-                <label for="price_out" class="form-label">Precio de Salida*</label>
-                <input type="number" name="price_out" class="form-control" id="price_out" value="<?php echo $product->price_out; ?>" placeholder="Precio de salida" required title="Ingresa un precio válido">
-            </div>
-
-            <div class="col-md-6">
-                <label for="presentation" class="form-label">Presentación</label>
-                <input type="text" name="presentation" class="form-control" id="presentation" value="<?php echo $product->presentation; ?>" placeholder="Presentación del Producto" title="Ingresa una presentación válida">
-            </div>
-
-            <div class="col-md-6">
-                <label for="inventary_min" class="form-label">Mínima en inventario:</label>
-                <input type="number" name="inventary_min" class="form-control" value="<?php echo $product->inventary_min;?>" id="inventary_min" placeholder="Mínima en Inventario (Default 10)" required title="Ingresa un valor numérico">
-            </div>
-            
-            <div class="col-md-6">
-                <label for="description" class="form-label">Descripción</label>
-                <textarea name="description" class="form-control" id="description" placeholder="Descripción del Producto" required title="Ingresa una descripción válida"><?php echo $product->description;?></textarea>
-            </div>
-
-            <div class="col-md-6">
-                <label for="is_active" class="form-label">¿Está activo?</label>
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" name="is_active" <?php if($product->is_active){ echo "checked";}?>> 
-                </div>
-            </div>
-
-
-            <div class="col-12">
-                <p class="alert alert-info">* Campos obligatorios</p>
-            </div>
-
-            <div class="col-12">
-                <input type="hidden" name="product_id" value="<?php echo $product->id; ?>">
-                <button type="submit" class="btn btn-success">Actualizar Producto</button>
-            </div>
-        </form>
+            </form>
+            <?php
+                // Limpiar los errores y los datos de sesión después de usarlos
+                unset($_SESSION['errors']);
+                unset($_SESSION['form_data']);
+                ?>
+        </div>
     </div>
 </div>
 
+<!-- Modal de éxito -->
+<div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="successModalLabel">
+                    <i class="bi bi-check-circle text-success"></i> Éxito
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                El cliente se agregó correctamente.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <a href="index.php?view=categories" class="btn btn-primary">Continuar</a>
+            </div>
+        </div>
+    </div>
+</div> 
+
+<!-- Modal de error -->
+<div class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="errorModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="errorModalLabel">
+                    <i class="bi bi-exclamation-circle text-danger"></i> Error
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Hubo un error al editar al cliente. Por favor, inténtalo de nuevo.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div> 
+    </div> 
+</div>
+
 <script>
-    document.getElementById('addproduct').addEventListener('submit', function(e) {
-        var fileInput = document.getElementById('image');
-        var filePath = fileInput.value;
-        var allowedExtensions = /(\.jpg|\.jpeg|\.png|\.gif)$/i;
-        if(fileInput.files.length > 0 && !allowedExtensions.exec(filePath)){
-            alert('Por favor, cargue un archivo de imagen válido (jpg, jpeg, png, gif).');
-            fileInput.value = '';
-            e.preventDefault();
-        }
-    });
+$(document).ready(function() {
+    // Verificar si se pasó un parámetro en la URL para mostrar el modal correspondiente
+    const urlParams = new URLSearchParams(window.location.search);
+    const result = urlParams.get('result'); 
+    if (result === 'success') {
+        var successModal = new bootstrap.Modal(document.getElementById('successModal'));
+        successModal.show();
+    } else if (result === 'error') {
+        var errorModal = new bootstrap.Modal(document.getElementById('errorModal'));
+        errorModal.show();
+    }
+
+    // Validar que el precio de entrada y salida sean numero y puedan inpluir decimales
+    function validarNumero() {
+    const numero = document.getElementById("miNumero").value;
+      const regex = /^[0-9]*(\.[0-9]+)?$/; // Permite cualquier número decimal
+    if (!regex.test(numero)) {
+        alert("Por favor, ingresa un número válido");
+    }
+    }
+});
+
 </script>
-
-<?php endif; ?>
-
-<?php
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Lógica para actualizar el producto
-    $product_id = $_POST['product_id'];
-    exit();
-}
-?>

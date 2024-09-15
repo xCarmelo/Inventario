@@ -38,69 +38,62 @@
     </div>
 </div>
 
+
 <!-- Modal de éxito -->
-<div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="successModalLabel">
-                    <i class="bi bi-check-circle text-success"></i> Éxito
-                </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                La categoría se agregó correctamente.
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                <a href="index.php?view=categories" class="btn btn-primary">Continuar</a>
+<?php if (isset($_SESSION['success'])) : ?>
+    <div class="modal fade show" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="successModalLabel">¡Éxito!</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <?php echo $_SESSION['success']; ?>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <a href="index.php?view=clients" class="btn btn-primary">Ir a Clientes</a> <!-- Segundo botón -->
+                </div>
             </div>
         </div>
     </div>
-</div>
+
+    <?php unset($_SESSION['success']); ?>
+<?php endif; ?>
 
 <!-- Modal de error -->
-<div class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="errorModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="errorModalLabel">
-                    <i class="bi bi-exclamation-circle text-danger"></i> Error
-                </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                Hubo un error al agregar la categoría. Por favor, inténtalo de nuevo.
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+<?php if (isset($_SESSION['errors']) && !empty($_SESSION['errors'])) : ?>
+    <div class="modal fade show" id="errorModal" tabindex="-1" aria-labelledby="errorModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="errorModalLabel">¡Error!</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <ul>
+                        <?php foreach ($_SESSION['errors'] as $error) : ?>
+                            <li><?php echo $error; ?></li>
+                        <?php endforeach; ?>
+                    </ul>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
+
+    <?php unset($_SESSION['errors']); ?>
+<?php endif; ?>
 
 <script>
-$(document).ready(function() {
-    // Verificar si se pasó un parámetro en la URL para mostrar el modal correspondiente
-    const urlParams = new URLSearchParams(window.location.search);
-    const result = urlParams.get('result');
-    if (result === 'success') {
-        var successModal = new bootstrap.Modal(document.getElementById('successModal'));
-        successModal.show();
-    } else if (result === 'error') {
-        var errorModal = new bootstrap.Modal(document.getElementById('errorModal'));
-        errorModal.show();
-    }
+    $(document).ready(function() {
+        // Mostrar el modal de éxito si está presente
+        $('#successModal').modal('show');
 
-    // Mostrar errores de validación o de la base de datos
-    <?php if (isset($_SESSION['error_msg'])) { ?>
-        var errorMessages = $("#error-messages");
-        var errorList = errorMessages.find("ul");
-        errorList.append("<li><?php echo $_SESSION['error_msg']; ?></li>");
-        <?php unset($_SESSION['error_msg']); ?>
-        errorMessages.show();
-    <?php } ?>
-});
-
-
+        // Mostrar el modal de error si está presente
+        $('#errorModal').modal('show');
+    });
 </script>

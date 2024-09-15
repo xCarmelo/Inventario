@@ -150,7 +150,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                ¿Estás seguro de que deseas eliminar este producto? Esta acción no se puede deshacer.
+                ¿Estás seguro de que deseas eliminar este producto? <strong>Las entradas y salidas se eliminaran.</strong> 
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
@@ -189,22 +189,43 @@
     </div>
 </div>
 
-<!-- JavaScript para el Modal de Imágenes -->
+<!-- JavaScript para el Modal de Imágenes --> 
 <script>
-document.addEventListener("DOMContentLoaded", function() {
-    var images = document.getElementsByClassName('custom-modal-trigger');
-    var modal = new bootstrap.Modal(document.getElementById('imgModal'));
-    var modalImage = document.getElementById('modalImage');
+    $(document).ready(function() {
+        $('#confirmDeleteModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget); // Botón que activó el modal
+            var url = button.data('href'); // Extraer la URL del atributo data-href
 
-    for (var i = 0; i < images.length; i++) {
-        images[i].addEventListener('mouseover', function() {
-            modalImage.src = this.src;
-            modal.show();
+            var modal = $(this);
+            modal.find('#confirmDeleteBtn').attr('href', url);
         });
 
-        images[i].addEventListener('mouseleave', function() {
-            modal.hide();
-        });
-    }
-});
+         // Mostrar el resultado según los parámetros de la URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const successMessage = urlParams.get('success');
+        const errorMessage = urlParams.get('error');
+
+        if (successMessage) {
+            $('#resultMessage').text(successMessage);
+            $('#resultModal').modal('show');
+        } else if (errorMessage) {
+            $('#resultMessage').text(errorMessage);
+            $('#resultModal').modal('show');
+        }
+
+        var images = document.getElementsByClassName('custom-modal-trigger');
+        var modal = new bootstrap.Modal(document.getElementById('imgModal'));
+        var modalImage = document.getElementById('modalImage');
+
+        for (var i = 0; i < images.length; i++) {
+            images[i].addEventListener('mouseover', function() {
+                modalImage.src = this.src;
+                modal.show();
+            });
+
+            images[i].addEventListener('mouseleave', function() {
+                modal.hide();
+            });    
+        }
+    });
 </script>

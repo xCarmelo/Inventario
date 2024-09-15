@@ -2,12 +2,12 @@
 <div class="row">
     <div class="col-12">
     <h1><i class="bi bi-cash-coin"></i> Venta</h1>
-        <p class="mt-4"><b>Buscar producto por nombre o por código:</b></p>
+        <p class="mt-4"><b>Buscar producto por nombre</b></p>
         <form id="searchp">
             <div class="row">
                 <div class="col-md-6 col-12 mb-2 mb-md-0">
                     <input type="hidden" name="view" value="sell">
-                    <input type="text" id="product_code" name="product" class="form-control" placeholder="Nombre o código del producto">
+                    <input type="text" id="product_code" name="product" class="form-control" placeholder="Nombre">
                 </div>
                 <div class="col-md-3 col-12">
                     <button type="submit" class="btn btn-primary w-100  fw-bold"><i class="glyphicon glyphicon-search"></i> Buscar</button>
@@ -128,7 +128,7 @@
         <div class="mb-3 row">
             <label for="money" class="col-sm-2 col-form-label">Efectivo</label>
             <div class="col-sm-10">
-                <input type="text" name="money" required class="form-control" id="money" placeholder="Efectivo">
+                <input type="number" name="money" required class="form-control" id="money" placeholder="Efectivo">
             </div>
         </div>
         <input id="totalSell" type="hidden" name="total" value="<?php echo $total; ?>" class="form-control" placeholder="Total">

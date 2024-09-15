@@ -2,14 +2,14 @@
     <div class="row">
         <div class="col-12">
             <h1><i class="bi bi-cart-check"></i> Realizar Compra</h1>
-            <p class="mt-5"><b>Buscar producto por nombre o por código:</b></p>
+            <p class="mt-5"><b>Buscar producto por nombre</b></p>
             <form>
-                <div class="row">
+                <div class="row"> 
                     <div class="col-md-6 col-12 mb-2 mb-md-0">
                         <input type="hidden" name="view" value="re">
                         <input type="text" name="product" class="form-control" placeholder="Nombre o código del producto">
                     </div>
-                    <div class="col-md-3 col-12">
+                    <div class="col-md-3 col-12"> 
                         <button type="submit" class="btn btn-primary w-100 fw-bold"><i class="glyphicon glyphicon-search"></i> Buscar</button>
                     </div>
                 </div>

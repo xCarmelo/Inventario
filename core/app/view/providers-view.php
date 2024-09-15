@@ -10,7 +10,7 @@
         </div>
 
         <div class="card">
-            <div class="card-header">
+            <div class="card-header"> 
                 PROVEEDORES
             </div>
             <div class="card-body">
@@ -70,7 +70,7 @@
                                     </a>
                                     <button class="btn btn-danger btn-sm d-inline btn-style" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" data-href="index.php?view=delprovider&id=<?php echo $user->id; ?>">
                                         <i class="bi bi-trash"></i>
-                                    </button>
+                                    </button> 
                                 </td>
                             </tr>
                             <?php endforeach; ?>
@@ -141,6 +141,26 @@
     </div>
 </div>
 
+
+<!-- Modal para mensajes de éxito o error -->
+<div class="modal fade" id="resultModal" tabindex="-1" aria-labelledby="resultModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="resultModalLabel">Resultado</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p id="resultMessage"></p>
+            </div>
+            <div class="modal-footer"> 
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <script>
     $(document).ready(function() {
         $('#confirmDeleteModal').on('show.bs.modal', function (event) {
@@ -150,6 +170,20 @@
             var modal = $(this);
             modal.find('#confirmDeleteBtn').attr('href', url);
         });
+
+         // Mostrar el resultado según los parámetros de la URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const successMessage = urlParams.get('success');
+        const errorMessage = urlParams.get('error');
+
+        if (successMessage || errorMessage) {
+            $('#resultMessage').text(successMessage || errorMessage);
+            $('#resultModal').modal('show');
+
+            // Limpiar los parámetros de la URL después de mostrar el mensaje
+            window.history.replaceState({}, document.title, window.location.pathname);
+        }
+
     });
 </script>
     

@@ -42,73 +42,52 @@ class ProductData {
     }
 
     public function add() {
+        $sql = "INSERT INTO " . self::$tablename . " 
+                (name, description, price_in, price_out, user_id, presentation, category_id, inventary_min, created_at) 
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                
         $con = Database::getCon();
-
-        // 1. Validar datos antes de la inserción
-        $errors = $this->validate(); 
-    
-        // 1. Validar datos antes de la inserción (opcional pero recomendado)
-        // Aquí puedes agregar validaciones para asegurarte de que los datos sean correctos
-        // antes de intentar insertarlos en la base de datos.
-    
-        $stmt = $con->prepare(
-            "INSERT INTO " . self::$tablename . " 
-            (barcode, name, description, price_in, price_out, user_id, presentation, unit, category_id, inventary_min, created_at) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)" // Nota: se cambió $this->created_at por ?
+        $stmt = $con->prepare($sql);
+        
+        $stmt->bind_param("ssddisiis", 
+            $this->name, $this->description, $this->price_in, $this->price_out, 
+            $this->user_id, $this->presentation, $this->category_id, $this->inventary_min, 
+            $this->created_at
         );
+        
+        $stmt->execute();
+        return $stmt;
+    }
+
+
+    public function add_with_image() { 
+        $sql = "INSERT INTO " . self::$tablename . " 
+                (image, name, description, price_in, price_out, user_id, presentation, category_id, inventary_min, created_at) 
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $con = Database::getCon();
+        $stmt = $con->prepare($sql);
     
-        if (!$stmt) { // Verificar si la preparación de la sentencia falló
-            throw new Exception("Error al preparar la sentencia: " . $con->error);
+        if ($stmt === false) {
+            die("Error en la preparación de la consulta");
         }
     
+        // Asignar valores nulos si no están definidos
         $category_id = $this->category_id ?? null;
         $inventary_min = $this->inventary_min ?? null;
         $created_at = date("Y-m-d H:i:s"); // Obtener la fecha y hora actual
     
-        $stmt->bind_param("sssddissiis", 
-            $this->barcode, $this->name, $this->description, $this->price_in, 
-            $this->price_out, $this->user_id, $this->presentation, $this->unit, 
+        // Asignar parámetros a la consulta
+        $stmt->bind_param("sssddisiis", 
+            $this->image, $this->name, $this->description, 
+            $this->price_in, $this->price_out, $this->user_id, $this->presentation, 
             $category_id, $inventary_min, $created_at
         );
     
-        if ($stmt->execute()) {
-            header("Location: index.php?view=products&success=Producto agregado exitosamente"); 
-        } else {
-            error_log("Error adding product: " . $stmt->error);
-            header("Location: index.php?view=products&error=Error al agregar el producto. Verifica los datos e inténtalo de nuevo."); 
-        }
-    
-        $stmt->close();
-        exit();
+        $stmt->execute();
+
+        return $stmt;
     }
 
-    public function add_with_image() {
-        $con = Database::getCon();
-        $stmt = $con->prepare(
-            "INSERT INTO " . self::$tablename . " 
-            (barcode, image, name, description, price_in, price_out, user_id, presentation, unit, category_id, inventary_min, created_at) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, $this->created_at)"
-        );
-
-        $category_id = $this->category_id ?? null;
-        $inventary_min = $this->inventary_min ?? null;
-
-        $stmt->bind_param("ssssddissii", 
-            $this->barcode, $this->image, $this->name, $this->description, 
-            $this->price_in, $this->price_out, $this->user_id, $this->presentation, 
-            $this->unit, $category_id, $inventary_min
-        );
-
-        if ($stmt->execute()) {
-            header("Location: index.php?view=products");
-        } else {
-            error_log("Error adding product with image: " . $stmt->error);
-            header("Location: index.php?view=addproduct&result=error");
-        }
-
-        $stmt->close();
-        exit();
-    }
 
     public static function delById($id) {
         $con = Database::getCon();
@@ -120,37 +99,44 @@ class ProductData {
         $stmt->close();
     }
 
-    public function del(){
-		$sql = "delete from ".self::$tablename." where id=$this->id";
-		Executor::doit($sql);
-	}
+    public function del() { 
+        $con = Database::getCon(); // Obtiene la conexión a la base de datos
+        $sql = "DELETE FROM " . self::$tablename . " WHERE id=?";
+        $stmt = $con->prepare($sql); // Prepara la consulta SQL
+        
+        if ($stmt === false) {
+            throw new Exception("Error en la preparación de la consulta"); // Lanza una excepción si hay un error
+        }
+        
+        $stmt->bind_param("i", $this->id); // Asocia el parámetro ID
+        
+        if (!$stmt->execute()) { // Ejecuta la consulta y verifica si hubo un error
+            throw new Exception("Error al eliminar el registro");
+        }
+        
+        return $stmt; // Devuelve la declaración ejecutada
+    }
 
     public function update() {
             $con = Database::getCon();
             $stmt = $con->prepare(
                 "UPDATE " . self::$tablename . " 
-                SET barcode = ?, name = ?, price_in = ?, price_out = ?, unit = ?, 
+                SET name = ?, price_in = ?, price_out = ?, 
                 presentation = ?, category_id = ?, inventary_min = ?, 
                 description = ?, is_active = ? WHERE id = ?"
             );
-            $stmt->bind_param("ssddssiisii", 
-                $this->barcode, $this->name, $this->price_in, $this->price_out, 
-                $this->unit, $this->presentation, $this->category_id, 
+            $stmt->bind_param("sddsiisii", 
+                $this->name, $this->price_in, $this->price_out, 
+                $this->presentation, $this->category_id, 
                 $this->inventary_min, $this->description, $this->is_active, $this->id
             );
 
-            if (!$stmt->execute()) {
-                error_log("Error updating product: " . $stmt->error);
-                echo "<script>console.error('Error updating product: " . $stmt->error . "');</script>";
-            } else {
-                echo "<script>console.log('Product updated successfully');</script>";
-            }
+            return $stmt->execute();
 
-            $stmt->close();
         }
 
     
-        public function del_category() {
+    public function del_category() {
         $con = Database::getCon();
         $stmt = $con->prepare("UPDATE " . self::$tablename . " SET category_id = NULL WHERE id = ?");
         $stmt->bind_param("i", $this->id);
@@ -164,10 +150,7 @@ class ProductData {
         $con = Database::getCon();
         $stmt = $con->prepare("UPDATE " . self::$tablename . " SET image = ? WHERE id = ?");
         $stmt->bind_param("si", $this->image, $this->id);
-        if (!$stmt->execute()) {
-            error_log("Error updating product image: " . $stmt->error);
-        }
-        $stmt->close();
+        return $stmt->execute();
     }
 
     public static function getById($id) {

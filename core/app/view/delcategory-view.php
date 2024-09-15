@@ -28,7 +28,7 @@ try {
 
 } catch (Exception $e) {
     // Redirigir con mensaje de error
-    Core::redir("./index.php?view=categories&error=" . urlencode($e->getMessage()));
+    Core::redir("./index.php?view=categories&error=" . urlencode('Error al eliminar la categoria'));
 }
 
 ?>

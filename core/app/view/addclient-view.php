@@ -1,6 +1,6 @@
 <?php
 
-    function validate_data($data) {
+    function validate_data($data) { 
 		$errors = [];
 		$valid = true;
 
@@ -33,36 +33,40 @@
         if (!$valid) {
 			$_SESSION['errors'] = $errors;
 			$_SESSION['form_data'] = $_POST;
-			header("Location: index.php?view=newclient");
+			header("Location: index.php?view=newclient&result=error"); 
 			exit();
 		}
 		else return $errors;
-    }
- 
+    } 
 
-if (count($_POST) > 0) {
-    $user = new PersonData();
-    $errors = validate_data($_POST);
+	if (count($_POST) > 0) {
+		$user = new PersonData();
+		$errors = validate_data($_POST);
+	
+		if (count($errors) == 0) {
+			// Si no hay errores, agregar el cliente 
+			$user->name = $_POST["name"];
+			$user->lastname = $_POST["lastname"];
+			$user->address1 = $_POST["address1"]; 
+			$user->email1 = $_POST["email1"]; 
+			$user->phone1 = $_POST["phone1"]; 
+	
+			$user->add_client();
+	
+			// En lugar de redirigir, establecer una baandera de éxito
+			$_SESSION['success'] = 'Cliente agregado exitosamente.';
+			$_SESSION['redirect_to'] = 'index.php?view=clients';
+		} else {
+			// Establecer la variable de errores
+			$_SESSION['errors'] = $errors;
+			$_SESSION['form_data'] = $_POST;  // Mantener los datos ingresados
+			// No redirect, let the page render with the error modal
+		}
 
-    if (count($errors) == 0) {
-        // Si no hay errores, agregar el cliente
-        $user->name = $_POST["name"];
-		$user->lastname = $_POST["lastname"];
-		$user->address1 = $_POST["address1"];
-		$user->email1 = $_POST["email1"]; 
-		$user->phone1 = $_POST["phone1"]; 
+		// Redirigir siempre a la misma página para mostrar el modal
+		header("Location: index.php?view=newclient&result=error");
+		exit();
+	}
+	
 
-		$user->add_client();
-
-        // En lugar de redirigir, establecer una baandera de éxito
-        $_SESSION['success'] = 'Cliente agregado exitosamente.';
-		$_SESSION['redirect_to'] = 'index.php?view=clients';
-    } else {
-       // Si hay errores, establecer la variable de errores
-		$_SESSION['errors'] = $errors;
-    }
-
-	// Redirigir siempre a la misma página para mostrar el modal
-    header("Location: index.php?view=newclient");
-    exit();
-}
+?>

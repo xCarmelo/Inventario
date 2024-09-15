@@ -116,7 +116,7 @@
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                 </div>
             </div>
-        </div>
+        </div> 
     </div>
 
     <?php unset($_SESSION['errors']); ?>

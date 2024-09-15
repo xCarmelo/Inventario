@@ -5,8 +5,8 @@ function validarCategoria($categoria) {
         return "La categoría debe contener entre 3 y 30 caracteres alfanuméricos";
     }
     return true;
-}
-
+} 
+ 
 if(count($_POST) > 0){
     $categoria = $_POST["categoria"];
 
@@ -14,7 +14,7 @@ if(count($_POST) > 0){
     if (CategoryData::searchCategory($categoria)) {
         $_SESSION['error_msg'] = "La categoría ya existe.";
         print "<script>window.location='index.php?view=newcategory&result=error';</script>";
-        exit;
+        exit; 
     }
 
     $user = new CategoryData();

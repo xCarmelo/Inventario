@@ -30,12 +30,12 @@
 		}
 
         if (!$valid) {
-			$_SESSION['errors'] = $errors;
-			$_SESSION['form_data'] = $_POST;
-			header("Location: index.php?view=newclient");
+			$_SESSION['errors'] = $errors; 
+			$_SESSION['form_data'] = $_POST; 
+			header("Location: index.php?view=editclient&id=" . $data["user_id"] . "&result=error"); 
 			exit();
 		}
-		else return $errors;
+		else return $errors; 
     }
 
 
@@ -54,10 +54,11 @@ if (count($_POST) > 0) {
         $result = $user->update();
         
 		if ($result) {
-			// Redirigir con éxito
+			// Redirigir con éxito 
 			$_SESSION['success'] = 'Cliente actualizado correctamente.';
 			$_SESSION['form_data'] = $_POST; // Store updated data in session
 			print "<script>window.location='index.php?view=editclient&id=" . $_POST["user_id"] . "';</script>";
+		
 		} else {
 			// Manejo del error
 			$_SESSION['errors'] = ['Hubo un error al actualizar el cliente.'];

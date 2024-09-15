@@ -1,5 +1,6 @@
 <?php
 $products = ProductData::getAll();
+$product_id = isset($_GET['product_id']) ? $_GET['product_id'] : "";
 ?>
 <section class="content">
     <div class="container">
@@ -13,7 +14,7 @@ $products = ProductData::getAll();
                             <select name="product_id" class="form-control">
                                 <option value="">--  TODOS --</option>
                                 <?php foreach($products as $p): ?>
-                                <option value="<?php echo $p->id; ?>"><?php echo $p->name; ?></option>
+                                <option value="<?php echo $p->id; ?>" <?php echo ($product_id == $p->id) ? 'selected' : ''; ?>><?php echo $p->name; ?></option>
                                 <?php endforeach; ?>
                             </select>
                         </div>
@@ -40,10 +41,10 @@ $products = ProductData::getAll();
                             <?php if ($_GET["sd"] != "" && $_GET["ed"] != ""): ?>
                                 <?php
                                 $operations = array();
-                                if ($_GET["product_id"] == "") {
+                                if ($product_id == "") {
                                     $operations = OperationData::getAllByDateOfficial($_GET["sd"], $_GET["ed"]);
                                 } else {
-                                    $operations = OperationData::getAllByDateOfficialBP($_GET["product_id"], $_GET["sd"], $_GET["ed"]);
+                                    $operations = OperationData::getAllByDateOfficialBP($product_id, $_GET["sd"], $_GET["ed"]);
                                 }
                                 
                                 $page = isset($_GET['page']) ? $_GET['page'] : 1;
@@ -143,7 +144,7 @@ $products = ProductData::getAll();
                                 <?php endif; ?>
                             <?php else: ?>
                                 <div class="">
-                                    <h2>Fecha Incorrectas</h2>
+                                    <h2>Fechas Incorrectas</h2>
                                     <p>Puede ser que no seleccionó un rango de fechas, o el rango seleccionado es incorrecto.</p>
                                 </div>
                             <?php endif; ?>
