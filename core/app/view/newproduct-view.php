@@ -55,7 +55,7 @@ $categories = CategoryData::getAll();
                         <div class="invalid-feedback">
                             <?php echo isset($_SESSION['errors']['price_out']) ? $_SESSION['errors']['price_out'] : ''; ?>
                         </div>
-                    </div>
+                    </div> 
 
                     <div class="col-md-6">
                         <label for="presentation" class="form-label">Presentación</label>
@@ -114,7 +114,7 @@ $categories = CategoryData::getAll();
                     <a href="index.php?view=products" class="btn btn-primary">Ir a Productos</a>
                 </div>
             </div>
-        </div>
+        </div> 
     </div>
 
     <?php unset($_SESSION['success']); ?>
@@ -179,6 +179,15 @@ $(document).ready(function() {
         alert("Por favor, ingresa un número válido");
       }
     }
+
+    // Si existe un parámetro 'result' en la URL, eliminar solo ese parámetro
+    const url = new URL(window.location.href);
+        if (url.searchParams.get('result')) {
+            url.searchParams.delete('result'); // Eliminar solo el parámetro 'result'
+
+            // Actualizar la URL sin recargar la página, manteniendo otros parámetros como 'view'
+            window.history.replaceState({}, document.title, url.pathname + "?" + url.searchParams.toString());
+        }
 });
 
 </script>

@@ -118,7 +118,7 @@ class OperationData {
 
     public function getOperationtype(){  
         return OperationTypeData::getById($this->operation_type_id);
-    }
+    } 
 
     public static function getQYesF($product_id){
         $q = 0;
@@ -129,7 +129,7 @@ class OperationData {
         foreach ($operations as $operation) {
             if ($operation->operation_type_id == $input_id) { 
                 $q += $operation->q; 
-            } else if ($operation->operation_type_id == $output_id) {   
+            } else if ($operation->operation_type_id == $output_id) {     
                 $q += (-$operation->q);
             }
         }

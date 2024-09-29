@@ -6,7 +6,7 @@
             <div class="card-header">
                 NUEVO CLIENTE
             </div>
-            <div class="card-body">
+            <div class="card-body">  
             <form class="form-horizontal" method="post" id="addproduct" action="index.php?view=addclient" role="form">
                 <div class="row">
                     <div class="col-md-6">
@@ -96,19 +96,17 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="errorModalLabel">¡Error!</h5>
+                    <h5 class="modal-title" id="errorModalLabel">
+                        <i class="bi bi-exclamation-circle text-danger"></i> Error
+                    </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <ul> 
-                        <?php foreach ($_SESSION['errors'] as $error) : ?>
-                            <li><?php echo $error; ?></li>
-                        <?php endforeach; ?>
-                    </ul> 
+                    Hubo un error al agregar el usuario. Por favor, inténtalo de nuevo.
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                </div> 
+                </div>
             </div>
         </div>
     </div>
@@ -127,6 +125,15 @@
         var errorModal = $('#errorModal');
         if (errorModal.length > 0) {
             errorModal.modal('show');
+        }
+
+        // Si existe un parámetro 'result' en la URL, eliminar solo ese parámetro
+        const url = new URL(window.location.href);
+        if (url.searchParams.get('result')) {
+            url.searchParams.delete('result'); // Eliminar solo el parámetro 'result'
+
+            // Actualizar la URL sin recargar la página, manteniendo otros parámetros como 'view'
+            window.history.replaceState({}, document.title, url.pathname + "?" + url.searchParams.toString());
         }
     });
 </script>

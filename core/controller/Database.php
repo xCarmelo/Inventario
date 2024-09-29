@@ -1,7 +1,7 @@
 <?php
 class Database {
     public static $db;
-    public static $con;
+    public static $con; 
 
     public function __construct() {
         $this->user = "root";

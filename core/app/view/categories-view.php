@@ -48,7 +48,7 @@
 
                     <div class="table-responsive">
                         <table class="table table-bordered table-hover">
-                            <thead>
+                            <thead class="table-primary">
                                 <tr><th>Nombre</th><th></th></tr>
                             </thead>
                             <tbody>
@@ -177,5 +177,19 @@
             $('#resultMessage').text(errorMessage);
             $('#resultModal').modal('show');
         }
+
+        mama = () => {
+            const url = new URL(window.location.href);
+            const params = new URLSearchParams(url.search);
+
+            params.delete('result');
+            params.delete('success'); // Add this line to remove the 'success' parameter as well
+
+            const newUrl = url.pathname + '?' + params.toString();
+            window.history.replaceState({}, document.title, newUrl);
+        };
+
+        mama();
     });
 </script>
+<?php unset($_SESSION['errors']); ?>

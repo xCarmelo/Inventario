@@ -23,6 +23,7 @@ if (count($_POST) > 0) {
     // Verificar si la categoría ya existe
     if (CategoryData::searchCategory($categoria)) {
         $_SESSION['error_msg'] = "La categoría ya existe.";
+        $_SESSION['errors'] = "La categoría ya existe.";
         print "<script>window.location='index.php?view=editcategory&id=" . $_POST["user_id"] . "&result=error';</script>";
         exit;
     }

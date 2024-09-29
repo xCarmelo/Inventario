@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <title>M. C. San Agustin</title>
+  <title>M. C. San Agustín</title>
     <base href="./">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -18,37 +18,70 @@
 <body>
 <!--Login -->
 <?php if(!isset($_SESSION["user_id"])):?>
-<div class="bg-light min-vh-100 d-flex flex-row align-items-center">
-<div class="container">
+<div class="min-vh-100 d-flex flex-row align-items-center backgrount-img justify-content-center">
+<div class="container login-container-margin">
 <div class="row justify-content-center">
 <div class="col-lg-6">
 <div class="card-group d-block d-md-flex row">
-<div class="card col-md-12 p-4 mb-0">
-<div class="card-body">
-<h1>Articulos Religiosos S. Agustin</h1>
-<br>
-<p class="text-medium-emphasis">Iniciar Sesion al Sistema</p>
-<form method="post" action="./?action=processlogin">
-<div class="input-group mb-3"><span class="input-group-text">
-<svg class="icon">
-</svg></span>
-<input class="form-control" type="text" name="username" placeholder="Email">
+
+<div class="card col-md-12 p-4 mb-0 card_login-container"> 
+  <div class="card card_login-container">
+    <div class="card-body login-background text-center">
+      <!-- Imagen redonda y centrada -->
+      <img src="assets/img/logoMC.jpg" alt="Logo" class="img-fluid rounded-circle mb-3 login-img">
+      <br>
+      <!-- Texto Login -->
+      <p class="text-login h4 mb-4">Login</p>
+      
+      <!-- Formulario --> 
+      <form method="post" class="form-login" action="./?action=processlogin">
+          <div class="input-group mb-3">
+              <span class="input-group-text">
+                  <i class="bi-person-fill"></i>
+              </span>
+              <input value="<?php echo isset($_SESSION['form_data']['username']) ? $_SESSION['form_data']['username'] : ''; ?>" 
+                  class="form-control <?php echo isset($_SESSION['errors']['username']) ? 'is-invalid' : ''; ?>" 
+                  type="text" 
+                  name="username" 
+                  placeholder="Usuario" 
+                  pattern="^[A-Za-z0-9_]{2,50}$" 
+                  title="Ingresa un nombre de usuario válido de al menos 2 caracteres, sin acento" 
+                  min="2" 
+                  required>
+              <div class="invalid-feedback">
+                  <?php echo isset($_SESSION['errors']['username']) ? $_SESSION['errors']['username'] : ''; ?>
+              </div>
+          </div> 
+          
+          <div class="input-group mb-4">
+              <span class="input-group-text">
+                  <i class="bi-lock-fill"></i>
+              </span>
+              <input value="<?php echo isset($_SESSION['form_data']['password']) ? $_SESSION['form_data']['password'] : ''; ?>" 
+                    class="form-control <?php echo isset($_SESSION['errors']['password']) ? 'is-invalid' : ''; ?>" 
+                    name="password" 
+                    type="password" 
+                    placeholder="Contraseña" 
+                    pattern="^(?=.*\d)[A-Za-z\d]{5,}$" 
+                    title="La contraseña debe tener al menos 8 caracteres y contener al menos un número." 
+                    min="5" 
+                    required>
+              <div class="invalid-feedback">
+                  <?php echo isset($_SESSION['errors']['password']) ? $_SESSION['errors']['password'] : ''; ?>
+              </div>
+          </div>
+          
+          <div class="input-group mb-3">
+              <button class="btn btn-primary form-control rounded" type="submit">Iniciar Sesión</button>
+          </div>
+      </form>
+
+    </div>
+  </div>
 </div>
-<div class="input-group mb-4"><span class="input-group-text">
-<svg class="icon">
-</svg></span>
-<input class="form-control" name="password" type="password" placeholder="Password">
-</div>
-<div class="row">
-<div class="col-6">
-<button class="btn btn-primary px-4" type="submit">Iniciar Sesion</button>
-</div>
-</div>
-</form>
-<br><br><br>
-</div>
-</div>
-</div>
+
+
+
 </div>
 </div>
 </div>
@@ -64,7 +97,7 @@
 </div>
 <h4>
 <div class="d-flex justify-content-center align-items-center"> 
-    <a href="./" style="color: white; text-decoration: none;" class="ms-2">M. C. San Agustin</a>
+    <a href="./" style="color: white; text-decoration: none;" class="ms-2">M. C. San Agustín</a>
     <button class="btn btn__menu" id="sidebarToggle"><i class="bi bi_menu bi__menu--active bi-list"></i></button>
 </div>
 </h4>
@@ -77,7 +110,7 @@
     <div class="me-auto logo_menu">  
         <img src="assets/img/logoMC.jpg" alt="" class="img-fluid rounded-circle logo-border" style="max-height: 70px;"> 
     </div>
-    <button class="btn btn__menu logo_menu" id="sidebarToggle"><i class="bi bi_menu bi__menu--active bi-list"></i></button>
+    <button class="btn btn__menu logo_menu" id="sidebarToggle"><i class="bi bi_menu bi__menu--active bi-list icon-list"></i></button>
 </h4>
 <ul class="sidebar-nav" data-simplebar>
     <li class="nav-item"><a class="nav-link" href="./">
@@ -188,12 +221,15 @@
         <a class="header-brand d-md-none" href="#">
       </a>
 
-        <div class="logaut">
-        <a class="dropdown-item logaut__link" href="./logout.php">
-          <i class="logaut__bi bi bi-box-arrow-right"></i> Logout
-        </a>
+      <div class="logout d-flex align-items-center justify-content-center">
+        <div class="dropdown-item logout__link d-flex align-items-center me-3">
+          <span class="ms-2"><?php echo $_SESSION['username']; ?></span>
+          <i class="logaut__bi bi bi-person"></i>
         </div>
-    </div>
+        <a class="dropdown-item logout__link" href="./logout.php">
+          <i class="logaut__bi bi bi-box-arrow-right"></i>
+        </a>
+      </div>  
   </header>
   <div class="body flex-grow-1 px-3">
     <div class="container-fluid">
@@ -202,6 +238,28 @@
   </div>
 </div>
 
+<?php endif; ?>
+
+<!-- Modal de error -->
+<?php if (isset($_SESSION['errors']) && !empty($_SESSION['errors'])) : ?>
+    <div class="modal fade show" id="errorModal" tabindex="-1" aria-labelledby="errorModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content"> 
+                <div class="modal-header"> 
+                    <h5 class="modal-title" id="errorModalLabel">
+                        <i class="bi bi-exclamation-circle text-danger"></i> Error
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>  
+                <div class="modal-body">
+                    El usuario o la contraseña son incorrectos. Por favor, inténtalo de nuevo.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
 <?php endif; ?>
 
 <!-- Necessary scripts -->
@@ -223,8 +281,26 @@ $(document).ready(function(){
     $("#sidebar").toggleClass("sidebar__active");
     $(".content").toggleClass("content-full-width");
   });
+
+   // Mostrar el modal de error si está presente
+    $('#errorModal').modal('show');
+
+         // Si existe un parámetro 'result' en la URL, eliminar solo ese parámetro
+    const url = new URL(window.location.href);
+        if (url.searchParams.get('result')) {
+            url.searchParams.delete('result'); // Eliminar solo el parámetro 'result'
+
+            // Actualizar la URL sin recargar la página, manteniendo otros parámetros como 'view'
+            window.history.replaceState({}, document.title, url.pathname + "?" + url.searchParams.toString());
+        }
 });
 </script>
+
+<?php
+// Limpiar los errores y los datos de sesión después de usarlos
+unset($_SESSION['errors']);
+unset($_SESSION['form_data']);
+?>
 
 
 </body>

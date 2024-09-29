@@ -128,5 +128,14 @@ $(document).ready(function() {
         var errorModal = new bootstrap.Modal(document.getElementById('errorModal'));
         errorModal.show();
     }
+
+    // Si existe un parámetro 'result' en la URL, eliminar solo ese parámetro
+    const url = new URL(window.location.href);
+        if (url.searchParams.get('result')) {
+            url.searchParams.delete('result'); // Eliminar solo el parámetro 'result'
+
+            // Actualizar la URL sin recargar la página, manteniendo otros parámetros como 'view'
+            window.history.replaceState({}, document.title, url.pathname + "?" + url.searchParams.toString());
+        }
 });
 </script>

@@ -60,7 +60,6 @@ $_SESSION["errors"] = $errors;
 			$sell->user_id = $_SESSION["user_id"]; 
 
 			$sell->total = $_POST["total"];
-			$sell->discount = $_POST["discount"];
 
 
 			 if(isset($_POST["client_id"]) && $_POST["client_id"]!=""){

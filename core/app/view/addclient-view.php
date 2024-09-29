@@ -40,15 +40,15 @@
     } 
 
 	if (count($_POST) > 0) {
-		$user = new PersonData();
+		$user = new PersonData(); 
 		$errors = validate_data($_POST);
 	
 		if (count($errors) == 0) {
-			// Si no hay errores, agregar el cliente 
+			// Si no hay errores, agregar el cliente  
 			$user->name = $_POST["name"];
 			$user->lastname = $_POST["lastname"];
 			$user->address1 = $_POST["address1"]; 
-			$user->email1 = $_POST["email1"]; 
+			$user->email1 = $_POST["email1"];  
 			$user->phone1 = $_POST["phone1"]; 
 	
 			$user->add_client();
@@ -63,9 +63,9 @@
 			// No redirect, let the page render with the error modal
 		}
 
-		// Redirigir siempre a la misma página para mostrar el modal
-		header("Location: index.php?view=newclient&result=error");
-		exit();
+			// Redirigir siempre a la misma página para mostrar el modal
+			header("Location: index.php?view=newclient&result=error");
+			exit();
 	}
 	
 

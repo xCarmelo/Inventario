@@ -48,7 +48,7 @@
 
                     <div class="table-responsive">
                         <table class="table table-bordered table-hover">
-                            <thead>
+                            <thead class="table-primary">
                                 <tr>
                                     <th>Nombre completo</th>
                                     <th>Dirección</th>
@@ -138,7 +138,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                ¿Estás seguro de que deseas eliminar este cliente? Esta acción no se puede deshacer.
+                ¿Estás seguro de que deseas eliminar este cliente? <strong>Puede que este asociado a varios registros   </strong>.
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
@@ -164,7 +164,7 @@
             </div>
         </div>
     </div>
-</div>
+</div>  
 
 
 <script>
@@ -189,5 +189,20 @@
             $('#resultMessage').text(errorMessage);
             $('#resultModal').modal('show');
         }
+
+        mama = () => {
+            const url = new URL(window.location.href);
+            const params = new URLSearchParams(url.search);
+
+            params.delete('result');
+            params.delete('success'); // Add this line to remove the 'success' parameter as well
+
+            const newUrl = url.pathname + '?' + params.toString();
+            window.history.replaceState({}, document.title, newUrl);
+        };
+
+        mama();
     });
 </script>
+
+<?php unset($_SESSION['errors']); ?>

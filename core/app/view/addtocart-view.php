@@ -1,5 +1,4 @@
 <?php
-session_start(); // Ensure the session is started
 
 if (!isset($_SESSION["cart"])) {
     // Initialize the cart with the first product

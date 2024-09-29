@@ -80,7 +80,7 @@ $product_id = isset($_GET['product_id']) ? $_GET['product_id'] : "";
 
                                     <div class="table-responsive">
                                         <table class="table table-bordered">
-                                            <thead>
+                                            <thead class="table-primary">
                                                 <tr>
                                                     <th>Id</th>
                                                     <th>Producto</th>

@@ -48,7 +48,7 @@
 
                 <div class="table-responsive">
                     <table class="table table-bordered table-hover">
-                        <thead>
+                        <thead class="table-primary">
                             <tr>
                                 <th>Codigo</th>
                                 <th>Imagen</th>
@@ -63,7 +63,7 @@
                         <tbody>
                             <?php foreach ($curr_products as $product): ?>
                             <tr>
-                                <td><?php echo $product->barcode; ?></td>
+                                <td><?php echo $product->id; ?></td>
                                 <td>
                                     <?php if ($product->image != ""): ?>
                                         <img src="storage/products/<?php echo $product->image; ?>" style="width:64px;" class="custom-modal-trigger">
@@ -227,5 +227,18 @@
                 modal.hide();
             });    
         }
+
+        mama = () => {
+            const url = new URL(window.location.href);
+            const params = new URLSearchParams(url.search);
+
+            params.delete('result');
+            params.delete('success'); // Add this line to remove the 'success' parameter as well
+
+            const newUrl = url.pathname + '?' + params.toString();
+            window.history.replaceState({}, document.title, newUrl);
+        };
+
+        mama();
     });
 </script>

@@ -63,7 +63,7 @@
                 <div class="card-body">
                     <div class="table-responsive">
                         <table class="table table-bordered table-hover">
-                            <thead>
+                            <thead class="table-primary">
                                 <tr>
                                     <th></th>
                                     <th>Producto</th>
@@ -109,10 +109,26 @@
             </div>
         <?php } ?>
         
-        <!-- Mostrar Saldo Inicial y Total Incluyendo Saldo Inicial -->
-        <h2 class="text-info mt-4">Saldo Inicial: C$ <span id="initialBalanceDisplay">0.00</span></h2>
-        <h2 class="text-success mt-3">Total Incluyendo Saldo Inicial: C$ <span id="totalDisplay"><?php echo isset($total_total) ? number_format($total_total, 2, ".", ",") : '0.00'; ?></span></h2>
-
+        <!-- Mini tabla para Saldo Inicial y Total -->
+        <div class="container mt-5">
+        <div class="row justify-content-star">
+            <div class="col-md-7">
+            <table class="table table-bordered">
+                <tbody>
+                <tr>
+                    <td class="text-info text-lg"><h5>Saldo Inicial:</h5></td>
+                    <td class="text-end text-info" style="font-size: 20px;">C$ <span id="initialBalanceDisplay">0.00</span></td>
+                </tr>
+                <tr>
+                    <td class="text-success"><h5>Total Incluyendo Saldo Inicial:</h5></td>
+                    <td class="text-end text-success" style="font-size: 20px;">C$ <span id="totalDisplay"><?php echo isset($total_total) ? number_format($total_total, 2, ".", ",") : '0.00'; ?></span></td>
+                </tr>
+                </tbody>
+            </table>
+            </div>
+        </div>
+        </div>
+        
         <!-- Paginación centrada debajo de la tabla -->
         <?php if ($totalSells > 0): ?>
             <div class="d-flex justify-content-center mt-3">
@@ -264,6 +280,19 @@
                     var modal = $(this);
                     modal.find('#confirmProcessBtn').attr('href', url);
                 });
+
+                mama = () => {
+                const url = new URL(window.location.href);
+                const params = new URLSearchParams(url.search);
+
+                params.delete('result');
+                params.delete('success'); // Add this line to remove the 'success' parameter as well
+
+                const newUrl = url.pathname + '?' + params.toString();
+                window.history.replaceState({}, document.title, newUrl);
+        };
+
+        mama();
     });
 </script>
 

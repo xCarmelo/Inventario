@@ -74,7 +74,7 @@ if (isset($_GET["sd"]) && isset($_GET["ed"]) && $_GET["sd"] != "" && $_GET["ed"]
                                     <?php $supertotal = 0; ?>
                                     <div class="table-responsive">
                                         <table class="table table-bordered">
-                                            <thead>
+                                            <thead class="table-primary">
                                                 <tr>
                                                     <th>Id</th>
                                                     <th>Total</th>

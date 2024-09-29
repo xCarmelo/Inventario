@@ -1,4 +1,12 @@
-<?php $user = PersonData::getById($_GET["id"]);?>
+<?php
+$id = filter_input(INPUT_GET, "id", FILTER_VALIDATE_INT);
+if ($id === false) {
+    // Redirigir a una página de error o mostrar un mensaje de error
+    header("Location: index.php?view=clients");
+    exit;
+}
+
+ $user = PersonData::getById($_GET["id"]);?> 
 <div class="row">
     <div class="col-md-12">
         <h1>Editar Cliente</h1>
@@ -38,9 +46,9 @@
                     <div class="row">
                         <div class="col-md-4">
                             <label for="validationCustom04" class="form-label mt-2">Email*</label>
-                            <input value="<?php echo isset($_SESSION['form_data']['email1']) ? $_SESSION['form_data']['email1'] : $user->email1; ?>" type="email" name="email1" class="form-control <?php echo isset($_SESSION['errors']['email1']) ? 'is-invalid' : ''; ?>" id="validationCustom04" placeholder="Email" required>
+                            <input value="<?php echo isset($_SESSION['form_data']['email']) ? $_SESSION['form_data']['email'] : $user->email1; ?>" type="email" name="email" class="form-control <?php echo isset($_SESSION['errors']['email']) ? 'is-invalid' : ''; ?>" id="validationCustom04" placeholder="Email" required>
                             <div class="invalid-feedback">
-                                <?php echo isset($_SESSION['errors']['email1']) ? $_SESSION['errors']['email1'] : ''; ?>
+                                <?php echo isset($_SESSION['errors']['email']) ? $_SESSION['errors']['email'] : ''; ?>
                             </div>
                         </div>
 
@@ -65,7 +73,6 @@
 
                 <?php
                 // Limpiar los errores y los datos de sesión después de usarlos
-                unset($_SESSION['errors']);
                 unset($_SESSION['form_data']);
                 ?>
             </div>
@@ -74,7 +81,7 @@
 </div>
 
 <!-- Modal de éxito -->
-<?php if (isset($_SESSION['success'])) : ?>
+<?php if (isset($_SESSION['success'])) : ?> 
     <div class="modal fade show" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -107,12 +114,10 @@
                 </div>
                 <div class="modal-body">
                     <ul>
-                        <?php foreach ($_SESSION['errors'] as $error) : ?>
-                            <li><?php echo $error; ?></li>
-                        <?php endforeach; ?>
+                            <li>Error al editar al cliente</li>
                     </ul>
                 </div>
-                <div class="modal-footer">
+                <div class="modal-footer"> 
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                 </div>
             </div>
@@ -129,5 +134,14 @@
 
         // Mostrar el modal de error si está presente
         $('#errorModal').modal('show');
+
+        // Si existe un parámetro 'result' en la URL, eliminar solo ese parámetro
+        const url = new URL(window.location.href);
+        if (url.searchParams.get('result')) {
+            url.searchParams.delete('result'); // Eliminar solo el parámetro 'result'
+
+            // Actualizar la URL sin recargar la página, manteniendo otros parámetros como 'view'
+            window.history.replaceState({}, document.title, url.pathname + "?" + url.searchParams.toString());
+        }
     });
 </script>

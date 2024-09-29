@@ -27,7 +27,7 @@
             <div class="card-body">
                 <div class="table-responsive">
                     <table class="table table-bordered table-hover">
-                        <thead>
+                        <thead class="table-primary">
                             <tr>
                                 <th>Código</th>
                                 <th>Imagen</th>
@@ -37,6 +37,7 @@
                                 <th>En inventario</th>
                                 <th>Cantidad</th>
                                 <th>Acciones</th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -116,7 +117,7 @@
         <div class="card-body">
             <div class="table-responsive">
                 <table class="table table-bordered table-hover">
-                    <thead>
+                    <thead class="table-primary">
                         <tr>
                             <th>Código</th>
                             <th>Cantidad</th>
@@ -296,5 +297,18 @@ document.addEventListener("DOMContentLoaded", function() {
             modal.hide();
         });
     }
+
+    mama = () => {
+            const url = new URL(window.location.href);
+            const params = new URLSearchParams(url.search);
+
+            params.delete('result');
+            params.delete('success'); // Add this line to remove the 'success' parameter as well
+
+            const newUrl = url.pathname + '?' + params.toString();
+            window.history.replaceState({}, document.title, newUrl);
+        };
+
+        mama();
 });
 </script>

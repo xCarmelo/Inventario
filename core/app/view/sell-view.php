@@ -246,6 +246,19 @@
                 $("#confirmModal").modal('hide');
             });
         });
+
+        mama = () => {
+            const url = new URL(window.location.href);
+            const params = new URLSearchParams(url.search);
+
+            params.delete('result');
+            params.delete('success'); // Add this line to remove the 'success' parameter as well
+
+            const newUrl = url.pathname + '?' + params.toString();
+            window.history.replaceState({}, document.title, newUrl);
+        };
+
+        mama();
     });
 </script>
 
@@ -254,3 +267,5 @@
 <div id="alerts"></div>
 
 <?php endif; ?>
+
+<?php unset($_SESSION['errors']); ?>

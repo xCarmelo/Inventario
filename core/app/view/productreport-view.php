@@ -12,9 +12,9 @@ if($product!=null):
 	<p>Te invitamos a que selecciones un rango de fechas (fecha inicial - fecha final) en las opciones de abajo.</p>
 </div>
 
-<div class="well">
+<div class="table-responsive">
 		<table class="table table-bordered">
-				<thead>
+				<thead class="table-primary">
 					<tr>
 						<th>Fecha de incio <a href="#" class="btn btn-sm btn-default" id="dp4" data-date-format="yyyy-mm-dd" data-date="2012-02-20">Cambiar</a></th>
 						<th>Fecha de fin <a href="#" class="btn btn-sm btn-default" id="dp5" data-date-format="yyyy-mm-dd" data-date="2012-02-25">Cambiar</a></th>
@@ -56,8 +56,9 @@ if($product!=null):
 <script>
 	$("#wellcome").hide();
 </script>
+<div class="table-responsive">
 <table class="table table-hover table-bordered">
-	<thead>
+	<thead  class="table-primary"> 
 		<th>Id</th>
 		<th>Producto</th>
 		<th>Cantidad</th>
@@ -75,7 +76,7 @@ if($product!=null):
 <?php endforeach; ?>
 
 </table>
-
+</div>
 			 <?php else:
 			 // si no hay operaciones
 			 ?>

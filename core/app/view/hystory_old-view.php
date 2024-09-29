@@ -123,7 +123,7 @@ if($ooficial>0){$of100 = $ooficial/$ototal;}
 		<p class="alert alert-success"> Se esta trabajando sobre el corte iniciado la fecha (AAAA-MM-DD HH:MM:SS): <b><?php echo $cut->created_at; ?></b></p>
 		<?php if(count($operations)>0):?>
 			<table class="table table-bordered table-hover">
-			<thead>
+			<thead class="table-primary">
 			<th></th>
 			<th>Cantidad</th>
 			<th>Con factura</th>

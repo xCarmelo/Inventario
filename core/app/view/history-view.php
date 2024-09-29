@@ -65,7 +65,7 @@ if (isset($_GET["product_id"])):
                 <?php if (count($operations) > 0): ?>
                     <div class="table-responsive">
                         <table class="table table-bordered table-hover">
-                            <thead>
+                            <thead class="table-primary">
                                 <tr>
                                     <th>#</th>
                                     <th>Cantidad</th>
@@ -123,3 +123,18 @@ if (isset($_GET["product_id"])):
 </div>
 
 <?php endif; ?>
+
+
+<script>
+    $(document).ready(function() { 
+
+    // Si existe un parámetro 'result' en la URL, eliminar solo ese parámetro
+    const url = new URL(window.location.href);
+        if (url.searchParams.get('result')) {
+            url.searchParams.delete('result'); // Eliminar solo el parámetro 'result'
+
+            // Actualizar la URL sin recargar la página, manteniendo otros parámetros como 'view'
+            window.history.replaceState({}, document.title, url.pathname + "?" + url.searchParams.toString());
+        }
+});
+</script>

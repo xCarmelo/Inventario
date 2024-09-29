@@ -21,7 +21,7 @@ $total_total = 0;
 <br>
 <div class="table-responsive">
     <table class="table table-bordered table-hover">
-        <thead>
+        <thead class="table-primary">
             <th></th>
             <th>Total</th>
             <th>Fecha</th>

@@ -41,7 +41,7 @@
 
                     <div class="table-responsive"> 
                         <table class="table table-bordered table-hover">
-                            <thead>
+                            <thead class="table-primary">
                                 <tr>
                                     <th></th>
                                     <th>Producto</th>
@@ -164,3 +164,4 @@
         });
     });
 </script>
+<?php unset($_SESSION['errors']); ?>

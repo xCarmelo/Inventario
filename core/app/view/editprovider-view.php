@@ -1,4 +1,12 @@
-<?php $user = PersonData::getById($_GET["id"]); ?>
+<?php 
+$id = filter_input(INPUT_GET, "id", FILTER_VALIDATE_INT);
+if ($id === false) {
+    // Redirigir a una página de error o mostrar un mensaje de error
+    header("Location: index.php?view=providers");
+    exit;
+}
+$user = PersonData::getById($_GET["id"]); 
+?>
 <div class="row">
     <div class="col-md-12">
         <h1>Editar Proveedor</h1>
@@ -126,5 +134,14 @@ $(document).ready(function() {
         var errorModal = new bootstrap.Modal(document.getElementById('errorModal'));
         errorModal.show();
     }
+
+    // Si existe un parámetro 'result' en la URL, eliminar solo ese parámetro
+    const url = new URL(window.location.href);
+        if (url.searchParams.get('result')) {
+            url.searchParams.delete('result'); // Eliminar solo el parámetro 'result'
+
+            // Actualizar la URL sin recargar la página, manteniendo otros parámetros como 'view'
+            window.history.replaceState({}, document.title, url.pathname + "?" + url.searchParams.toString());
+        }
 });
 </script>

@@ -38,7 +38,7 @@ function validate_data($data) {
     if (!preg_match("/^[A-Za-zÁÉÍÓÚÑáéíóúñ\s\-'\.0-9]{2,50}$/", $data['presentation'])) {
         $valid = false;
         $errors['presentation'] = "El campo presentación debe tener al menos 2 caracteres y como máximo 50";
-    }
+    } 
     
     if (!preg_match("/^[A-Za-zÁÉÍÓÚÑáéíóúñ\s0-9\-'\.,!?¡¿]+$/", $data['description'])) {
         $valid = false;
@@ -85,8 +85,14 @@ if(count($_POST) > 0) {
             if($image->uploaded) {
                 $image->Process("storage/products/");
                 if($image->processed) {
+                    if(!empty($product->image)){
+                        if (file_exists("storage/products/". $product->image))
+                            unlink("storage/products/". $product->image); // Eliminar la imagen anterior
+                    }
+
                     $product->image = $image->file_dst_name;
-                    $product->update_image();
+
+                    $product->update_image(); 
                 }
             }
         }

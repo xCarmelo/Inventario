@@ -25,9 +25,18 @@ $curr_products = array_slice($products_array, $offset, $limit);
 ?>
 <div class="container mt-3">
     <div class="row">
-        <div class="col-md-12 mb-1">
-            <h1>Mundo catolico San Agustin</h1>
+    <div class="container-fluid bg-light p-5 text-center" style="margin-top: -65px;">
+    <div class="row">
+            <div class="col-md-12 ">
+                <h1 class="display-4 fw-bold" style="color: #4f5d73;">Mundo Católico San Agustín</h1>
+                <p class="lead text-muted" style="font-size: 1.5rem; letter-spacing: 1px; line-height: 1.6; font-weight: 500;">
+                    ¡Todo en artículos religiosos para tu fe!
+                </p>
+                <hr style="border-top: 3px solid #007bff; width: 50%; margin: 0 auto;">
+            </div>
         </div>
+    </div>
+
     </div>
     <div class="row g-4">
         <!-- Tarjetas de estadísticas -->
@@ -148,7 +157,7 @@ $curr_products = array_slice($products_array, $offset, $limit);
 
                         <div class="table-responsive">
                             <table class="table table-bordered table-hover">
-                                <thead>
+                                <thead class="table-primary">
                                     <tr>
                                         <th>Código</th>
                                         <th>Nombre del producto</th>

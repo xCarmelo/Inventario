@@ -1,6 +1,6 @@
 <?php
 class UserData {
-    public static $tablename = "user";
+    public static $tablename = "user"; 
 
     public function __construct() {
         $this->id = null; // Asumiendo que 'id' es autoincremental en la base de datos
@@ -12,38 +12,45 @@ class UserData {
         $this->image = null; // O asigna un valor predeterminado si es necesario
         $this->is_active = 1; // Valor predeterminado
         $this->is_admin = 0;
+        $this->phone = "";
         date_default_timezone_set('America/Managua'); 
         $this->created_at = date("Y-m-d H:i:s");
     }
     // Método para agregar un nuevo usuario con una consulta preparada
 
     public function add() {
-        $sql = "INSERT INTO user (name, lastname, username, email, is_admin, password, created_at) 
-                VALUES (?, ?, ?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO user (name, lastname, username, email, is_admin, password, phone, created_at) 
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         
         // Obtén la conexión a la base de datos
-        $con = Database::getCon(); // Asumiendo que `Database::getConnection()` devuelve la conexión
+        $con = Database::getCon(); 
         
         // Prepara la consulta
         $stmt = $con->prepare($sql);
         
+        // Comprueba si la preparación fue exitosa
+        if ($stmt === false) {
+            die("Error en la preparación de la consulta");
+        }
+        
         // Vincula los parámetros
-        $stmt->bind_param("ssssiss", 
+        $stmt->bind_param("ssssisss", 
             $this->name, 
             $this->lastname, 
             $this->username, 
             $this->email, 
             $this->is_admin, 
             $this->password, 
+            $this->phone,
             $this->created_at
         );
         
         // Ejecuta la consulta
         $stmt->execute();
         
-        // Cierra la consulta
-        $stmt->close();
-    }
+        // Retorna el objeto `stmt` para posibles verificaciones posteriores
+        return $stmt;
+    }    
     
     public static function delById($id) {
         $sql = "DELETE FROM " . self::$tablename . " WHERE id = ?";
@@ -55,21 +62,32 @@ class UserData {
     }
 
     public function del() {
-        $sql = "DELETE FROM " . self::$tablename . " WHERE id = ?";
         $con = Database::getCon();
+        $sql = "DELETE FROM " . self::$tablename . " WHERE id=?";
         $stmt = $con->prepare($sql);
+        
+        if ($stmt === false) {
+            throw new Exception("Error en la preparación de la consulta");
+        }
+        
         $stmt->bind_param("i", $this->id);
-        $stmt->execute();
-        $stmt->close();
+        
+        if (!$stmt->execute()) {
+            throw new Exception("Error al eliminar el usuario");
+        }
+        
+        return $stmt;
     }
 
     public function update() {
-        $sql = "UPDATE " . self::$tablename . " SET name = ?, email = ?, username = ?, lastname = ?, is_active = ?, is_admin = ? 
+        $sql = "UPDATE " . self::$tablename . " SET name = ?, phone = ?, password = ?, email = ?, username = ?, lastname = ?, is_active = ?, is_admin = ? 
                 WHERE id = ?";
         $con = Database::getCon();
         $stmt = $con->prepare($sql);
-        $stmt->bind_param("ssssiii", 
+        $stmt->bind_param("ssssssiii", 
             $this->name, 
+            $this->phone, 
+            $this->password, 
             $this->email, 
             $this->username, 
             $this->lastname, 
@@ -78,7 +96,8 @@ class UserData {
             $this->id
         );
         $stmt->execute();
-        $stmt->close();
+
+        return $stmt;
     }
 
     public function update_passwd() {
@@ -132,6 +151,20 @@ class UserData {
         $data = Model::many($result, new UserData());
         $stmt->close();
         return $data;
+    }
+
+    public static function searchUser($q) {
+        $con = Database::getCon();
+        $stmt = $con->prepare("SELECT * FROM " . self::$tablename . " WHERE username = ?");
+        $stmt->bind_param("s", $q);
+        $stmt->execute();
+        
+        $result = $stmt->get_result();
+        if ($result->num_rows > 0) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }
 

@@ -9,7 +9,7 @@
             </div>
 
             <div class="card">
-                <div class="card-header">
+                <div class="card-header">  
                     USUARIOS
                 </div>
                 <div class="card-body">
@@ -18,7 +18,7 @@
                     $limit = isset($_GET['limit']) ? $_GET['limit'] : 10;
 
                     $users = UserData::getAll();
-                    if (count($users) > 0) {
+                    if (count($users) > 0) { 
                         $totalUsers = count($users);
                         $totalPages = ceil($totalUsers / $limit);
                         $offset = ($page - 1) * $limit;
@@ -47,14 +47,14 @@
 
                     <div class="table-responsive">
                         <table class="table table-bordered table-hover">
-                            <thead>
+                            <thead class="table-primary">
                                 <tr>
                                     <th>Nombre completo</th>
                                     <th>Nombre de usuario</th>
                                     <th>Email</th>
                                     <th>Activo</th>
                                     <th>Admin</th>
-                                    <th></th>
+                                    <th>Acciones</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -74,8 +74,11 @@
                                         <?php endif; ?>
                                     </td>
                                     <td style="width:30px;">
-                                        <a href="index.php?view=edituser&id=<?php echo $user->id; ?>" class="btn btn-warning btn-xs">Editar</a>
-                                    </td>
+                                        <div class="btn-group" role="group">
+                                        <a href="index.php?view=edituser&id=<?php echo $user->id; ?>" class="btn btn-sm btn-warning"><i class="bi bi-pencil"></i></a>
+                                        <button class="btn btn-sm btn-danger ms-1" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" data-href="index.php?view=deluser&id=<?php echo $user->id; ?>"><i class="bi bi-trash"></i></button>
+                                    </div>
+                                    </td> 
                                 </tr>
                                 <?php endforeach; ?>
                             </tbody>
@@ -126,3 +129,81 @@
         </div>
     </div>
 </div>
+
+<!-- Modal de Confirmación para Eliminación -->
+<div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmDeleteModalLabel">Confirmar Eliminación</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                ¿Estás seguro de que deseas eliminar este usuario? <strong>Puede que este asociado a varios registros.</strong>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <a id="confirmDeleteBtn" class="btn btn-danger" href="#">Eliminar</a>
+            </div>
+        </div>
+    </div>
+</div> 
+
+<!-- Modal para mensajes de éxito o error -->
+<div class="modal fade" id="resultModal" tabindex="-1" aria-labelledby="resultModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="resultModalLabel">Resultado</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p id="resultMessage"></p>
+            </div>
+            <div class="modal-footer"> 
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>   
+ 
+
+<script>
+    $(document).ready(function() {
+        $('#confirmDeleteModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget); // Botón que activó el modal
+            var url = button.data('href'); // Extraer la URL del atributo data-href
+
+            var modal = $(this);
+            modal.find('#confirmDeleteBtn').attr('href', url);
+        });
+
+         // Mostrar el resultado según los parámetros de la URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const successMessage = urlParams.get('success');
+        const errorMessage = urlParams.get('error');
+
+        if (successMessage) {
+            $('#resultMessage').text(successMessage);
+            $('#resultModal').modal('show');
+        } else if (errorMessage) {
+            $('#resultMessage').text(errorMessage);
+            $('#resultModal').modal('show');
+        }
+
+        mama = () => {
+            const url = new URL(window.location.href);
+            const params = new URLSearchParams(url.search);
+
+            params.delete('result');
+            params.delete('success'); // Add this line to remove the 'success' parameter as well
+
+            const newUrl = url.pathname + '?' + params.toString();
+            window.history.replaceState({}, document.title, newUrl);
+        };
+
+        mama();
+    });
+</script>    
+
+<?php unset($_SESSION['errors']); ?>

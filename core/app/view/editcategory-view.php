@@ -1,4 +1,10 @@
 <?php
+    $id = filter_input(INPUT_GET, "id", FILTER_VALIDATE_INT);
+    if ($id === false) {
+        // Redirigir a una página de error o mostrar un mensaje de error
+        header("Location: index.php?view=categories");
+        exit;
+    }
     $user = CategoryData::getById($_GET["id"]);
 ?>
 
@@ -20,7 +26,7 @@
                                 <div class="input-group-append">
                                     <?php if(isset($_SESSION['error_msg'])) { ?>
                                     <div class="alert alert-danger mt-3">
-                                        <?php echo $_SESSION['error_msg']; unset($_SESSION['error_msg']); ?>
+                                        <?php echo $_SESSION['error_msg'];?>
                                     </div>
                                     <?php } ?>
                                 </div>
@@ -60,6 +66,8 @@
     </div>
 </div>
 
+
+<?php if (isset($_SESSION['errors']) && !empty($_SESSION['errors'])) : ?>
 <!-- Modal de error -->
 <div class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="errorModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -79,6 +87,8 @@
         </div>
     </div>
 </div>
+<?php endif; ?>  
+<?php unset($_SESSION['errors']); ?>
 
 <script>
 $(document).ready(function() {
@@ -89,17 +99,24 @@ $(document).ready(function() {
     if (result === 'success') {
         var successModal = new bootstrap.Modal(document.getElementById('successModal'));
         successModal.show();
-    } else if (result === 'error') {
-        var errorModal = new bootstrap.Modal(document.getElementById('errorModal'));
-        errorModal.show();
-        console.error("Hubo un error al actualizar la categoría.");
-    }
+    } 
+
+    $('#errorModal').modal('show');
 
     // Cerrar el modal de éxito cuando se hace clic en el botón "Cerrar"
     $('#successCloseBtn').click(function() {
         var successModal = bootstrap.Modal.getInstance(document.getElementById('successModal'));
         successModal.hide();
     });
+
+    // Si existe un parámetro 'result' en la URL, eliminar solo ese parámetro
+    const url = new URL(window.location.href);
+        if (url.searchParams.get('result')) {
+            url.searchParams.delete('result'); // Eliminar solo el parámetro 'result'
+
+            // Actualizar la URL sin recargar la página, manteniendo otros parámetros como 'view'
+            window.history.replaceState({}, document.title, url.pathname + "?" + url.searchParams.toString());
+        }
 });
 
 </script>

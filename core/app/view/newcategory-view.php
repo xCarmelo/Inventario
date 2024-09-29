@@ -16,7 +16,7 @@
                 <div class="form-group">
                     <label for="inputEmail1" class="col-lg-2 control-label">Nombre*</label>
                     <div class="col-md-6 mt-3">
-                        <input type="text" name="categoria" required pattern="^[a-zA-Z0-9áéíóúñÁÉÍÓÚÑ\s]{3,30}$" title="La categoría debe contener entre 3 y 30 caracteres alfanuméricos." class="form-control" />
+                        <input placeholder="Categoria" type="text" name="categoria" required pattern="^[a-zA-Z0-9áéíóúñÁÉÍÓÚÑ\s]{3,30}$" title="La categoría debe contener entre 3 y 30 caracteres alfanuméricos." class="form-control" />
                     <div class="input-group mt-3 mb-3">
                         <div class="input-group-append ">
                             <?php if(isset($_SESSION['error_msg'])) { ?>
@@ -53,7 +53,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                    <a href="index.php?view=clients" class="btn btn-primary">Ir a Clientes</a> <!-- Segundo botón -->
+                    <a href="index.php?view=categories" class="btn btn-primary">Ir a Categoria</a> <!-- Segundo botón -->
                 </div>
             </div>
         </div>
@@ -73,9 +73,7 @@
                 </div>
                 <div class="modal-body">
                     <ul>
-                        <?php foreach ($_SESSION['errors'] as $error) : ?>
-                            <li><?php echo $error; ?></li>
-                        <?php endforeach; ?>
+                            <li>Error al agregar la categoria</li>
                     </ul>
                 </div>
                 <div class="modal-footer">
@@ -85,7 +83,7 @@
         </div>
     </div>
 
-    <?php unset($_SESSION['errors']); ?>
+    <?php unset($_SESSION['errors']);?>
 <?php endif; ?>
 
 <script>
@@ -95,5 +93,14 @@
 
         // Mostrar el modal de error si está presente
         $('#errorModal').modal('show');
+
+        // Si existe un parámetro 'result' en la URL, eliminar solo ese parámetro
+        const url = new URL(window.location.href);
+        if (url.searchParams.get('result')) {
+            url.searchParams.delete('result'); // Eliminar solo el parámetro 'result'
+
+            // Actualizar la URL sin recargar la página, manteniendo otros parámetros como 'view'
+            window.history.replaceState({}, document.title, url.pathname + "?" + url.searchParams.toString());
+        }
     });
 </script>

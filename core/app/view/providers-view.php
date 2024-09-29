@@ -48,8 +48,8 @@
 
                 <div class="table-responsive">
                     <table class="table table-bordered table-hover">
-                        <thead>
-                            <tr>
+                        <thead class="table-primary">
+                            <tr> 
                                 <th>Nombre completo</th>
                                 <th>Dirección</th>
                                 <th>Email</th>
@@ -70,7 +70,7 @@
                                     </a>
                                     <button class="btn btn-danger btn-sm d-inline btn-style" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" data-href="index.php?view=delprovider&id=<?php echo $user->id; ?>">
                                         <i class="bi bi-trash"></i>
-                                    </button> 
+                                    </button>
                                 </td>
                             </tr>
                             <?php endforeach; ?>
@@ -183,6 +183,19 @@
             // Limpiar los parámetros de la URL después de mostrar el mensaje
             window.history.replaceState({}, document.title, window.location.pathname);
         }
+
+        mama = () => {
+            const url = new URL(window.location.href);
+            const params = new URLSearchParams(url.search);
+
+            params.delete('result');
+            params.delete('success'); // Add this line to remove the 'success' parameter as well
+
+            const newUrl = url.pathname + '?' + params.toString();
+            window.history.replaceState({}, document.title, newUrl);
+        };
+
+        mama();
 
     });
 </script>

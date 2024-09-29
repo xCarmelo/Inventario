@@ -1,6 +1,13 @@
 <?php 
-$product = ProductData::getById($_GET["id"]);
-$categories = CategoryData::getAll();
+$id = filter_input(INPUT_GET, "id", FILTER_VALIDATE_INT);
+if ($id === false) {
+    // Redirigir a una página de error o mostrar un mensaje de error
+    header("Location: index.php?view=products");
+    exit;
+}
+
+$product = ProductData::getById($id);
+$categories = CategoryData::getAll(); 
 ?>
 
 <div class="row">
@@ -115,8 +122,6 @@ $categories = CategoryData::getAll();
                 </div>
             </form>
             <?php
-                // Limpiar los errores y los datos de sesión después de usarlos
-                unset($_SESSION['errors']);
                 unset($_SESSION['form_data']);
                 ?>
         </div>
@@ -134,17 +139,19 @@ $categories = CategoryData::getAll();
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                El cliente se agregó correctamente.
+                El producto se actualizo correctamente.
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                <a href="index.php?view=categories" class="btn btn-primary">Continuar</a>
+                <a href="index.php?view=products" class="btn btn-primary">Continuar</a>
             </div>
         </div>
     </div>
 </div> 
 
-<!-- Modal de error -->
+
+<?php if (isset($_SESSION['errors']) && !empty($_SESSION['errors'])) : ?>
+<!-- Modal de error --> 
 <div class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="errorModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -155,7 +162,7 @@ $categories = CategoryData::getAll();
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                Hubo un error al editar al cliente. Por favor, inténtalo de nuevo.
+                Hubo un error al editar el producto. Por favor, inténtalo de nuevo.
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
@@ -163,19 +170,21 @@ $categories = CategoryData::getAll();
         </div> 
     </div> 
 </div>
+<?php unset($_SESSION['errors']); ?>
+<?php endif; ?> 
 
 <script>
 $(document).ready(function() {
     // Verificar si se pasó un parámetro en la URL para mostrar el modal correspondiente
     const urlParams = new URLSearchParams(window.location.search);
-    const result = urlParams.get('result'); 
+    const result = urlParams.get('result');
     if (result === 'success') {
         var successModal = new bootstrap.Modal(document.getElementById('successModal'));
         successModal.show();
-    } else if (result === 'error') {
-        var errorModal = new bootstrap.Modal(document.getElementById('errorModal'));
-        errorModal.show();
-    }
+    } 
+    
+
+
 
     // Validar que el precio de entrada y salida sean numero y puedan inpluir decimales
     function validarNumero() {
@@ -185,6 +194,15 @@ $(document).ready(function() {
         alert("Por favor, ingresa un número válido");
     }
     }
+
+    // Si existe un parámetro 'result' en la URL, eliminar solo ese parámetro
+    const url = new URL(window.location.href);
+        if (url.searchParams.get('result')) {
+            url.searchParams.delete('result'); // Eliminar solo el parámetro 'result'
+
+            // Actualizar la URL sin recargar la página, manteniendo otros parámetros como 'view'
+            window.history.replaceState({}, document.title, url.pathname + "?" + url.searchParams.toString());
+        }
 });
 
 </script>

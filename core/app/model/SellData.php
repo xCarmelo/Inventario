@@ -61,11 +61,25 @@ class SellData {
 
     public function del() {
         $con = Database::getCon();
-        $stmt = $con->prepare("DELETE FROM ".self::$tablename." WHERE id = ?");
+        $stmt = $con->prepare("DELETE FROM " . self::$tablename . " WHERE id = ?");
+        
+        // Verifica si la preparación del statement fue exitosa
+        if ($stmt === false) {
+            throw new Exception("Error en la preparación de la consulta");
+        }
+    
+        // Vincula el parámetro id
         $stmt->bind_param("i", $this->id);
-        $stmt->execute();
-        return $stmt->get_result();
+    
+        // Verifica si la ejecución fue exitosa
+        if (!$stmt->execute()) {
+            throw new Exception("Error al eliminar el registro");
+        }
+    
+        // Retorna el statement
+        return $stmt;
     }
+    
 
     public function update_box() {
         $con = Database::getCon();

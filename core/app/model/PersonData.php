@@ -22,7 +22,7 @@ class PersonData {
     public function add_client() { 
         $sql = "INSERT INTO " . self::$tablename . " (name, lastname, address1, email1, phone1, kind, created_at) VALUES (?, ?, ?, ?, ?, 1, ?)";
         $con = Database::getCon();
-        $stmt = $con->prepare($sql);
+        $stmt = $con->prepare($sql); 
         
         if ($stmt === false) {
             die("Error en la preparación de la consulta");
@@ -57,7 +57,7 @@ class PersonData {
     }
 
     public function del() {
-        $con = Database::getCon();
+        $con = Database::getCon(); 
     
         // Primero, actualizamos el campo person_id a NULL para que se pueda eliminar el proveedor
         $updateSql = "UPDATE sell SET person_id = NULL WHERE person_id = ?";
