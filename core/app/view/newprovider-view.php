@@ -66,7 +66,6 @@
                 
                 <?php
                 // Limpiar los errores y los datos de sesión después de usarlos
-                unset($_SESSION['errors']);
                 unset($_SESSION['form_data']);
                 ?>
             </div>
@@ -76,6 +75,8 @@
 
 
 <!-- Modal de éxito -->
+<?php if (isset($_SESSION['success'])) : ?>
+<!-- Modal de éxito --> 
 <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -95,7 +96,10 @@
         </div>
     </div>
 </div>
+<?php unset($_SESSION['success']); ?>
+<?php endif; ?>
 
+<?php if (isset($_SESSION['errors']) && !empty($_SESSION['errors'])) : ?>
 <!-- Modal de error -->
 <div class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="errorModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -107,14 +111,16 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                Hubo un error al agregar al agregar el proveedor. Por favor, inténtalo de nuevo.
+                Hubo un error al agregar el proveedor. Por favor, inténtalo de nuevo.
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
             </div>
         </div> 
     </div>
-</div>
+</div> 
+<?php unset($_SESSION['errors']);?>
+<?php endif; ?>
 
 <script>
 $(document).ready(function() {

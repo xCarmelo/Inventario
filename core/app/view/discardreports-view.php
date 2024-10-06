@@ -1,5 +1,4 @@
 <?php
-$clients = PersonData::getClients();
 $operations = array();
 
 if (isset($_GET["sd"]) && isset($_GET["ed"]) && $_GET["sd"] != "" && $_GET["ed"] != "") {
@@ -7,15 +6,13 @@ if (isset($_GET["sd"]) && isset($_GET["ed"]) && $_GET["sd"] != "" && $_GET["ed"]
     $page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
     $offset = ($page - 1) * $limit;
 
-    if ($_GET["client_id"] == "") {
-        $operations = SellData::getAllByDateOp($_GET["sd"], $_GET["ed"], 2);
-    } else {
-        $operations = SellData::getAllByDateBCOp($_GET["client_id"], $_GET["sd"], $_GET["ed"], 2);
-    }
-
+    // Obtener operaciones de descarte por rango de fechas
+    $operations = OperationData::getAllByDateOp($_GET["sd"], $_GET["ed"], 3);
+    
+    // Contar total de operaciones y calcular páginas
     $totalOperations = count($operations);
     $totalPages = ceil($totalOperations / $limit);
-
+    
     // Filtrar operaciones por paginación
     $operations = array_slice($operations, $offset, $limit);
 }
@@ -24,18 +21,10 @@ if (isset($_GET["sd"]) && isset($_GET["ed"]) && $_GET["sd"] != "" && $_GET["ed"]
     <div class="container">
         <div class="row">
             <div class="col-12">
-                <h1><i class="bi bi-graph-up-arrow"></i> Reportes de Ventas</h1>
+                <h1><i class="bi bi-graph-down-arrow"></i> Reportes de Descarte</h1>
                 <form class="mt-5">
-                    <input type="hidden" name="view" value="sellreports">
+                    <input type="hidden" name="view" value="discardreports">
                     <div class="row">
-                        <div class="col-md-3 col-sm-6 mb-2">
-                            <select name="client_id" class="form-select">
-                                <option value="">-- TODOS --</option>
-                                <?php foreach ($clients as $p): ?>
-                                <option value="<?php echo $p->id; ?>" <?php echo isset($_GET["client_id"]) && $_GET["client_id"] == $p->id ? 'selected' : ''; ?>><?php echo $p->name; ?></option>
-                                <?php endforeach; ?>
-                            </select> 
-                        </div>
                         <div class="col-md-3 col-sm-6 mb-2">
                             <input type="date" name="sd" value="<?php echo isset($_GET["sd"]) ? $_GET["sd"] : ''; ?>" class="form-control">
                         </div>
@@ -43,7 +32,7 @@ if (isset($_GET["sd"]) && isset($_GET["ed"]) && $_GET["sd"] != "" && $_GET["ed"]
                             <input type="date" name="ed" value="<?php echo isset($_GET["ed"]) ? $_GET["ed"] : ''; ?>" class="form-control">
                         </div>
                         <div class="col-md-3 col-sm-6 mb-2">
-                            <button type="submit" class="btn btn-success w-100">Procesar</button> 
+                            <button type="submit" class="btn btn-success w-100">Procesar</button>
                         </div>
                     </div>
                 </form>
@@ -52,7 +41,7 @@ if (isset($_GET["sd"]) && isset($_GET["ed"]) && $_GET["sd"] != "" && $_GET["ed"]
         <div class="row mt-4">
             <div class="col-12">
                 <div class="card">
-                    <div class="card-header">REPORTE DE VENTAS</div>
+                    <div class="card-header">REPORTE DE DESCARTES</div>
                     <div class="card-body">
                         <?php if (isset($_GET["sd"]) && isset($_GET["ed"])): ?>
                             <?php if ($_GET["sd"] != "" && $_GET["ed"] != ""): ?>
@@ -71,62 +60,66 @@ if (isset($_GET["sd"]) && isset($_GET["ed"]) && $_GET["sd"] != "" && $_GET["ed"]
                                     </div>
                                 </div>
                                 <?php if (count($operations) > 0): ?>
-                                    <?php $supertotal = 0; ?>
                                     <div class="table-responsive">
                                         <table class="table table-bordered">
-                                            <thead class="table-primary">
+                                            <thead>
                                                 <tr>
                                                     <th>Id</th>
-                                                    <th>Total</th>
+                                                    <th>Producto</th>
+                                                    <th>Descripción</th>
+                                                    <th>Motivo del descarte</th>
+                                                    <th>Cantidad</th>
                                                     <th>Fecha</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 <?php foreach ($operations as $operation): ?>
-                                                    <tr>
+                                                    <?php $product = ProductData::getById($operation->product_id); ?>
+                                                    <tr>  
                                                         <td><?php echo $operation->id; ?></td>
-                                                        <td>C$ <?php echo number_format($operation->total - $operation->discount, 2, '.', ','); ?></td>
+                                                        <td><?php echo $product->name; ?></td>
+                                                        <td><?php echo $product->description; ?></td>
+                                                        <td><?php echo htmlspecialchars($operation->reason); ?></td>
+                                                        <td><?php echo number_format($operation->q); ?></td>
                                                         <td><?php echo $operation->created_at; ?></td>
                                                     </tr>
-                                                    <?php $supertotal += ($operation->total - $operation->discount); ?>
                                                 <?php endforeach; ?>
                                             </tbody>
                                         </table>
-                                    <!-- Paginación centrada debajo de la tabla -->
-                                <div class="d-flex justify-content-center mt-3">
-                                            <nav aria-label="Page navigation">
-                                                <ul class="pagination">
-                                                    <?php if ($page > 1): ?>
-                                                        <li class="page-item">
-                                                            <a class="page-link" href="index.php?view=products&limit=<?php echo $limit; ?>&page=1">««</a>
-                                                        </li>
-                                                        <li class="page-item">
-                                                            <a class="page-link" href="index.php?view=products&limit=<?php echo $limit; ?>&page=<?php echo $page - 1; ?>">‹</a>
-                                                        </li>
-                                                    <?php endif; ?>
-
-                                                    <?php
-                                                    $startPage = max(1, $page - 2);
-                                                    $endPage = min($totalPages, $page + 2);
-                                                    for ($i = $startPage; $i <= $endPage; $i++): ?>
-                                                        <li class="page-item <?php echo ($i == $page) ? 'active' : ''; ?>">
-                                                            <a class="page-link" href="index.php?view=products&limit=<?php echo $limit; ?>&page=<?php echo $i; ?>"><?php echo $i; ?></a>
-                                                        </li>
-                                                    <?php endfor; ?>
-
-                                                    <?php if ($page < $totalPages): ?>
-                                                        <li class="page-item">
-                                                            <a class="page-link" href="index.php?view=products&limit=<?php echo $limit; ?>&page=<?php echo $page + 1; ?>">›</a>
-                                                        </li>
-                                                        <li class="page-item">
-                                                            <a class="page-link" href="index.php?view=products&limit=<?php echo $limit; ?>&page=<?php echo $totalPages; ?>">»»</a>
-                                                        </li>
-                                                    <?php endif; ?>
-                                                </ul>
-                                            </nav>
-                                        </div>
                                     </div>
-                                    <h1>Total de ventas: C$ <?php echo number_format($supertotal, 2, '.', ','); ?></h1>
+                                    <!-- Paginación centrada debajo de la tabla -->
+                                    <div class="d-flex justify-content-center mt-3">
+                                        <nav aria-label="Page navigation">
+                                            <ul class="pagination">
+                                                <?php if ($page > 1): ?>
+                                                    <li class="page-item">
+                                                        <a class="page-link" href="index.php?view=discardreports&limit=<?php echo $limit; ?>&page=1">««</a>
+                                                    </li>
+                                                    <li class="page-item">
+                                                        <a class="page-link" href="index.php?view=discardreports&limit=<?php echo $limit; ?>&page=<?php echo $page - 1; ?>">‹</a>
+                                                    </li>
+                                                <?php endif; ?>
+
+                                                <?php
+                                                $startPage = max(1, $page - 2);
+                                                $endPage = min($totalPages, $page + 2);
+                                                for ($i = $startPage; $i <= $endPage; $i++): ?>
+                                                    <li class="page-item <?php echo ($i == $page) ? 'active' : ''; ?>">
+                                                        <a class="page-link" href="index.php?view=discardreports&limit=<?php echo $limit; ?>&page=<?php echo $i; ?>"><?php echo $i; ?></a>
+                                                    </li>
+                                                <?php endfor; ?>
+
+                                                <?php if ($page < $totalPages): ?>
+                                                    <li class="page-item">
+                                                        <a class="page-link" href="index.php?view=discardreports&limit=<?php echo $limit; ?>&page=<?php echo $page + 1; ?>">›</a>
+                                                    </li>
+                                                    <li class="page-item">
+                                                        <a class="page-link" href="index.php?view=discardreports&limit=<?php echo $limit; ?>&page=<?php echo $totalPages; ?>">»»</a>
+                                                    </li>
+                                                <?php endif; ?>
+                                            </ul>
+                                        </nav>
+                                    </div>
                                 <?php else: ?>
                                     <div class="jumbotron">
                                         <h2>No hay operaciones</h2>

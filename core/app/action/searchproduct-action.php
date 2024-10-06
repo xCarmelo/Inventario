@@ -76,16 +76,17 @@
                                                                 if (newPrice > 0) {
                                                                     priceProductInput.val(newPrice);
                                                                 }
-                                                            });
+                                                            }); 
                                                         });
                                                     </script>
                                                     <input type="number" class="form-control" required name="q" placeholder="Cantidad ..." pattern="[0-9]+" title="Ingresa una cantidad válida" min="1">
-                                                    <div class="input-group-append">
+                                                    <div class="input-group-append ms-2"> <!-- Agregado margen a la izquierda -->
                                                         <button type="submit" class="btn btn-primary"><i class="glyphicon glyphicon-plus-sign"></i> Agregar</button>
                                                     </div>
                                                 </div>
                                             </form>
                                         </td>
+
                                     </tr>
                                 <?php else: $products_in_cero++; ?>
                                 <?php endif; ?>

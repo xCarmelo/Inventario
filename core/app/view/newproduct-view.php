@@ -146,7 +146,7 @@ $categories = CategoryData::getAll();
     <?php unset($_SESSION['errors']); ?>
 <?php endif; ?>
 
-<script>
+<script> 
 $(document).ready(function() {
     // Show modals if they exist
     if ($('#successModal').length > 0) {

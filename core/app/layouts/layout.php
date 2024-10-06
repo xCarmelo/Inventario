@@ -175,10 +175,15 @@
             <i class="bi bi-basket"></i> COMPRAS
           </a>
         </li>
+        <li class="nav-subitem">
+          <a class="nav-link" href="./?view=discard">
+            <i class="bi bi-trash"></i> DESECHOS
+          </a>
+        </li>
       </ul>
     </li>
 
-    <li class="nav-item">
+    <li class="nav-item"> 
       <a class="nav-link nav-group-toggle" href="#" data-bs-toggle="collapse" data-bs-target="#reportes-submenu" aria-expanded="false" aria-controls="reportes-submenu">
         <i class="bi bi-clipboard-data"></i> REPORTES
       </a>
@@ -188,9 +193,16 @@
             <i class="bi bi-clipboard-data"></i> INVENTARIO
           </a>
         </li>
+        <!--
         <li class="nav-subitem">
           <a class="nav-link" href="./?view=sellreports">
             <i class="bi bi-graph-up"></i> VENTAS
+          </a>
+        </li>
+        -->
+        <li class="nav-subitem">
+          <a class="nav-link" href="./?view=discardreports">
+            <i class="bi bi-file-earmark-excel"></i> DESECHOS
           </a>
         </li>
       </ul>

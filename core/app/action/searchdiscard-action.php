@@ -10,7 +10,7 @@
                 ?>
                 <div class="table-responsive">
                     <table class="table table-bordered table-hover">
-                        <thead>
+                        <thead class="table-primary">
                             <tr>
                                 <th>Imagen</th>
                                 <th>Nombre</th>

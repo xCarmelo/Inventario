@@ -9,6 +9,36 @@
                 </a>
             </div>
             <?php endif; ?>
+
+            <br>
+            <!-- Formulario de búsqueda --> 
+        <div class="d-flex mt-3">
+                <!-- Formulario 1 -->
+                <form class="d-flex w-100" method="post" action="index.php?action=searchAleatori">
+                    <input type="text" name="vista" value="clients" hidden>
+                    <input title="El nombre solo puede contener letras, espacios, guiones. Debe tener entre 1 y 50 caracteres." 
+                        pattern="^[A-Za-zÁÉÍÓÚÑáéíóúñ\s0-9\-'\.]{1,50}$" 
+                        class="form-control me-2" 
+                        type="text" 
+                        name="search" 
+                        autofocus 
+                        placeholder="Buscar..." 
+                        value="<?php echo isset($_SESSION['SearchItemclients']) ? $_SESSION['SearchItemclients'] : ''; ?>">
+                    <button class="btn btn-outline-success d-flex align-items-center" type="submit">
+                        <span class="me-1">Buscar</span>
+                    </button>
+                </form>
+
+                <!-- Formulario 2: Botón al lado del botón "Buscar" -->
+                <form class="ms-2" method="post" action="index.php?action=eliminarSesion">
+                    <button type="submit" class="btn btn-outline-primary d-flex align-items-center justify-content-center">
+                        <i class="bi bi-arrow-repeat"></i>
+                    </button>
+                    <input type="text" name="vista" value="clients" hidden>
+                </form>
+            </div>
+            <br>
+
             <div class="card">
                 <div class="card-header">
                     CLIENTES
@@ -18,7 +48,13 @@
                     $page = isset($_GET['page']) ? $_GET['page'] : 1;
                     $limit = isset($_GET['limit']) ? $_GET['limit'] : 10;
 
+                    if(isset($_SESSION['SearchItemclients']))
+                    {
+                        $clients = PersonData::getLike($_SESSION['SearchItemclients']);
+                    }
+                    else
                     $clients = PersonData::getClients();
+
                     if (count($clients) > 0) {
                         $totalClients = count($clients);
                         $totalPages = ceil($totalClients / $limit);
@@ -156,7 +192,7 @@
                 <h5 class="modal-title" id="resultModalLabel">Resultado</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body"> 
                 <p id="resultMessage"></p>
             </div>
             <div class="modal-footer"> 
@@ -201,8 +237,9 @@
             window.history.replaceState({}, document.title, newUrl);
         };
 
-        mama();
+        mama();  
     });
 </script>
 
 <?php unset($_SESSION['errors']); ?>
+<?php unset($_SESSION['success']); ?>

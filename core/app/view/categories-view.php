@@ -9,8 +9,38 @@
                 </a> 
             </div> 
             <?php endif; ?>
+                <br>
+            <!-- Formulario de búsqueda -->
+            <div class="d-flex mt-3">
+                <!-- Formulario 1 -->
+                <form class="d-flex w-100" method="post" action="index.php?action=searchAleatori">
+                    <input type="text" name="vista" value="categories" hidden>
+                    <input title="El nombre solo puede contener letras, espacios, guiones. Debe tener entre 1 y 50 caracteres." 
+                        pattern="^[A-Za-zÁÉÍÓÚÑáéíóúñ\s0-9\-'\.]{1,50}$" 
+                        class="form-control me-2" 
+                        type="text" 
+                        name="search" 
+                        autofocus 
+                        placeholder="Buscar..." 
+                        value="<?php echo isset($_SESSION['SearchItemcategories']) ? $_SESSION['SearchItemcategories'] : ''; ?>">
+                    <button class="btn btn-outline-success d-flex align-items-center" type="submit">
+                        <span class="me-1">Buscar</span>
+                    </button>
+                </form>
+
+                <!-- Formulario 2: Botón al lado del botón "Buscar" -->
+                <form class="ms-2" method="post" action="index.php?action=eliminarSesion">
+                    <button type="submit" class="btn btn-outline-primary d-flex align-items-center justify-content-center">
+                        <i class="bi bi-arrow-repeat"></i>
+                    </button>
+                    <input type="text" name="vista" value="categories" hidden>
+                </form>
+            </div>
+
+
+            <br>
             <div class="card">
-                <div class="card-header">
+                <div class="card-header"> 
                     CATEGORÍAS
                 </div> 
                 <div class="card-body">
@@ -18,7 +48,13 @@
                     $page = isset($_GET['page']) ? $_GET['page'] : 1;
                     $limit = isset($_GET['limit']) ? $_GET['limit'] : 10;
 
+                    if(isset($_SESSION['SearchItemcategories']))
+                    {
+                        $categories = CategoryData::getLike($_SESSION['SearchItemcategories']);
+                    }
+                    else
                     $categories = CategoryData::getAll();
+
                     if (count($categories) > 0) {
                         $totalCategories = count($categories);
                         $totalPages = ceil($totalCategories / $limit);
@@ -49,24 +85,30 @@
                     <div class="table-responsive">
                         <table class="table table-bordered table-hover">
                             <thead class="table-primary">
-                                <tr><th>Nombre</th><th></th></tr>
+                                <tr>
+                                    <th>Nombre</th>
+
+                                    <?php if($_SESSION['is_admin'] === 1): ?>
+                                    <th></th>
+                                    <?php endif; ?>
+                                </tr> 
                             </thead>
                             <tbody>
                                 <?php foreach ($curr_categories as $category): ?>
                                 <tr>
                                     <td><?php echo $category->name; ?></td>
+                                    <?php if($_SESSION['is_admin'] === 1): ?>
                                     <td>
                                         <div class="btn-group" role="group">
-                                            <?php if($_SESSION['is_admin'] === 1): ?>
                                             <a href="index.php?view=editcategory&id=<?php echo $category->id; ?>" class="btn btn-sm btn-warning">
                                                 <i class="bi bi-pencil-fill"></i>
                                             </a>
                                             <button class="btn btn-sm btn-danger ms-1" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" data-href="index.php?view=delcategory&id=<?php echo $category->id; ?>">
                                                 <i class="bi bi-trash-fill"></i>
                                             </button>
-                                            <?php endif; ?>
                                         </div>
                                     </td>
+                                    <?php endif; ?>
                                 </tr>
                                 <?php endforeach; ?>
                             </tbody>
@@ -180,7 +222,7 @@
 
         mama = () => {
             const url = new URL(window.location.href);
-            const params = new URLSearchParams(url.search);
+            const params = new URLSearchParams(url.search); 
 
             params.delete('result');
             params.delete('success'); // Add this line to remove the 'success' parameter as well

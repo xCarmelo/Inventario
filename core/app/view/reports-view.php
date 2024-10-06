@@ -25,7 +25,7 @@ $product_id = isset($_GET['product_id']) ? $_GET['product_id'] : "";
                             <input type="date" name="ed" value="<?php if(isset($_GET["ed"])) { echo $_GET["ed"]; } ?>" class="form-control">
                         </div>
                         <div class="col-md-3 col-sm-6 mb-2">
-                            <input type="submit" class="btn btn-success btn-block" value="Procesar">
+                            <input type="submit" class="btn btn-success btn-block w-100" value="Procesar">
                         </div>
                     </div>
                 </form>
@@ -84,6 +84,7 @@ $product_id = isset($_GET['product_id']) ? $_GET['product_id'] : "";
                                                 <tr>
                                                     <th>Id</th>
                                                     <th>Producto</th>
+                                                    <th>Descripción</th>
                                                     <th>Cantidad</th>
                                                     <th>Operación</th>
                                                     <th>Fecha</th>
@@ -94,6 +95,7 @@ $product_id = isset($_GET['product_id']) ? $_GET['product_id'] : "";
                                                     <tr>
                                                         <td><?php echo $operation->id; ?></td>
                                                         <td><?php echo $operation->getProduct()->name; ?></td>
+                                                        <td><?php echo $operation->getProduct()->description; ?></td>
                                                         <td><?php echo $operation->q; ?></td>
                                                         <td><?php echo $operation->getOperationType()->name; ?></td>
                                                         <td><?php echo $operation->created_at; ?></td>

@@ -4,7 +4,7 @@ class PersonData {
     public $id;
     public $name;
     public $lastname;
-    public $email;
+    public $email; 
     public $image;
     public $password;
     public $created_at;
@@ -197,6 +197,26 @@ class PersonData {
 
     public static function getLike($q) {
         $sql = "SELECT * FROM " . self::$tablename . " WHERE name LIKE ?";
+        $con = Database::getCon();
+        $stmt = $con->prepare($sql);
+        $like = "%" . $q . "%";
+        $stmt->bind_param("s", $like);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $array = array();
+        while ($r = $result->fetch_array()) {
+            $person = new PersonData();
+            $person->id = $r['id'];
+            $person->name = $r['name'];
+            $person->email1 = $r['email1'];
+            $person->created_at = $r['created_at'];
+            $array[] = $person;
+        }
+        return $array;
+    }
+
+    public static function getProvider($q) {
+        $sql = "SELECT * FROM " . self::$tablename . " WHERE name LIKE ? and kind = 2";
         $con = Database::getCon();
         $stmt = $con->prepare($sql);
         $like = "%" . $q . "%";

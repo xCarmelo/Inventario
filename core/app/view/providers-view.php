@@ -7,18 +7,54 @@
                     <i class="bi bi-truck me-2"></i> Nuevo Proveedor
                 </a>
             </div>
+
+            <br>
+
+        <!-- Formulario de búsqueda -->
+        <div class="d-flex mt-3">
+                <!-- Formulario 1 -->
+                <form class="d-flex w-100" method="post" action="index.php?action=searchAleatori">
+                    <input type="text" name="vista" value="providers" hidden>
+                    <input title="El nombre solo puede contener letras, espacios, guiones. Debe tener entre 1 y 50 caracteres." 
+                        pattern="^[A-Za-zÁÉÍÓÚÑáéíóúñ\s0-9\-'\.]{1,50}$" 
+                        class="form-control me-2" 
+                        type="text" 
+                        name="search" 
+                        autofocus 
+                        placeholder="Buscar..." 
+                        value="<?php echo isset($_SESSION['SearchItemproviders']) ? $_SESSION['SearchItemproviders'] : ''; ?>">
+                    <button class="btn btn-outline-success d-flex align-items-center" type="submit">
+                        <span class="me-1">Buscar</span>
+                    </button>
+                </form>
+
+                <!-- Formulario 2: Botón al lado del botón "Buscar" -->
+                <form class="ms-2" method="post" action="index.php?action=eliminarSesion">
+                    <button type="submit" class="btn btn-outline-primary d-flex align-items-center justify-content-center">
+                        <i class="bi bi-arrow-repeat"></i>
+                    </button>
+                    <input type="text" name="vista" value="providers" hidden>
+                </form>
+            </div>
+            <br>
         </div>
 
         <div class="card">
             <div class="card-header"> 
-                PROVEEDORES
+                PROVEEDORES 
             </div>
             <div class="card-body">
                 <?php
                 $page = isset($_GET['page']) ? $_GET['page'] : 1;
                 $limit = isset($_GET['limit']) ? $_GET['limit'] : 10;
 
+                if(isset($_SESSION['SearchItemproviders']))
+                { 
+                    $users = PersonData::getProvider($_SESSION['SearchItemproviders']);
+                }
+                else
                 $users = PersonData::getProviders();
+
                 if (count($users) > 0) {
                     $totalUsers = count($users);
                     $totalPages = ceil($totalUsers / $limit);
@@ -199,4 +235,3 @@
 
     });
 </script>
-    

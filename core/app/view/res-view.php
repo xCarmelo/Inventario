@@ -7,7 +7,7 @@
                 <div class="card-header">
                     COMPRAS
                 </div>
-                <div class="card-body">
+                <div class="card-body"> 
 
                     <?php
                     // Configuración de paginación
@@ -155,6 +155,24 @@
     </div>
 </div>
 
+<!-- Modal para mensajes de éxito o error -->
+<div class="modal fade" id="resultModal" tabindex="-1" aria-labelledby="resultModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="resultModalLabel">Resultado</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p id="resultMessage"></p>
+            </div>
+            <div class="modal-footer"> 
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>  
+
 <!-- Script para cambiar el límite de paginación -->
 <script>
     $(document).ready(function() {
@@ -162,6 +180,32 @@
             var limit = $(this).val();
             window.location.href = "?view=res&page=1&limit=" + limit;
         });
+
+         // Mostrar el resultado según los parámetros de la URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const successMessage = urlParams.get('success');
+        const errorMessage = urlParams.get('error');
+
+        if (successMessage) {
+            $('#resultMessage').text(successMessage);
+            $('#resultModal').modal('show');
+        } else if (errorMessage) {
+            $('#resultMessage').text(errorMessage);
+            $('#resultModal').modal('show');
+        }
+
+        mama = () => {
+            const url = new URL(window.location.href);
+            const params = new URLSearchParams(url.search);
+
+            params.delete('result');
+            params.delete('success'); // Add this line to remove the 'success' parameter as well
+
+            const newUrl = url.pathname + '?' + params.toString();
+            window.history.replaceState({}, document.title, newUrl);
+        };
+
+        mama();
     });
 </script>
 <?php unset($_SESSION['errors']); ?>

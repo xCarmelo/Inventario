@@ -10,7 +10,7 @@ $user = PersonData::getById($_GET["id"]);
 <div class="row">
     <div class="col-md-12">
         <h1>Editar Proveedor</h1>
-        <br>
+        <br> 
         <div class="card">
             <div class="card-header">
                 EDITAR PROVEEDOR
@@ -73,7 +73,6 @@ $user = PersonData::getById($_GET["id"]);
 
                 <?php
                 // Limpiar los errores y los datos de sesión después de usarlos
-                unset($_SESSION['errors']);
                 unset($_SESSION['form_data']);
                 ?>
             </div>
@@ -81,7 +80,9 @@ $user = PersonData::getById($_GET["id"]);
     </div>
 </div>
 
+ 
 <!-- Modal de éxito -->
+<?php if (isset($_SESSION['success'])) : ?>
 <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -96,12 +97,15 @@ $user = PersonData::getById($_GET["id"]);
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                <a href="index.php?view=categories" class="btn btn-primary">Continuar</a>
+                <a href="index.php?view=providers" class="btn btn-primary">Continuar</a>
             </div>
         </div>
     </div>
 </div> 
+<?php unset($_SESSION['success']); ?>
+<?php endif; ?>
 
+<?php if (isset($_SESSION['errors']) && !empty($_SESSION['errors'])) : ?>
 <!-- Modal de error -->
 <div class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="errorModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -121,6 +125,9 @@ $user = PersonData::getById($_GET["id"]);
         </div> 
     </div> 
 </div>
+
+<?php unset($_SESSION['errors']);?>
+<?php endif; ?>
 
 <script> 
 $(document).ready(function() { 

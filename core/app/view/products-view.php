@@ -1,14 +1,44 @@
 <div class="row">
     <div class="col-md-12">
-        <h1><i class="bi bi-box-seam"></i> Productos</h1>
+        <h1><i class="bi bi-box-seam"></i> Productos</h1> 
         <?php if($_SESSION['is_admin'] === 1): ?>
         <div class="mt-4">
             <a href="index.php?view=newproduct" class="btn btn-primary">
                 <i class="bi bi-plus-lg me-2"></i> Agregar Producto
-            </a>
+            </a> 
         </div>
         <?php endif; ?>
         <br>
+
+        <!-- Formulario de búsqueda --> 
+        <div class="d-flex mt-3">
+                <!-- Formulario 1 -->
+                <form class="d-flex w-100" method="post" action="index.php?action=searchAleatori">
+                    <input type="text" name="vista" value="products" hidden>
+                    <input title="El nombre solo puede contener letras, espacios, guiones. Debe tener entre 1 y 50 caracteres." 
+                        pattern="^[A-Za-zÁÉÍÓÚÑáéíóúñ\s0-9\-'\.]{1,50}$" 
+                        class="form-control me-2" 
+                        type="text" 
+                        name="search" 
+                        autofocus 
+                        placeholder="Buscar..." 
+                        value="<?php echo isset($_SESSION['SearchItemproducts']) ? $_SESSION['SearchItemproducts'] : ''; ?>">
+                    <button class="btn btn-outline-success d-flex align-items-center" type="submit">
+                        <span class="me-1">Buscar</span>
+                    </button>
+                </form>
+
+                <!-- Formulario 2: Botón al lado del botón "Buscar" -->
+                <form class="ms-2" method="post" action="index.php?action=eliminarSesion">
+                    <button type="submit" class="btn btn-outline-primary d-flex align-items-center justify-content-center">
+                        <i class="bi bi-arrow-repeat"></i>
+                    </button>
+                    <input type="text" name="vista" value="products" hidden>
+                </form>
+            </div>
+
+            <br>
+
         <div class="card">
             <div class="card-header">
                 PRODUCTOS
@@ -18,7 +48,15 @@
                 $page = isset($_GET['page']) ? $_GET['page'] : 1;
                 $limit = isset($_GET['limit']) ? $_GET['limit'] : 10;
 
-                $products = ProductData::getAll();
+                //********************************** */
+                if(isset($_SESSION['SearchItemproducts']))
+                {
+                    $products = ProductData::getLike($_SESSION['SearchItemproducts']);  
+                }
+                else
+                    $products = ProductData::getAll();
+                /****************************************** */
+
                 if (count($products) > 0) {
                     $totalProducts = count($products);
                     $totalPages = ceil($totalProducts / $limit);
@@ -121,7 +159,7 @@
                                 <li class="page-item">
                                     <a class="page-link" href="index.php?view=products&limit=<?php echo $limit; ?>&page=<?php echo $totalPages; ?>">»»</a>
                                 </li>
-                            <?php endif; ?>
+                            <?php endif; ?> 
                         </ul>
                     </nav>
                 </div>
@@ -130,8 +168,7 @@
                 } else {
                 ?>
                 <div class="jumbotron">
-                    <h2>No hay productos</h2>
-                    <p>No se han agregado productos a la base de datos, puedes agregar uno dando click en el boton <b>"Agregar Producto"</b>.</p>
+                    <p class="alert alert-danger">Sin Articulos disponibles</p>
                 </div>
                 <?php
                 }
@@ -226,7 +263,7 @@
             images[i].addEventListener('mouseleave', function() {
                 modal.hide();
             });    
-        }
+        } 
 
         mama = () => {
             const url = new URL(window.location.href);
@@ -239,6 +276,6 @@
             window.history.replaceState({}, document.title, newUrl);
         };
 
-        mama();
+        mama(); 
     });
 </script>

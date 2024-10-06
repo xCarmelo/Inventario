@@ -6,7 +6,7 @@
         exit;
     }
     $user = CategoryData::getById($_GET["id"]);
-?>
+?> 
 
 <div class="row">
     <div class="col-md-12">
@@ -46,13 +46,14 @@
 </div>
 
 <!-- Modal de éxito -->
+<?php if (isset($_SESSION['success'])) : ?> 
 <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="successModalLabel">
                     <i class="bi bi-check-circle text-success"></i> Éxito
-                </h5>
+                </h5> 
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -65,7 +66,8 @@
         </div>
     </div>
 </div>
-
+<?php unset($_SESSION['success']); ?>
+<?php endif; ?>
 
 <?php if (isset($_SESSION['errors']) && !empty($_SESSION['errors'])) : ?>
 <!-- Modal de error -->

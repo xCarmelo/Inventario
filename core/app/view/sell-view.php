@@ -12,18 +12,18 @@
                 <div class="col-md-3 col-12">
                     <button type="submit" class="btn btn-primary w-100  fw-bold"><i class="glyphicon glyphicon-search"></i> Buscar</button>
                 </div>
-            </div>
+            </div> 
         </form>
     </div>
 </div>
-    <div id="show_search_results"></div>
+    <div id="show_search_results"></div> 
     <script>
         $(document).ready(function(){
             $("#searchp").on("submit",function(e){
                 e.preventDefault();
                 $.get("./?action=searchproduct",$("#searchp").serialize(),function(data){
                     $("#show_search_results").html(data); 
-                });
+                });-
                 $("#product_code").val("");
             });
         });
@@ -35,7 +35,7 @@
                 }else{
                     console.log(e.which);
                 }
-            });
+            }); 
         });
     </script>
 

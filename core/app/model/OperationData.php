@@ -73,6 +73,22 @@ class OperationData {
         return Model::one($result, new OperationData());
     }
 
+    
+    public function addDiscard(){
+        $sql = "INSERT INTO " . self::$tablename . " (product_id, reason, q, operation_type_id, sell_id, created_at, new_price) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        $con = Database::getCon();
+        $stmt = $con->prepare($sql);
+        $stmt->bind_param("issiisd", $this->product_id, $this->reason, $this->q, $this->operation_type_id, $this->sell_id, $this->created_at, $this->new_price);
+        $stmt->execute();
+        return array($stmt, $con->insert_id);
+    }
+
+    public static function getAllByDateOp($start, $end, $op) {
+        $sql = "SELECT * FROM " . self::$tablename . " WHERE DATE(created_at) >= \"$start\" AND DATE(created_at) <= \"$end\" AND operation_type_id = $op ORDER BY created_at DESC";
+        $query = Executor::doit($sql);
+        return Model::many($query[0], new OperationData());
+    }
+
     public static function getAll(){
         $sql = "SELECT * FROM " . self::$tablename;
         $con = Database::getCon();
@@ -109,7 +125,7 @@ class OperationData {
         }
         $stmt->execute();
         $result = $stmt->get_result();
-        return Model::many($result, new OperationData());
+        return Model::many($result, new OperationData()); 
     }
 
     public function getProduct(){ 
@@ -123,13 +139,16 @@ class OperationData {
     public static function getQYesF($product_id){
         $q = 0;
         $operations = self::getAllByProductId($product_id);
-        $input_id = OperationTypeData::getByName("entrada")->id;
-        $output_id = OperationTypeData::getByName("salida")->id;
+        $input_id = OperationTypeData::getByName("Compra")->id;
+        $output_id = OperationTypeData::getByName("Venta")->id;
+        $discard_id = OperationTypeData::getByName("Desecho")->id;
         
         foreach ($operations as $operation) {
             if ($operation->operation_type_id == $input_id) { 
                 $q += $operation->q; 
-            } else if ($operation->operation_type_id == $output_id) {     
+            } else if ($operation->operation_type_id == $output_id) {   
+                $q += (-$operation->q);
+            }else if ($operation->operation_type_id == $discard_id) {   
                 $q += (-$operation->q);
             }
         }
@@ -189,8 +208,8 @@ class OperationData {
     public static function getOutputQ($product_id, $cut_id){
         $q = 0;
         $operations = self::getOutputByProductIdCutId($product_id, $cut_id);
-        $input_id = OperationTypeData::getByName("entrada")->id;
-        $output_id = OperationTypeData::getByName("salida")->id;
+        $input_id = OperationTypeData::getByName("Compra")->id;
+        $output_id = OperationTypeData::getByName("Venta ")->id;
         foreach ($operations as $operation) {
             if ($operation->operation_type_id == $input_id) { 
                 $q += $operation->q; 
@@ -204,8 +223,8 @@ class OperationData {
     public static function getOutputQYesF($product_id){
         $q = 0;
         $operations = self::getOutputByProductId($product_id);
-        $input_id = OperationTypeData::getByName("entrada")->id;
-        $output_id = OperationTypeData::getByName("salida")->id;
+        $input_id = OperationTypeData::getByName("Compra")->id;
+        $output_id = OperationTypeData::getByName("Venta ")->id;
         foreach ($operations as $operation) {
             if ($operation->operation_type_id == $input_id) { 
                 $q += $operation->q; 
@@ -219,7 +238,7 @@ class OperationData {
     public static function getInputQYesF($product_id){
         $q = 0;
         $operations = self::getInputByProductId($product_id);
-        $input_id = OperationTypeData::getByName("entrada")->id;
+        $input_id = OperationTypeData::getByName("Compra")->id;
         foreach ($operations as $operation) {
             if ($operation->operation_type_id == $input_id) { 
                 $q += $operation->q; 
@@ -251,8 +270,8 @@ class OperationData {
     public static function getInputQ($product_id, $cut_id){
         $q = 0;
         $operations = self::getInputByProductId($product_id);
-        $input_id = OperationTypeData::getByName("entrada")->id;
-        $output_id = OperationTypeData::getByName("salida")->id;
+        $input_id = OperationTypeData::getByName("Compra")->id;
+        $output_id = OperationTypeData::getByName("Venta ")->id;
         foreach ($operations as $operation) {
             if ($operation->operation_type_id == $input_id) { 
                 $q += $operation->q; 

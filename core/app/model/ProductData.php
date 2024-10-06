@@ -13,7 +13,7 @@ class ProductData {
         // Establecer la zona horaria deseada (reemplaza 'America/Managua' con tu zona horaria)
         date_default_timezone_set('America/Managua'); 
     
-        $this->created_at = date("Y-m-d H:i:s");
+        $this->created_at = date("Y-m-d H:i:s"); 
     }
 
     public function validate() {
@@ -153,7 +153,7 @@ class ProductData {
         return $stmt->execute();
     }
 
-    public static function getById($id) {
+    public static function getById($id) { 
         $con = Database::getCon();
         $stmt = $con->prepare("SELECT * FROM " . self::$tablename . " WHERE id = ?");
         $stmt->bind_param("i", $id);
@@ -179,9 +179,9 @@ class ProductData {
 
     public static function getLike($p) {
         $con = Database::getCon();
-        $stmt = $con->prepare("SELECT * FROM " . self::$tablename . " WHERE barcode LIKE ? OR name LIKE ? OR id LIKE ?");
+        $stmt = $con->prepare("SELECT * FROM " . self::$tablename . " WHERE  name LIKE ?");
         $like = "%$p%";
-        $stmt->bind_param("sss", $like, $like, $like);
+        $stmt->bind_param("s", $like);
         $stmt->execute();
         $result = $stmt->get_result();
         return Model::many($result, new ProductData());

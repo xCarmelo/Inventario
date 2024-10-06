@@ -4,35 +4,66 @@ $limit = isset($_GET['limit']) ? (int)$_GET['limit'] : 10;
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 $offset = ($page - 1) * $limit;
 
-// Obtener la lista de ventas
-$sells = SellData::getSells(); // Asegúrate de que este método devuelva todos los datos necesarios para paginar
+// Obtener clientes
+$clients = PersonData::getClients(); 
+
+// Obtener la lista de ventas con filtros de cliente y fechas
+$sells = array();
+if (isset($_GET["sd"]) && isset($_GET["ed"]) && $_GET["sd"] != "" && $_GET["ed"] != "") {
+    if ($_GET["client_id"] == "") {
+        $sells = SellData::getAllByDateOp($_GET["sd"], $_GET["ed"], 2);
+    } else {
+        $sells = SellData::getAllByDateBCOp($_GET["client_id"], $_GET["sd"], $_GET["ed"], 2);
+    }
+} else {
+    $sells = SellData::getSells(); // Obtener todas las ventas si no hay filtros 
+}
 
 // Calcular el total de páginas
 $total = count($sells);
 $totalPages = ceil($total / $limit);
 $sells = array_slice($sells, $offset, $limit); // Paginación de los datos
-
-// Mostrar la información de la página actual y el total de páginas
 ?>
 
 <div class="row">
     <div class="col-md-12">
         <h1><i class="bi bi-cart"></i> Lista de Ventas</h1>
-        <div class="clearfix"></div>
+        <form class="mt-3">
+            <input type="hidden" name="view" value="sellreports"> 
+            <div class="row">
+                <div class="col-md-3 col-sm-6 mb-2">
+                    <select name="client_id" class="form-select">
+                        <option value="">-- TODOS --</option>
+                        <?php foreach ($clients as $p): ?>
+                        <option value="<?php echo $p->id; ?>" <?php echo isset($_GET["client_id"]) && $_GET["client_id"] == $p->id ? 'selected' : ''; ?>><?php echo $p->name; ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                <div class="col-md-3 col-sm-6 mb-2">
+                    <input type="date" name="sd" value="<?php echo isset($_GET["sd"]) ? $_GET["sd"] : ''; ?>" class="form-control">
+                </div>
+                <div class="col-md-3 col-sm-6 mb-2">
+                    <input type="date" name="ed" value="<?php echo isset($_GET["ed"]) ? $_GET["ed"] : ''; ?>" class="form-control">
+                </div>
+                <div class="col-md-3 col-sm-6 mb-2">
+                    <button type="submit" class="btn btn-success w-100">Procesar</button>
+                </div>
+            </div>
+        </form>
 
-     
+        <div class="clearfix"></div>
 
         <?php if (count($sells) > 0) { ?>
 
         <div class="card mt-5">
             <div class="card-header">
                 VENTAS 
-            </div> 
+            </div>  
 
             <div class="d-flex justify-content-between mb-3 mt-3 ms-3">
             <div>
                 <b>Mostrar:</b>
-                <select id="limitSelect" class="form-select d-inline-block w-auto">
+                <select id="limitSelect" class="form-select d-inline-block w-auto" onchange="this.form.submit()">
                     <option value="10" <?php echo $limit == 10 ? 'selected' : ''; ?>>10</option>
                     <option value="25" <?php echo $limit == 25 ? 'selected' : ''; ?>>25</option>
                     <option value="50" <?php echo $limit == 50 ? 'selected' : ''; ?>>50</option>
@@ -131,94 +162,13 @@ $sells = array_slice($sells, $offset, $limit); // Paginación de los datos
                         </ul>
                     </nav>
                 </div>
+            </div>
 
         <?php } else { ?>
         <div class="jumbotron">
             <h2>No hay ventas</h2>
-            <p>No se ha realizado ninguna venta.</p>
+            <p>No se encontraron resultados para el rango seleccionado.</p>
         </div>
         <?php } ?>
-
-        <!-- Modal de Confirmación -->
-        <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="confirmDeleteModalLabel">Confirmar Eliminación</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        ¿Estás seguro de que deseas eliminar esta venta? Esta acción no se puede deshacer.
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                        <a id="confirmDeleteBtn" class="btn btn-danger" href="#">Eliminar</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-
-        
-<!-- Modal para mensajes de éxito o error -->
-<div class="modal fade" id="resultModal" tabindex="-1" aria-labelledby="resultModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="resultModalLabel">Resultado</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <p id="resultMessage"></p>
-            </div>
-            <div class="modal-footer"> 
-                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cerrar</button>
-            </div>
-        </div>
-    </div>
-</div> 
-
-
-        <script>
-            $(document).ready(function() {
-                $('#confirmDeleteModal').on('show.bs.modal', function (event) {
-                    var button = $(event.relatedTarget);
-                    var url = button.data('href');
-                    var modal = $(this);
-                    modal.find('#confirmDeleteBtn').attr('href', url);
-                });
-
-                $('#limitSelect').on('change', function() {
-                    var limit = $(this).val();
-                    window.location.href = "?view=sells&page=1&limit=" + limit;
-                });
-
-                 // Mostrar el resultado según los parámetros de la URL
-                const urlParams = new URLSearchParams(window.location.search);
-                const successMessage = urlParams.get('success');
-                const errorMessage = urlParams.get('error');
-
-                if (successMessage) {
-                    $('#resultMessage').text(successMessage);
-                    $('#resultModal').modal('show');
-                } else if (errorMessage) {
-                    $('#resultMessage').text(errorMessage);
-                    $('#resultModal').modal('show');
-                }
-
-                mama = () => {
-            const url = new URL(window.location.href);
-            const params = new URLSearchParams(url.search);
-
-            params.delete('result');
-            params.delete('success'); // Add this line to remove the 'success' parameter as well
-
-            const newUrl = url.pathname + '?' + params.toString();
-            window.history.replaceState({}, document.title, newUrl);
-        };
-
-        mama();
-                    });
-        </script>
     </div>
 </div>

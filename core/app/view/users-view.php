@@ -8,6 +8,34 @@
                 </a>
             </div>
 
+            <br>
+
+        <!-- Formulario 1 -->
+        <div class="d-flex mt-3">
+        <form class="d-flex w-100" method="post" action="index.php?action=searchAleatori">
+                    <input type="text" name="vista" value="users" hidden>
+                    <input title="El nombre solo puede contener letras, espacios, guiones. Debe tener entre 1 y 50 caracteres." 
+                        pattern="^[A-Za-zÁÉÍÓÚÑáéíóúñ\s0-9\-'\.]{1,50}$" 
+                        class="form-control me-2" 
+                        type="text" 
+                        name="search" 
+                        autofocus 
+                        placeholder="Buscar..." 
+                        value="<?php echo isset($_SESSION['SearchItemusers']) ? $_SESSION['SearchItemusers'] : ''; ?>">
+                    <button class="btn btn-outline-success d-flex align-items-center" type="submit">
+                        <span class="me-1">Buscar</span>
+                    </button>
+                </form>
+
+                <form class="ms-2" method="post" action="index.php?action=eliminarSesion">
+                    <button type="submit" class="btn btn-outline-primary d-flex align-items-center justify-content-center">
+                        <i class="bi bi-arrow-repeat"></i>
+                    </button>
+                    <input type="text" name="vista" value="users" hidden>
+                </form>
+            </div>
+            <br>
+
             <div class="card">
                 <div class="card-header">  
                     USUARIOS
@@ -17,7 +45,13 @@
                     $page = isset($_GET['page']) ? $_GET['page'] : 1;
                     $limit = isset($_GET['limit']) ? $_GET['limit'] : 10;
 
-                    $users = UserData::getAll();
+                    if(isset($_SESSION['SearchItemusers']))
+                    {
+                        $users = UserData::getLike($_SESSION['SearchItemusers']);
+                    }
+                    else
+                        $users = UserData::getAll();
+
                     if (count($users) > 0) { 
                         $totalUsers = count($users);
                         $totalPages = ceil($totalUsers / $limit);
@@ -64,7 +98,7 @@
                                     <td><?php echo $user->username; ?></td>
                                     <td><?php echo $user->email; ?></td>
                                     <td>
-                                        <?php if ($user->is_active): ?>
+                                        <?php if ($user->is_active): ?> 
                                         <i class="bi bi-check-lg"></i>
                                         <?php endif; ?>
                                     </td>
@@ -121,7 +155,7 @@
 
                     <?php
                     } else {
-                        echo '<p class="alert alert-warning">No hay usuarios.</p>';
+                        echo '<p class="alert alert-danger">No hay usuarios.</p>';
                     }
                     ?>
                 </div>
@@ -206,4 +240,4 @@
     });
 </script>    
 
-<?php unset($_SESSION['errors']); ?>
+<?php unset($_SESSION['errors']); unset($_SESSION['success']);?>

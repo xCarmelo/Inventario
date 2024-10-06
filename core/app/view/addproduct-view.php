@@ -61,7 +61,7 @@ function validate_data($data) {
 
 if (count($_POST) > 0) { 
     $product = new ProductData();
-    $errors = validate_data($_POST); 
+    $errors = validate_data($_POST);  
 
     if (count($errors) == 0) {
             $product->name = $_POST["name"];
