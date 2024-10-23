@@ -2,12 +2,12 @@
 class ProductData {
     public static $tablename = "product";
 
-    public function __construct() {
+    public function __construct() { 
         $this->name = "";
         $this->price_in = 0.0;
         $this->price_out = 0.0;
         $this->unit = "";
-        $this->user_id = 0;
+        $this->user_id = 0; 
         $this->presentation = "";
         $this->description = "";
         // Establecer la zona horaria deseada (reemplaza 'America/Managua' con tu zona horaria)
@@ -99,16 +99,16 @@ class ProductData {
         $stmt->close();
     }
 
-    public function del() { 
+    public function del($active = 0) { 
         $con = Database::getCon(); // Obtiene la conexión a la base de datos
-        $sql = "DELETE FROM " . self::$tablename . " WHERE id=?";
+        $sql = "UPDATE " . self::$tablename . " SET is_active = ? WHERE id=?";
         $stmt = $con->prepare($sql); // Prepara la consulta SQL
         
         if ($stmt === false) {
             throw new Exception("Error en la preparación de la consulta"); // Lanza una excepción si hay un error
         }
         
-        $stmt->bind_param("i", $this->id); // Asocia el parámetro ID
+        $stmt->bind_param("ii", $active, $this->id); // Asocia el parámetro ID
         
         if (!$stmt->execute()) { // Ejecuta la consulta y verifica si hubo un error
             throw new Exception("Error al eliminar el registro");

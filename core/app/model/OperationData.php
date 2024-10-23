@@ -31,20 +31,21 @@ class OperationData {
         $con = Database::getCon();
         $stmt = $con->prepare($sql);
         $stmt->bind_param("i", $id);
-        $stmt->execute();
+        $stmt->execute(); 
         return $stmt;
     }
 
     public function del() {
         $con = Database::getCon(); // Obtiene la conexión a la base de datos
-        $sql = "DELETE FROM " . self::$tablename . " WHERE id=?";
+        $sql = "UPDATE " . self::$tablename . " SET operation_type_id = ?, reason_for_return = ? WHERE id=?";
         $stmt = $con->prepare($sql); // Prepara la consulta SQL
         
         if ($stmt === false) {
             throw new Exception("Error en la preparación de la consulta"); // Lanza una excepción si hay un error
         }
         
-        $stmt->bind_param("i", $this->id); // Asocia el parámetro ID
+        $filtro = 4;
+        $stmt->bind_param("isi", $filtro, $this->reason_for_return, $this->id); // Asocia el parámetro ID
         
         if (!$stmt->execute()) { // Ejecuta la consulta y verifica si hubo un error
             throw new Exception("Error al eliminar el registro");
@@ -59,6 +60,15 @@ class OperationData {
         $con = Database::getCon();
         $stmt = $con->prepare($sql);
         $stmt->bind_param("isi", $this->product_id, $this->q, $this->id);
+        $stmt->execute();
+        return $stmt;
+    }
+
+    public function updateOperation(){
+        $sql = "UPDATE " . self::$tablename . " SET operation_type_id=?, reason_for_return=? WHERE id=?";
+        $con = Database::getCon();
+        $stmt = $con->prepare($sql);
+        $stmt->bind_param("isi", $this->operation_type_id, $this->reason_for_return, $this->id);
         $stmt->execute();
         return $stmt;
     }
@@ -129,11 +139,11 @@ class OperationData {
     }
 
     public function getProduct(){ 
-        return ProductData::getById($this->product_id);
+        return ProductData::getById($this->product_id); 
     }
 
     public function getOperationtype(){  
-        return OperationTypeData::getById($this->operation_type_id);
+        return OperationTypeData::getById($this->operation_type_id); 
     } 
 
     public static function getQYesF($product_id){
@@ -144,7 +154,7 @@ class OperationData {
         $discard_id = OperationTypeData::getByName("Desecho")->id;
         
         foreach ($operations as $operation) {
-            if ($operation->operation_type_id == $input_id) { 
+            if ($operation->operation_type_id == $input_id) {  
                 $q += $operation->q; 
             } else if ($operation->operation_type_id == $output_id) {   
                 $q += (-$operation->q);
@@ -186,10 +196,11 @@ class OperationData {
     }
 
     public static function getAllProductsBySellId($sell_id){
-        $sql = "SELECT * FROM " . self::$tablename . " WHERE sell_id=? ORDER BY created_at DESC";
+        $sql = "SELECT * FROM " . self::$tablename . " WHERE sell_id=? and operation_type_id != ? ORDER BY created_at DESC";
         $con = Database::getCon();
         $stmt = $con->prepare($sql);
-        $stmt->bind_param("i", $sell_id);
+        $filtro = 4;
+        $stmt->bind_param("ii", $sell_id, $filtro);
         $stmt->execute();
         $result = $stmt->get_result();
         return Model::many($result, new OperationData());

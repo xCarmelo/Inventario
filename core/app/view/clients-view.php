@@ -1,3 +1,5 @@
+<?php $filtro_active_user = isset($_SESSION['filtroActiveUser'])?$_SESSION['filtroActiveUser']:1;?>
+
 <div class="container">
     <div class="row">
         <div class="col-md-12">
@@ -27,6 +29,15 @@
                     <button class="btn btn-outline-success d-flex align-items-center" type="submit">
                         <span class="me-1">Buscar</span>
                     </button>
+                </form>
+
+                <!--es para filtrar los usuarios desactivados-->
+                <form class="ms-2" method="post" action="index.php?action=filtroActiveUser">
+                <div style="padding-left: 30px;" class="form-check form-check-lg btn btn-outline-primary d-flex align-items-center justify-content-center">
+                    <input <?php if($filtro_active_user == 0):?> checked <?php endif?> type="checkbox" class="form-check-input" name="userInactive" id="userInactive" onchange="this.form.submit();">
+                    <label class="form-check-label ms-2" for="userInactive">Eliminados</label>
+                    <input type="text" hidden value="clients" name="view">
+                </div>
                 </form>
 
                 <!-- Formulario 2: Botón al lado del botón "Buscar" -->
@@ -94,28 +105,39 @@
                                     <th>Acciones</th>
                                     <?php endif; ?>
                                 </tr>
-                            </thead>
+                            </thead> 
                             <tbody>
-                                <?php foreach ($curr_clients as $client): ?>
+                                <?php foreach ($curr_clients as $client): 
+                                    if($client->active == $filtro_active_user):
+                                    ?>
+                                    
                                 <tr>
                                     <td><?php echo $client->name . ' ' . $client->lastname; ?></td>
                                     <td><?php echo $client->address1; ?></td>
                                     <td><?php echo $client->email1; ?></td>
                                     <td><?php echo $client->phone1; ?></td>
                                     <?php if($_SESSION['is_admin'] === 1): ?>
-                                    <td style="width:130px;">
-                                        <div class="btn-group" role="group">
-                                            <a href="index.php?view=editclient&id=<?php echo $client->id; ?>" class="btn btn-sm btn-warning">
-                                                <i class="bi bi-pencil-fill"></i>
-                                            </a>
-                                            <button class="btn btn-sm btn-danger ms-1" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" data-href="index.php?view=delclient&id=<?php echo $client->id; ?>">
-                                                <i class="bi bi-trash-fill"></i>
-                                            </button>
-                                        </div>
-                                    </td>
+
+                                        <?php if($filtro_active_user == 0):?>
+                                            <td style="width:30px;">
+                                                <div class="btn-group" role="group">
+                                                <button class="btn btn-sm btn-primary ms-1" data-bs-toggle="modal" data-bs-target="#confirmHabilitarModal" data-href="index.php?view=delclient&id=<?php echo $client->id;?>&active=1"><i class="bi bi-arrow-counterclockwise"></i>Habilitar</button>                                     </div>
+                                            </td>
+                                        <?php else:?> 
+                                            <td style="width:130px;">
+                                                <div class="btn-group" role="group">
+                                                    <a href="index.php?view=editclient&id=<?php echo $client->id; ?>" class="btn btn-sm btn-warning"> 
+                                                        <i class="bi bi-pencil-fill"></i>
+                                                    </a>
+                                                    <button class="btn btn-sm btn-danger ms-1" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" data-href="index.php?view=delclient&id=<?php echo $client->id; ?>">
+                                                        <i class="bi bi-trash-fill"></i>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        <?php endif; ?>
                                     <?php endif; ?>
                                 </tr>
-                                <?php endforeach; ?>
+                                <?php endif; endforeach; ?>
                             </tbody>
                         </table>
                     </div>
@@ -174,7 +196,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                ¿Estás seguro de que deseas eliminar este cliente? <strong>Puede que este asociado a varios registros   </strong>.
+                ¿Estás seguro de que deseas eliminar este cliente?
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
@@ -203,6 +225,26 @@
 </div>  
 
 
+<!-- Modal de Confirmación para Habilitar cliente -->
+<div class="modal fade" id="confirmHabilitarModal" tabindex="-1" aria-labelledby="confirmHabilitarModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmHabilitarModalLabel">Confirmar Habilitación</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                ¿Estás seguro de que deseas habilitar este cliente?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <a id="confirmHabilitarBtn" class="btn btn-primary" href="#">Habilitar</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <script>
     $(document).ready(function() {
         $('#confirmDeleteModal').on('show.bs.modal', function (event) {
@@ -211,6 +253,15 @@
 
             var modal = $(this);
             modal.find('#confirmDeleteBtn').attr('href', url);
+        });
+
+         // Manejar la apertura del modal de habilitación
+        $('#confirmHabilitarModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget); // Botón que activó el modal
+            var url = button.data('href'); // Extraer la URL del atributo data-href
+
+            var modal = $(this);
+            modal.find('#confirmHabilitarBtn').attr('href', url); // Establecer la URL en el botón de confirmación
         });
 
          // Mostrar el resultado según los parámetros de la URL
@@ -228,7 +279,7 @@
 
         mama = () => {
             const url = new URL(window.location.href);
-            const params = new URLSearchParams(url.search);
+            const params = new URLSearchParams(url.search); 
 
             params.delete('result');
             params.delete('success'); // Add this line to remove the 'success' parameter as well

@@ -22,6 +22,7 @@
                 <?php
                 $products_in_cero = 0;
                 foreach($products as $product):
+                    if($product->isa_ctive != 0):
                     $q = OperationData::getQYesF($product->id);
                     
                     // Si hay productos en inventario
@@ -47,7 +48,7 @@
                     <?php else: 
                         $products_in_cero++;
                     endif;
-                endforeach; ?>
+                endif; endforeach; ?>
             </tbody>
         </table>
     </div>

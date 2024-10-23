@@ -75,12 +75,12 @@ $_SESSION["errors"] = $errors;
 
 			$op = new OperationData(); 
 			 $op->product_id = $c["product_id"] ;
-			 $op->operation_type_id=OperationTypeData::getByName("salida")->id;
+			 $op->operation_type_id=OperationTypeData::getByName("Venta")->id;
 			 $op->sell_id=$s[1];
 			 $op->q= $c["q"];
 			 $op->new_price = $c["newprice"]; 
 
-			if(isset($_POST["is_oficial"])){
+			if(isset($_POST["is_oficial"])){ 
 				$op->is_oficial = 1;
 			}
 

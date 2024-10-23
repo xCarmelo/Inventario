@@ -140,12 +140,14 @@
             <i class="bi bi-tags"></i> CATEGORIAS
           </a>
         </li>
+
+        <?php if($_SESSION['is_admin'] === 1): ?> 
         <li class="nav-subitem">
           <a class="nav-link" href="./?view=clients">
             <i class="bi bi-people"></i> CLIENTES
           </a>
         </li>
-        <?php if($_SESSION['is_admin'] === 1): ?>
+
         <li class="nav-subitem">
           <a class="nav-link" href="./?view=providers">
             <i class="bi bi-truck"></i> PROVEEDORES
@@ -154,6 +156,8 @@
         <?php endif; ?>
       </ul>
     </li>
+
+    <?php if ($_SESSION['is_admin'] === 1) { ?>
     
     <li class="nav-item">
       <a class="nav-link nav-group-toggle" href="#" data-bs-toggle="collapse" data-bs-target="#inventario-submenu" aria-expanded="false" aria-controls="inventario-submenu">
@@ -167,17 +171,19 @@
         </li>
         <li class="nav-subitem">
           <a class="nav-link" href="./?view=re">
-            <i class="bi bi-bag"></i> HACER COMPRA
+            <i class="bi bi-bag"></i> HACER COMPRA 
           </a>
         </li>
+        
         <li class="nav-subitem">
           <a class="nav-link" href="./?view=res">
-            <i class="bi bi-basket"></i> COMPRAS
+            <i class="bi bi-basket"></i>LISTA DE COMPRAS
           </a>
         </li>
+
         <li class="nav-subitem">
           <a class="nav-link" href="./?view=discard">
-            <i class="bi bi-trash"></i> DESECHOS
+            <i class="bi bi-trash"></i> REALIZAR DESCARTE
           </a>
         </li>
       </ul>
@@ -190,9 +196,11 @@
       <ul class="nav-submenu collapse" id="reportes-submenu">
         <li class="nav-subitem">
           <a class="nav-link" href="./?view=reports">
-            <i class="bi bi-clipboard-data"></i> INVENTARIO
+            <i class="bi bi-clipboard-data"></i> INVENTARIO 
           </a>
         </li>
+        <?php } ?>
+
         <!--
         <li class="nav-subitem">
           <a class="nav-link" href="./?view=sellreports">
@@ -200,11 +208,13 @@
           </a>
         </li>
         -->
+        <?php if ($_SESSION['is_admin'] === 1) { ?>
         <li class="nav-subitem">
           <a class="nav-link" href="./?view=discardreports">
-            <i class="bi bi-file-earmark-excel"></i> DESECHOS
+            <i class="bi bi-file-earmark-excel"></i> DESCARTES 
           </a>
         </li>
+        <?php } ?>
       </ul>
     </li>
     <?php if($_SESSION['is_admin'] === 1): ?>

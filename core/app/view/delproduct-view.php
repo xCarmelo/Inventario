@@ -15,37 +15,25 @@ try {
         throw new Exception("Cliente no encontrado.");
     } 
 
-    if ($product != null) {
-        $operations = OperationData::getAllByProductId($product->id);
 
-        foreach ($operations as $op) { 
-            $op->del();
-        }
- 
-        // Suponiendo que el script se ejecuta en la misma carpeta que "storage"
-        $ruta_archivo = "storage/products/" . $product->image;
-
-        // Verificar si el archivo existe antes de intentar eliminarlo
-        if (file_exists($ruta_archivo)) {
-            if (unlink($ruta_archivo)) {
-
-            } else {
-
-            }
-        } else {
-            
-        }
-
+    if(isset($_GET['active']) && $_GET['active'] == 1)
+    {
+        $product->del(1);
+        Core::redir("./index.php?view=products&success=producto habilitado correctamente");
+    }
+    else
+    {
         $product->del();
-
-
-        // Redirigir con mensaje de éxito
-        Core::redir("./index.php?view=products&success=producto eliminado correctamente");
+        Core::redir("./index.php?view=products&success=producto habilitado correctamente");
     }
 
+
 } catch (Exception $e) { 
-        // Redirigir con mensaje de error
-        Core::redir("./index.php?view=products&error=" . urlencode('Error al eliminar el producto'));
+    if(isset($_GET['active']) && $_GET['active'] == 1)
+        Core::redir("./index.php?view=products&error=" . urlencode('Error al habilitar el producto'));
+    else
+    Core::redir("./index.php?view=products&error=" . urlencode('Error al eliminar el producto'));
+    
 }
 
 ?>

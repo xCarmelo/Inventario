@@ -38,14 +38,14 @@ $curr_products = array_slice($products_array, $offset, $limit);
     </div>
 
     </div>
-    <div class="row g-4">
+
+    <div class="container">
+    <div class="row g-4 justify-content-center">
         <!-- Tarjetas de estadísticas -->
-        <div class="row g-4">
         <div class="col-12 col-sm-6 col-lg-3">
             <div class="card">
                 <div class="card-body d-flex align-items-center">
-                    <div class="bg-primary text-white me-3 d-flex justify-content-center align-items-center rounded-circle"
-                         style="width: 50px; height: 50px;">
+                    <div class="bg-primary text-white me-3 d-flex justify-content-center align-items-center rounded-circle" style="width: 50px; height: 50px;">
                         <i class="bi bi-box fs-3"></i>
                     </div>
                     <div>
@@ -61,12 +61,13 @@ $curr_products = array_slice($products_array, $offset, $limit);
                 </div>
             </div>
         </div>
-        <!-- /.col-->
+
+        <?php if($_SESSION['is_admin'] === 1): ?>
+        <!-- Tarjeta CLIENTES -->
         <div class="col-12 col-sm-6 col-lg-3">
             <div class="card">
                 <div class="card-body d-flex align-items-center">
-                    <div class="bg-info text-white me-3 d-flex justify-content-center align-items-center rounded-circle"
-                         style="width: 50px; height: 50px;">
+                    <div class="bg-info text-white me-3 d-flex justify-content-center align-items-center rounded-circle" style="width: 50px; height: 50px;">
                         <i class="bi bi-people fs-3"></i>
                     </div>
                     <div>
@@ -82,12 +83,12 @@ $curr_products = array_slice($products_array, $offset, $limit);
                 </div>
             </div>
         </div>
-        <!-- /.col-->
+
+        <!-- Tarjeta PROVEEDORES -->
         <div class="col-12 col-sm-6 col-lg-3">
             <div class="card">
                 <div class="card-body d-flex align-items-center">
-                    <div class="bg-warning text-white me-3 d-flex justify-content-center align-items-center rounded-circle"
-                         style="width: 50px; height: 50px;">
+                    <div class="bg-warning text-white me-3 d-flex justify-content-center align-items-center rounded-circle" style="width: 50px; height: 50px;">
                         <i class="bi bi-truck fs-3"></i>
                     </div>
                     <div>
@@ -103,12 +104,14 @@ $curr_products = array_slice($products_array, $offset, $limit);
                 </div>
             </div>
         </div>
-        <!-- /.col-->
+        <?php endif; ?>
+
+
+        <!-- Tarjeta CATEGORIAS -->
         <div class="col-12 col-sm-6 col-lg-3">
             <div class="card">
                 <div class="card-body d-flex align-items-center">
-                    <div class="bg-danger text-white me-3 d-flex justify-content-center align-items-center rounded-circle"
-                         style="width: 50px; height: 50px;">
+                    <div class="bg-danger text-white me-3 d-flex justify-content-center align-items-center rounded-circle" style="width: 50px; height: 50px;">
                         <i class="bi bi-tag fs-3"></i>
                     </div>
                     <div>
@@ -125,9 +128,9 @@ $curr_products = array_slice($products_array, $offset, $limit);
             </div>
         </div>
     </div>
-    </div>
+</div>
+<br>
 
-    <br>
 
     <div class="row">
         <div class="col-md-12">
@@ -168,6 +171,8 @@ $curr_products = array_slice($products_array, $offset, $limit);
                                 </thead>
                                 <tbody>
                                     <?php foreach ($curr_products as $product): 
+                                            if($product->is_active != 0):
+
                                         $q = OperationData::getQYesF($product->id); ?>
                                         <tr class="<?php if ($q == 0) {
                                             echo "table-danger";
@@ -192,7 +197,7 @@ $curr_products = array_slice($products_array, $offset, $limit);
                                                 ?>
                                             </td>
                                         </tr>
-                                    <?php endforeach; ?>
+                                    <?php endif; endforeach; ?>
                                 </tbody>
                             </table>
                         </div>

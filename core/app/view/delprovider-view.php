@@ -16,14 +16,28 @@ try {
         throw new Exception("Proveedor no encontrado.");
     }
 
-    $provider->del();
+    //validar que si se desactivara o si se deshabilitara
+    if(isset($_GET['active']) && $_GET['active'] == 1)
+    {
+        $provider->del(1);
+        Core::redir("./index.php?view=providers&success=Proveedor habilitado correctamente"); 
+    }
+    else
+    {
+        $provider->del();
+        Core::redir("./index.php?view=providers&success=Proveedor eliminado correctamente"); 
+    }
 
     // Redirigir con mensaje de éxito
     Core::redir("./index.php?view=providers&success=Proveedor eliminado correctamente"); 
 
 } catch (Exception $e) {
     // Redirigir con mensaje de error
-    Core::redir("./index.php?view=providers&error=" . urlencode('Error al eliminar el proveedor'));
+    if(isset($_GET['active']) && $_GET['active'] == 1)
+        Core::redir("./index.php?view=providers&error=" . urlencode('Error al habilitar el Proveedor'));
+    else
+        Core::redir("./index.php?view=providers&error=" . urlencode('Error al eliminar el Proveedor'));
+
 }
 
 ?>

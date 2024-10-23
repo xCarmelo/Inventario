@@ -7,7 +7,7 @@
                 <div class="row"> 
                     <div class="col-md-6 col-12 mb-2 mb-md-0">
                         <input type="hidden" name="view" value="re">
-                        <input type="text" name="product" class="form-control" placeholder="Nombre o código del producto">
+                        <input type="text" name="product" class="form-control" placeholder="Nombre del producto">
                     </div>
                     <div class="col-md-3 col-12"> 
                         <button type="submit" class="btn btn-primary w-100 fw-bold"><i class="glyphicon glyphicon-search"></i> Buscar</button>
@@ -44,6 +44,7 @@
                             <?php
                             $products_in_cero = 0;
                             foreach($products as $product):
+                                if($product->is_active != 0):
                                 $q = OperationData::getQYesF($product->id);
                             ?>
                             <form method="post" action="index.php?view=addtore">
@@ -68,7 +69,7 @@
                                     </td>
                                 </tr>
                             </form>
-                            <?php endforeach; ?>
+                            <?php endif;     endforeach; ?>
                         </tbody>
                     </table>
                 </div>
@@ -158,9 +159,9 @@
                         ?>
                         <select name="client_id" class="form-control">
                             <option value="">-- NINGUNO --</option>
-                            <?php foreach($clients as $client): ?>
+                            <?php foreach($clients as $client): if($client->active != 0): ?>
                                 <option value="<?php echo $client->id; ?>"><?php echo $client->name . " " . $client->lastname; ?></option>
-                            <?php endforeach; ?>
+                            <?php endif; endforeach; ?>
                         </select>
                     </div>
                 </div>

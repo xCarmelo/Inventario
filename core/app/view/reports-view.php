@@ -35,7 +35,7 @@ $product_id = isset($_GET['product_id']) ? $_GET['product_id'] : "";
         <div class="row">
             <div class="col-12">
                 <div class="card">
-                    <div class="card-header">MOVIMIENTOS</div>
+                    <div class="card-header">MOVIMIENTOS</div> 
                     <div class="card-body">
                         <?php if (isset($_GET["sd"]) && isset($_GET["ed"])): ?>
                             <?php if ($_GET["sd"] != "" && $_GET["ed"] != ""): ?>
@@ -87,18 +87,20 @@ $product_id = isset($_GET['product_id']) ? $_GET['product_id'] : "";
                                                     <th>Descripción</th>
                                                     <th>Cantidad</th>
                                                     <th>Operación</th>
+                                                    <th>Motivo</th>
                                                     <th>Fecha</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 <?php foreach ($curr_operations as $operation): ?>
                                                     <tr>
-                                                        <td><?php echo $operation->id; ?></td>
+                                                        <td><?php echo $operation->id; ?></td> 
                                                         <td><?php echo $operation->getProduct()->name; ?></td>
                                                         <td><?php echo $operation->getProduct()->description; ?></td>
                                                         <td><?php echo $operation->q; ?></td>
                                                         <td><?php echo $operation->getOperationType()->name; ?></td>
-                                                        <td><?php echo $operation->created_at; ?></td>
+                                                        <td><?php echo $operation->reason_for_return; ?></td>
+                                                        <td><?php echo $operation->created_at; ?></td> 
                                                     </tr>
                                                 <?php endforeach; ?>
                                             </tbody>

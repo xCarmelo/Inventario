@@ -25,6 +25,7 @@
                             $products_in_cero = 0;
 
                             foreach ($products as $product):
+                                if($product->is_active != 0):
                                 $q = OperationData::getQYesF($product->id);
                                 $product_id_to_find = $product->id;
 
@@ -69,7 +70,7 @@
                                     </tr>
                                 <?php else: $products_in_cero++; ?>
                                 <?php endif; ?>
-                            <?php endforeach; ?>
+                            <?php endif; endforeach; ?>
                         </tbody>
                     </table>
                 </div>

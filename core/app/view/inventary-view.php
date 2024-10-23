@@ -49,7 +49,8 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <?php foreach ($curr_products as $product): ?>
+                                    <?php foreach ($curr_products as $product): 
+                                        if($product->is_active != 0):?>
                                         <tr class="<?php if (OperationData::getQYesF($product->id) <= $product->inventary_min) echo "table-warning"; ?>">
                                             <td><?php echo $product->id; ?></td>
                                             <td>
@@ -65,7 +66,7 @@
                                                 </a>
                                             </td>
                                         </tr>
-                                    <?php endforeach; ?>
+                                    <?php endif; endforeach; ?>
                                 </tbody>
                             </table>
                         </div>

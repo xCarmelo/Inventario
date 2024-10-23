@@ -7,7 +7,7 @@ class Database {
         $this->user = "root";
         $this->pass = "";
         $this->host = "localhost";
-        $this->ddbb = "mundocatolico";
+        $this->ddbb = "mundocatolico"; 
     }
     //mundocatolico
     //fiore_di_carmelo

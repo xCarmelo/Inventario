@@ -1,3 +1,5 @@
+<?php $filtro_active_user = isset($_SESSION['filtroActiveUser'])?$_SESSION['filtroActiveUser']:1;?>
+
 <div class="container">
     <div class="row">
         <div class="col-md-12">
@@ -26,6 +28,15 @@
                     <button class="btn btn-outline-success d-flex align-items-center" type="submit">
                         <span class="me-1">Buscar</span>
                     </button>
+                </form>
+
+                <!--es para filtrar los proveedores desactivados-->
+                <form class="ms-2" method="post" action="index.php?action=filtroActiveUser">
+                <div style="padding-left: 30px;" class="form-check form-check-lg btn btn-outline-primary d-flex align-items-center justify-content-center">
+                    <input <?php if($filtro_active_user == 0):?> checked <?php endif?> type="checkbox" class="form-check-input" name="userInactive" id="userInactive" onchange="this.form.submit();">
+                    <label class="form-check-label ms-2" for="userInactive">Eliminados</label>
+                    <input type="text" hidden value="categories" name="view">
+                </div>
                 </form>
 
                 <!-- Formulario 2: Botón al lado del botón "Buscar" -->
@@ -91,12 +102,22 @@
                                     <?php if($_SESSION['is_admin'] === 1): ?>
                                     <th></th>
                                     <?php endif; ?>
-                                </tr> 
+                                </tr>  
                             </thead>
                             <tbody>
-                                <?php foreach ($curr_categories as $category): ?>
+                                <?php foreach ($curr_categories as $category): 
+                                    if($category->is_active == $filtro_active_user):
+                                    ?>
+
                                 <tr>
                                     <td><?php echo $category->name; ?></td>
+
+                                    <?php if($filtro_active_user == 0):?>
+                                    <td style="width:30px;">
+                                        <div class="btn-group" role="group">
+                                        <button class="btn btn-sm btn-primary ms-1" data-bs-toggle="modal" data-bs-target="#confirmHabilitarModal" data-href="index.php?view=delcategory&id=<?php echo $category->id; ?>&active=1"><i class="bi bi-arrow-counterclockwise"></i>Habilitar</button>                                     </div>
+                                    </td>
+                                    <?php else: ?>
                                     <?php if($_SESSION['is_admin'] === 1): ?>
                                     <td>
                                         <div class="btn-group" role="group">
@@ -110,13 +131,13 @@
                                     </td>
                                     <?php endif; ?>
                                 </tr>
-                                <?php endforeach; ?>
+                                <?php endif; endif; endforeach; ?>
                             </tbody>
                         </table>
                     </div>
 
                     <!-- Paginación centrada debajo de la tabla -->
-                    <div class="d-flex justify-content-center mt-3">
+                    <div class="d-flex justify-content-center mt-3"> 
                         <nav aria-label="Page navigation">
                             <ul class="pagination">
                                 <?php if ($page > 1): ?>
@@ -147,7 +168,7 @@
                                 <?php endif; ?>
                             </ul>
                         </nav>
-                    </div>
+                    </div> 
 
                     <?php
                     } else {
@@ -197,6 +218,27 @@
     </div>
 </div>
 
+
+<!-- Modal de Confirmación para Habilitar categoria -->
+<div class="modal fade" id="confirmHabilitarModal" tabindex="-1" aria-labelledby="confirmHabilitarModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmHabilitarModalLabel">Confirmar Habilitación</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                ¿Estás seguro de que deseas habilitar este categoria?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <a id="confirmHabilitarBtn" class="btn btn-primary" href="#">Habilitar</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <script>
     $(document).ready(function() {
         $('#confirmDeleteModal').on('show.bs.modal', function (event) {
@@ -205,6 +247,15 @@
 
             var modal = $(this);
             modal.find('#confirmDeleteBtn').attr('href', url);
+        });
+
+            // Manejar la apertura del modal de habilitación
+            $('#confirmHabilitarModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget); // Botón que activó el modal
+            var url = button.data('href'); // Extraer la URL del atributo data-href
+
+            var modal = $(this);
+            modal.find('#confirmHabilitarBtn').attr('href', url); // Establecer la URL en el botón de confirmación
         });
 
         // Mostrar el resultado según los parámetros de la URL
@@ -225,6 +276,7 @@
             const params = new URLSearchParams(url.search); 
 
             params.delete('result');
+            params.delete('error');
             params.delete('success'); // Add this line to remove the 'success' parameter as well
 
             const newUrl = url.pathname + '?' + params.toString();

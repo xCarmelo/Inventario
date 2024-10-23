@@ -11,6 +11,7 @@ class PersonData {
     public $address1;
     public $email1;
     public $phone1;
+    public $ac; 
  
     public function __construct() {
         // Establecer la zona horaria deseada (reemplaza 'America/Managua' con tu zona horaria)
@@ -56,32 +57,18 @@ class PersonData {
         return $stmt;
     }
 
-    public function del() {
+    public function del($active_person = 0) {
         $con = Database::getCon(); 
     
-        // Primero, actualizamos el campo person_id a NULL para que se pueda eliminar el proveedor
-        $updateSql = "UPDATE sell SET person_id = NULL WHERE person_id = ?";
-        $updateStmt = $con->prepare($updateSql);
-    
-        if ($updateStmt === false) {
-            throw new Exception("Error en la preparación de la consulta");
-        }
-    
-        $updateStmt->bind_param("i", $this->id);
-    
-        if (!$updateStmt->execute()) {
-            throw new Exception("Error al eliminar el proveedor");
-        }
+        $updateSql = "UPDATE " . self::$tablename . " SET active = ? WHERE id = ?";
+        $active = $active_person;
 
-        //luego si podemos elimnar
-    
-        $sql = "DELETE FROM " . self::$tablename . " WHERE id=?";
-        $stmt = $con->prepare($sql);
+        $stmt = $con->prepare($updateSql);
         if ($stmt === false) {
             throw new Exception("Error en la preparación de la consulta");
         }
         
-        $stmt->bind_param("i", $this->id);
+        $stmt->bind_param("ii", $active, $this->id);
         
         if (!$stmt->execute()) {
             throw new Exception("Error al eliminar el proveedor");
@@ -156,7 +143,7 @@ class PersonData {
     public static function getClients() {
         $sql = "SELECT * FROM " . self::$tablename . " WHERE kind=1 ORDER BY name, lastname";
         $con = Database::getCon();
-        $stmt = $con->prepare($sql);
+        $stmt = $con->prepare($sql); 
         $stmt->execute();
         $result = $stmt->get_result();
         $array = array();
@@ -169,6 +156,7 @@ class PersonData {
             $person->phone1 = $r['phone1'];
             $person->address1 = $r['address1'];
             $person->created_at = $r['created_at'];
+            $person->active = $r['active'];
             $array[] = $person;
         }
         return $array;
@@ -188,6 +176,7 @@ class PersonData {
             $person->lastname = $r['lastname'];
             $person->email1 = $r['email1'];
             $person->phone1 = $r['phone1'];
+            $person->active = $r['active'];
             $person->address1 = $r['address1'];
             $person->created_at = $r['created_at'];
             $array[] = $person;
@@ -220,7 +209,7 @@ class PersonData {
         $con = Database::getCon();
         $stmt = $con->prepare($sql);
         $like = "%" . $q . "%";
-        $stmt->bind_param("s", $like);
+        $stmt->bind_param("s", $like); 
         $stmt->execute();
         $result = $stmt->get_result();
         $array = array();

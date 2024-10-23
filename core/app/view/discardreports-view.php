@@ -21,7 +21,7 @@ if (isset($_GET["sd"]) && isset($_GET["ed"]) && $_GET["sd"] != "" && $_GET["ed"]
     <div class="container">
         <div class="row">
             <div class="col-12">
-                <h1><i class="bi bi-graph-down-arrow"></i> Reportes de Descarte</h1>
+                <h1><i class="bi bi-graph-down-arrow"></i> Reporte de Descartes</h1>
                 <form class="mt-5">
                     <input type="hidden" name="view" value="discardreports">
                     <div class="row">

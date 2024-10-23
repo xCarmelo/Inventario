@@ -71,7 +71,7 @@ if (count($_POST) > 0) {
             $product->presentation = $_POST["presentation"];
             $product->category_id = $_POST["category_id"];
             $product->inventary_min = $_POST["inventary_min"];
-            $product->user_id = $_SESSION["user_id"];
+            $product->user_id = $_SESSION["user_id"]; 
 
         //validacion para imagen 
         if (isset($_FILES["image"]) && $_FILES['image']['size'] != 0) {

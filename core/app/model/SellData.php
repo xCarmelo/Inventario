@@ -89,6 +89,14 @@ class SellData {
         return $stmt->get_result();
     }
 
+    public function update_total() {
+        $con = Database::getCon();
+        $stmt = $con->prepare("UPDATE ".self::$tablename." SET total = ?  WHERE id = ?");
+        $stmt->bind_param("di", $this->total,  $this->id); 
+        $stmt->execute();
+        return $stmt->get_result();
+    }
+
     public static function getById($id) {
         $con = Database::getCon();
         $stmt = $con->prepare("SELECT * FROM ".self::$tablename." WHERE id = ?");

@@ -32,7 +32,7 @@
                                 <option value="25" <?php echo $limit == 25 ? 'selected' : ''; ?>>25</option>
                                 <option value="50" <?php echo $limit == 50 ? 'selected' : ''; ?>>50</option>
                             </select>
-                            <b>Compras por página</b>
+                            <b>Compras por página</b> 
                         </div>
                         <div>
                             <p class="mb-0 me-3">Estás en la página <?php echo $page; ?> de <?php echo $totalPages; ?></p>
@@ -76,29 +76,13 @@
                                     
                                     <?php if ($_SESSION['is_admin'] === 1):?>
                                     <td style="width:30px;">
-                                        <button class="btn btn-xs btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal-<?php echo $sell->id; ?>"><i class="bi bi-trash"></i></button>
-                                    </td>
+                                    <button class="btn btn-xs btn-danger d-flex align-items-center text-white" data-bs-toggle="modal" data-bs-target="#confirmDevolucionModal" data-href="index.php?view=delre&id=<?php echo $operation->sell_id; ?>">
+                                        <span>Devolución</span>
+                                        <i class="bi bi-arrow-return-left ms-2"></i>
+                                    </button> 
+                                </td>
                                     <?php endif;?>
                                 </tr>
-
-                                <!-- Modal -->
-                                <div class="modal fade" id="deleteModal-<?php echo $sell->id; ?>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="exampleModalLabel">Confirmar Eliminación</h5>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                            </div>
-                                            <div class="modal-body">
-                                                ¿Estás seguro de que quieres eliminar esta compra?
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                                                <a href="index.php?view=delre&id=<?php echo $sell->id; ?>" class="btn btn-danger">Eliminar</a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
 
                                 <?php endforeach; ?>
                             </tbody>
@@ -155,6 +139,33 @@
     </div>
 </div>
 
+
+<!-- Modal de Confirmación --> 
+<div class="modal fade" id="confirmDevolucionModal" tabindex="-1" aria-labelledby="confirmDevolucionModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header"> 
+                <h5 class="modal-title" id="confirmDevolucionModalLabel">Confirmar devolución</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>¿Estás seguro que deseas realizar la devolución de la compra? Esta acción no se puede deshacer.</p>
+                <!-- Campo de texto para el motivo de la devolución -->
+                <div class="form-group">
+                    <label for="motivoDevolucion" class="mb-2"><strong>Motivo de la devolución</strong></label>
+                    <input type="text" id="motivoDevolucion" class="form-control" placeholder="Escribe el motivo de la devolución">
+                    <!-- Aquí aparecerá el mensaje de error -->
+                    <small id="motivoError" class="text-danger" style="display:none;">Debes ingresar el motivo de la devolución</small>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <a id="confirmDeleteBtn" class="btn btn-danger" href="#">Confirmar</a>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Modal para mensajes de éxito o error -->
 <div class="modal fade" id="resultModal" tabindex="-1" aria-labelledby="resultModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -176,9 +187,44 @@
 <!-- Script para cambiar el límite de paginación -->
 <script>
     $(document).ready(function() {
+        // Selecciona el modal y el botón de confirmación
+        var $confirmDevolucionModal = $('#confirmDevolucionModal');
+        var $confirmDeleteBtn = $('#confirmDeleteBtn');
+        var $motivoInput = $('#motivoDevolucion'); 
+        var $motivoError = $('#motivoError'); // Elemento para mostrar el error
+
         $('#limitSelect').on('change', function() {
             var limit = $(this).val();
             window.location.href = "?view=res&page=1&limit=" + limit;
+        });
+
+         // Evento que se dispara cuando el modal se muestra
+         $confirmDevolucionModal.on('show.bs.modal', function (event) {
+            var $button = $(event.relatedTarget);
+            var url = $button.data('href');
+            
+            // Cuando se haga clic en el botón "Confirmar", se valida el motivo
+            $confirmDeleteBtn.off('click').on('click', function (e) {
+                e.preventDefault(); 
+                var motivo = $.trim($motivoInput.val());
+
+                // Verifica si el campo de motivo está vacío
+                if (motivo === '') {
+                    $motivoError.show(); // Muestra el mensaje de error
+                    return;
+                } else {
+                    $motivoError.hide(); // Oculta el mensaje de error si no está vacío
+                }
+
+                // Agrega el motivo como parámetro a la URL y redirige
+                var nuevaUrl = url + '&motivo=' + encodeURIComponent(motivo);
+                window.location.href = nuevaUrl; 
+            });
+        });
+
+        // Oculta el mensaje de error cuando se comienza a escribir en el campo
+        $motivoInput.on('input', function() {
+            $motivoError.hide();
         });
 
          // Mostrar el resultado según los parámetros de la URL

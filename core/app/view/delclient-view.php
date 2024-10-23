@@ -12,18 +12,30 @@ try {
 
     $client = PersonData::getById($_GET["id"]);
 
-    if (!$client) {
-        throw new Exception("Cliente no encontrado.");
+    if (!$client) { 
+        throw new Exception("Cliente no encontrado.");  
     }
 
-    $client->del();
+    if(isset($_GET['active']) && $_GET['active'] == 1)
+    {
+        $client->del(1);
+        Core::redir("./index.php?view=clients&success=Cliente habilitado correctamente"); 
+    }
+    else
+    {
+        $client->del();
+        Core::redir("./index.php?view=clients&success=Cliente eliminado correctamente"); 
+    }
 
     // Redirigir con mensaje de éxito
-    Core::redir("./index.php?view=clients&success=Cliente eliminado correctamente"); 
 
 } catch (Exception $e) {
-    // Redirigir con mensaje de error
-    Core::redir("./index.php?view=clients&error=" . urlencode('Error al eliminar el cliente'));
+    
+    if(isset($_GET['active']) && $_GET['active'] == 1)
+        Core::redir("./index.php?view=clients&error=" . urlencode('Error al habilitar el cliente'));
+    else
+        Core::redir("./index.php?view=clients&error=" . urlencode('Error al eliminar el cliente'));
+
 }
 
 ?>

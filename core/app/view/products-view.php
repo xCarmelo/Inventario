@@ -1,3 +1,5 @@
+<?php $filtro_active_user = isset($_SESSION['filtroActiveUser'])?$_SESSION['filtroActiveUser']:1;?>
+
 <div class="row">
     <div class="col-md-12">
         <h1><i class="bi bi-box-seam"></i> Productos</h1> 
@@ -26,6 +28,16 @@
                     <button class="btn btn-outline-success d-flex align-items-center" type="submit">
                         <span class="me-1">Buscar</span>
                     </button>
+                </form>
+
+                
+                <!--es para filtrar los proveedores desactivados-->
+                <form class="ms-2" method="post" action="index.php?action=filtroActiveUser">
+                <div style="padding-left: 30px;" class="form-check form-check-lg btn btn-outline-primary d-flex align-items-center justify-content-center">
+                    <input <?php if($filtro_active_user == 0):?> checked <?php endif?> type="checkbox" class="form-check-input" name="userInactive" id="userInactive" onchange="this.form.submit();">
+                    <label class="form-check-label ms-2" for="userInactive">Eliminados</label>
+                    <input type="text" hidden value="products" name="view">
+                </div>
                 </form>
 
                 <!-- Formulario 2: Botón al lado del botón "Buscar" -->
@@ -91,15 +103,17 @@
                                 <th>Codigo</th>
                                 <th>Imagen</th>
                                 <th>Nombre</th>
-                                <th>Descripcion</th>
-                                <th>Activo</th>
+                                <th>Descripcion</th>   
                                 <?php if($_SESSION['is_admin'] === 1): ?>
                                 <th>Acciones</th>
                                 <?php endif; ?>
                             </tr>
                         </thead>
                         <tbody>
-                            <?php foreach ($curr_products as $product): ?>
+                            <?php foreach ($curr_products as $product): 
+                                if($product->is_active == $filtro_active_user):
+                                ?>
+
                             <tr>
                                 <td><?php echo $product->id; ?></td>
                                 <td>
@@ -108,14 +122,14 @@
                                     <?php endif; ?>
                                 </td>
                                 <td><?php echo $product->name; ?></td>
-                                <td><?php echo $product->description; ?></td>
-                                <td>
-                                    <?php if ($product->is_active): ?>
-                                        <i class="bi bi-check-lg text-success"></i> 
+                                <td><?php echo $product->description; ?></td>   
+
+                                <?php if($filtro_active_user == 0):?>
+                                    <td style="width:30px;">
+                                        <div class="btn-group" role="group">
+                                        <button class="btn btn-sm btn-primary ms-1" data-bs-toggle="modal" data-bs-target="#confirmHabilitarModal" data-href="index.php?view=delproduct&id=<?php echo $product->id; ?>&active=1"><i class="bi bi-arrow-counterclockwise"></i>Habilitar</button>                                     </div>
+                                    </td>
                                     <?php else: ?>
-                                        <i class="bi bi-x-lg text-danger"></i> 
-                                    <?php endif; ?>
-                                </td>
                                 <?php if($_SESSION['is_admin'] === 1): ?>
                                 <td style="width:120px;">
                                     <div class="btn-group" role="group">
@@ -125,7 +139,7 @@
                                 </td>
                                 <?php endif; ?>
                             </tr>
-                            <?php endforeach; ?>
+                            <?php endif; endif; endforeach; ?>
                         </tbody>
                     </table>
                 </div>
@@ -187,7 +201,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                ¿Estás seguro de que deseas eliminar este producto? <strong>Las entradas y salidas se eliminaran.</strong> 
+                ¿Estás seguro de que deseas eliminar este producto?  
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
@@ -226,6 +240,25 @@
     </div>
 </div>
 
+<!-- Modal de Confirmación para Habilitar product -->
+<div class="modal fade" id="confirmHabilitarModal" tabindex="-1" aria-labelledby="confirmHabilitarModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmHabilitarModalLabel">Confirmar Habilitación</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                ¿Estás seguro de que deseas habilitar este producto?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <a id="confirmHabilitarBtn" class="btn btn-primary" href="#">Habilitar</a>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- JavaScript para el Modal de Imágenes --> 
 <script>
     $(document).ready(function() {
@@ -235,6 +268,15 @@
 
             var modal = $(this);
             modal.find('#confirmDeleteBtn').attr('href', url);
+        });
+
+                 // Manejar la apertura del modal de habilitación
+        $('#confirmHabilitarModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget); // Botón que activó el modal
+            var url = button.data('href'); // Extraer la URL del atributo data-href
+
+            var modal = $(this);
+            modal.find('#confirmHabilitarBtn').attr('href', url); // Establecer la URL en el botón de confirmación
         });
 
          // Mostrar el resultado según los parámetros de la URL

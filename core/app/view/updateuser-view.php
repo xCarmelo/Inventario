@@ -1,5 +1,5 @@
 <?php
-    function validate_data($data) { 
+    function validate_data($data) {  
 		$errors = [];
 		$valid = true;
 

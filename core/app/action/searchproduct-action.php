@@ -12,13 +12,13 @@
                     <table class="table table-bordered table-hover">
                         <thead class="table-primary">
                             <tr>
-                                <th>Imagen</th>
+                                <th>Imagen</th> 
                                 <th>Nombre</th>
-                                <th>Unidad</th>
+                                <th>Descripción</th>
                                 <th>Precio unitario</th>
                                 <th>Precio a vender</th>
                                 <th>En inventario</th>
-                                <th>Cantidad</th>
+                                <th>Cantidad</th> 
                             </tr>
                         </thead>
                         <tbody>
@@ -26,6 +26,7 @@
                             $products_in_cero = 0;
 
                             foreach ($products as $product):
+                                if($product->is_active != 0):
                                 $q = OperationData::getQYesF($product->id);
                                 $product_id_to_find = $product->id;
 
@@ -51,7 +52,7 @@
                                         <?php endif; ?>
                                     </td>
                                         <td><?php echo $product->name; ?></td>
-                                        <td><?php echo $product->unit; ?></td>
+                                        <td><?php echo $product->description; ?></td>
                                         <td>C$ <?php echo number_format($product->price_out); ?></td>
                                         <td>
                                             <input id="newprice" type="number" value="<?php echo $newprice; ?>" placeholder="<?php echo $newprice; ?>" pattern="^[1-9]\d*$">
@@ -90,7 +91,7 @@
                                     </tr>
                                 <?php else: $products_in_cero++; ?>
                                 <?php endif; ?>
-                            <?php endforeach; ?>
+                            <?php endif; endforeach; ?>
                         </tbody>
                     </table>
                 </div>

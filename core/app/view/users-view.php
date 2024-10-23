@@ -1,12 +1,14 @@
+<?php $filtro_active_user = isset($_SESSION['filtroActiveUser'])?$_SESSION['filtroActiveUser']:1;?>
+
 <div class="container">
-    <div class="row">
+    <div class="row"> 
         <div class="col-md-12">
             <h1><i class="bi bi-list-task"></i> Lista de Usuarios</h1>
             <div class="mb-3 mt-5">
                 <a href="index.php?view=newuser" class="btn btn-primary btn-sm">
                     <i class="bi bi-person-plus-fill"></i> Nuevo Usuario
                 </a>
-            </div>
+            </div> 
 
             <br>
 
@@ -27,7 +29,17 @@
                     </button>
                 </form>
 
+                <!--es para filtrar los usuarios desactivados-->
+                <form class="ms-2" method="post" action="index.php?action=filtroActiveUser">
+                <div style="padding-left: 30px;" class="form-check form-check-lg btn btn-outline-primary d-flex align-items-center justify-content-center">
+                    <input <?php if($filtro_active_user == 0):?> checked <?php endif?> type="checkbox" class="form-check-input" name="userInactive" id="userInactive" onchange="this.form.submit();">
+                    <label class="form-check-label ms-2" for="userInactive">Eliminados</label>
+                    <input type="text" hidden value="users" name="view">
+                </div>
+                </form>
+                
                 <form class="ms-2" method="post" action="index.php?action=eliminarSesion">
+
                     <button type="submit" class="btn btn-outline-primary d-flex align-items-center justify-content-center">
                         <i class="bi bi-arrow-repeat"></i>
                     </button>
@@ -86,38 +98,48 @@
                                     <th>Nombre completo</th>
                                     <th>Nombre de usuario</th>
                                     <th>Email</th>
-                                    <th>Activo</th>
                                     <th>Admin</th>
                                     <th>Acciones</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php foreach ($curr_users as $user): ?>
+                                <?php foreach ($curr_users as $user): 
+                                    if($user->is_active == $filtro_active_user):
+                                    ?>
+ 
                                 <tr>
                                     <td><?php echo $user->name . " " . $user->lastname; ?></td>
                                     <td><?php echo $user->username; ?></td>
                                     <td><?php echo $user->email; ?></td>
                                     <td>
-                                        <?php if ($user->is_active): ?> 
-                                        <i class="bi bi-check-lg"></i>
-                                        <?php endif; ?>
-                                    </td>
-                                    <td>
                                         <?php if ($user->is_admin): ?>
                                         <i class="bi bi-check-lg"></i>
                                         <?php endif; ?>
                                     </td>
+
+                                    <?php if($filtro_active_user == 0):?>
                                     <td style="width:30px;">
                                         <div class="btn-group" role="group">
+                                        <button class="btn btn-sm btn-primary ms-1" data-bs-toggle="modal" data-bs-target="#confirmHabilitarModal" data-href="index.php?view=activeUser&id=<?php echo $user->id; ?>"><i class="bi bi-arrow-counterclockwise"></i>Habilitar</button>                                     </div>
+                                    </td> 
+                                    
+                                    <?php else:?>
+                                    <td style="width:30px;"> 
+                                        <div class="btn-group" role="group">
                                         <a href="index.php?view=edituser&id=<?php echo $user->id; ?>" class="btn btn-sm btn-warning"><i class="bi bi-pencil"></i></a>
-                                        <button class="btn btn-sm btn-danger ms-1" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" data-href="index.php?view=deluser&id=<?php echo $user->id; ?>"><i class="bi bi-trash"></i></button>
+                                        
+                                        <?php if($_SESSION['user_id'] != $user->id):?>
+                                        <button class="btn btn-sm btn-danger ms-1" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" data-href="index.php?view=inactiveUser&id=<?php echo $user->id; ?>"><i class="bi bi-trash"></i></button>
+                                        <?php endif?>
                                     </div>
                                     </td> 
+                                    <?php endif;?>
+
                                 </tr>
-                                <?php endforeach; ?>
+                                <?php endif; endforeach; ?>
                             </tbody>
                         </table>
-                    </div>
+                    </div> 
 
                     <!-- Paginación centrada debajo de la tabla -->
                     <div class="d-flex justify-content-center mt-3">
@@ -173,7 +195,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                ¿Estás seguro de que deseas eliminar este usuario? <strong>Puede que este asociado a varios registros.</strong>
+                ¿Estás seguro de que deseas eliminar este usuario? 
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
@@ -192,7 +214,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <p id="resultMessage"></p>
+                <p id="resultMessage"></p> 
             </div>
             <div class="modal-footer"> 
                 <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cerrar</button>
@@ -200,7 +222,26 @@
         </div>
     </div>
 </div>   
- 
+
+<!-- Modal de Confirmación para Habilitar Usuario -->
+<div class="modal fade" id="confirmHabilitarModal" tabindex="-1" aria-labelledby="confirmHabilitarModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmHabilitarModalLabel">Confirmar Habilitación</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                ¿Estás seguro de que deseas habilitar este usuario?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <a id="confirmHabilitarBtn" class="btn btn-primary" href="#">Habilitar</a>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <script>
     $(document).ready(function() {
@@ -210,6 +251,15 @@
 
             var modal = $(this);
             modal.find('#confirmDeleteBtn').attr('href', url);
+        });
+
+          // Manejar la apertura del modal de habilitación
+        $('#confirmHabilitarModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget); // Botón que activó el modal
+            var url = button.data('href'); // Extraer la URL del atributo data-href
+
+            var modal = $(this);
+            modal.find('#confirmHabilitarBtn').attr('href', url); // Establecer la URL en el botón de confirmación
         });
 
          // Mostrar el resultado según los parámetros de la URL
@@ -230,6 +280,7 @@
             const params = new URLSearchParams(url.search);
 
             params.delete('result');
+            params.delete('error');
             params.delete('success'); // Add this line to remove the 'success' parameter as well
 
             const newUrl = url.pathname + '?' + params.toString();
@@ -237,6 +288,7 @@
         };
 
         mama();
+
     });
 </script>    
 

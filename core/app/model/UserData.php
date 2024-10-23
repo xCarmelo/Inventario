@@ -100,6 +100,48 @@ class UserData {
         return $stmt;
     }
 
+    public function desactive_user() {
+        $sql = "UPDATE " . self::$tablename . " SET is_active = ? WHERE id = ?";
+        $con = Database::getCon();
+        $stmt = $con->prepare($sql);
+
+        if ($stmt === false) {
+            throw new Exception("Error en la preparación de la consulta");
+        }
+        
+        $stmt->bind_param("ii", 
+            $this->is_active, 
+            $this->id
+        );
+
+        if (!$stmt->execute()) {
+            throw new Exception("Error al actualizar el estado de la venta");
+        }
+
+        return $stmt;
+    }
+
+    public function active_user() {
+        $sql = "UPDATE " . self::$tablename . " SET is_active = ? WHERE id = ?";
+        $con = Database::getCon();
+        $stmt = $con->prepare($sql);
+
+        if ($stmt === false) {
+            throw new Exception("Error en la preparación de la consulta");
+        }
+        
+        $stmt->bind_param("ii", 
+            $this->is_active, 
+            $this->id
+        );
+
+        if (!$stmt->execute()) {
+            throw new Exception("Error al actualizar el estado de la venta");
+        }
+
+        return $stmt;
+    }
+
     public function update_passwd() {
         $sql = "UPDATE " . self::$tablename . " SET password = ? WHERE id = ?";
         $con = Database::getCon();
@@ -145,7 +187,7 @@ class UserData {
         $con = Database::getCon();
         $stmt = $con->prepare($sql);
         $likeQuery = "%" . $q . "%";
-        $stmt->bind_param("s", $likeQuery);
+        $stmt->bind_param("s", $likeQuery); 
         $stmt->execute();
         $result = $stmt->get_result();
         $data = Model::many($result, new UserData());

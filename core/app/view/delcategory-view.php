@@ -6,7 +6,7 @@ function validateId($id) {
 }
 
 try {
-    if (!isset($_GET["id"]) || !validateId($_GET["id"])) {
+    if (!isset($_GET["id"]) || !validateId($_GET["id"])) { 
         throw new Exception("ID inválido.");
     }
 
@@ -16,19 +16,24 @@ try {
         throw new Exception("Categoría no encontrada.");
     }
 
-    $products = ProductData::getAllByCategoryId($category->id);
-    foreach ($products as $product) {
-        $product->del_category();
+    if(isset($_GET['active']) && $_GET['active'] == 1)
+    {
+        $category->del(1);
+        Core::redir("./index.php?view=categories&success=Categoria habilitada correctamente");
+    }
+    else
+    {
+        $category->del();
+        Core::redir("./index.php?view=categories&success=Categoria deshabilitada correctamente");
     }
 
-    $category->del();
-
-    // Redirigir con mensaje de éxito
-    Core::redir("./index.php?view=categories&success=Categoría eliminada correctamente");
 
 } catch (Exception $e) {
-    // Redirigir con mensaje de error
-    Core::redir("./index.php?view=categories&error=" . urlencode('Error al eliminar la categoria'));
+    if(isset($_GET['active']) && $_GET['active'] == 1)
+        Core::redir("./index.php?view=categories&error=" . urlencode('Error al habilitar el categories'));
+    else
+    Core::redir("./index.php?view=categories&error=" . urlencode('Error al eliminar el categories'));
+    
 }
 
 ?>

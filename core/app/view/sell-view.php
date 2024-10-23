@@ -119,11 +119,11 @@
                 ?>
                 <select name="client_id" class="form-select">
                     <option value="">-- NINGUNO --</option>
-                    <?php foreach($clients as $client): ?>
+                    <?php foreach($clients as $client):  if($client->active != 0):?> 
                     <option value="<?php echo $client->id; ?>"><?php echo $client->name." ".$client->lastname; ?></option>
-                    <?php endforeach; ?>
+                    <?php endif; endforeach; ?>
                 </select>
-            </div>
+            </div> 
         </div>
         <div class="mb-3 row">
             <label for="money" class="col-sm-2 col-form-label">Efectivo</label>
@@ -184,7 +184,7 @@
             var alertHtml = '<div class="alert alert-' + type + ' alert-dismissible fade show" role="alert">' +
                             message +
                             '</div>';
-            $('#alerts').html(alertHtml);
+            $('#alerts').html(alertHtml); 
             setTimeout(function() {
                 $('.alert').alert('close');
             }, 5000);

@@ -71,15 +71,17 @@ class CategoryData {
         $con->close();
     }
 
-    public function del() {
+    public function del($is_active = 0) {
         $con = Database::getCon();
-        $stmt = $con->prepare("DELETE FROM " . self::$tablename . " WHERE id = ?");
-        $stmt->bind_param("i", $this->id);
+        $stmt = $con->prepare("UPDATE " . self::$tablename . " set is_active = ? WHERE id = ?");
+        $stmt->bind_param("ii", $is_active, $this->id);
         if (!$stmt->execute()) {
-            throw new Exception("Error al eliminar la categoría.");
+            if($is_active = 0)
+                throw new Exception("Error al eliminar la categoría."); 
+            else 
+                throw new Exception("Error al havilitar la categoría."); 
         }
     }
-    
 
     public function update() {
         $con = Database::getCon();
@@ -118,6 +120,7 @@ class CategoryData {
             $category = new CategoryData();
             $category->id = $r['id'];
             $category->name = $r['name'];
+            $category->is_active = $r['is_active'];
             $category->created_at = $r['created_at'];
             $array[] = $category;
         }

@@ -23,6 +23,7 @@ $total_total = 0;
     <table class="table table-bordered table-hover">
         <thead class="table-primary">
             <th></th>
+            <th>Corte de caja</th>
             <th>Total</th>
             <th>Fecha</th>
         </thead>
@@ -32,6 +33,7 @@ $total_total = 0;
             <td style="width:30px;">
                 <a href="./index.php?view=b&id=<?php echo $box->id; ?>" class="btn btn-default btn-xs"><i class="bi bi-arrow-right"></i></a>
             </td>
+            <td>Corte de caja #<?php echo $box->id;?></td>
             <td>
                 <?php
                 $total = 0;
