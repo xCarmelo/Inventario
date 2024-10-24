@@ -125,10 +125,12 @@
                                 <td><?php echo $product->description; ?></td>   
 
                                 <?php if($filtro_active_user == 0):?>
+                                    <?php if ($_SESSION['is_admin'] === 1):?>
                                     <td style="width:30px;">
                                         <div class="btn-group" role="group">
                                         <button class="btn btn-sm btn-primary ms-1" data-bs-toggle="modal" data-bs-target="#confirmHabilitarModal" data-href="index.php?view=delproduct&id=<?php echo $product->id; ?>&active=1"><i class="bi bi-arrow-counterclockwise"></i>Habilitar</button>                                     </div>
                                     </td>
+                                    <?php endif;?>
                                     <?php else: ?>
                                 <?php if($_SESSION['is_admin'] === 1): ?>
                                 <td style="width:120px;">

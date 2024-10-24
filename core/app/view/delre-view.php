@@ -12,10 +12,10 @@ try {
 	$operations = OperationData::getAllProductsBySellId($_GET["id"]);
 
 	foreach ($operations as $op) {  
-		if((OperationData::getOutputQYesF($op->product_id) - $op->q) <= 0) 
+		if((OperationData::getQYesF($op->product_id) - $op->q) < 0) 
 			throw new Exception("No hay suficiente stock para devolver la compra.");
 		
-		$op->reason_for_return = $_GET['motivo'];
+		$op->reason_for_return = $_GET['motivo'] . " (devolución de compra)";
 		$op->del();
 	}
 

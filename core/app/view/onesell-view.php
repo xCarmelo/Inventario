@@ -55,13 +55,16 @@ if(isset($_COOKIE["selled"])){
 						<th>Cantidad</th>
 						<th>Nombre del Producto</th>
 						<th>Descripcion</th>
-						<th>Precio Unitario</th>
+						<th>Precio Unitario</th> 
 						<th>Precio vendido</th>
 						<th>Total</th>
+                        <?php if ($_SESSION['is_admin'] === 1):?>
 						<th></th>
+                        <?php endif;?>
+                    </tr>
 					</tr>
 				</thead>
-				<tbody>
+				<tbody> 
 					<?php foreach($operations as $operation): ?>
 					<?php $product = $operation->getProduct(); ?>
 					<tr>
@@ -72,12 +75,15 @@ if(isset($_COOKIE["selled"])){
 						<td>C$ <?php echo number_format($product->price_out,2,".",",") ;?></td>
 						<td>C$ <?php echo number_format($operation->new_price,2,".",",") ;?></td>
 						<td><b>C$ <?php echo number_format($operation->q*$operation->new_price,2,".",","); $total+=$operation->q*$product->price_out;?></b></td>
-						<td>
+						<?php if ($_SESSION['is_admin'] === 1):?>
+                        <td>
 						<button class="btn btn-xs btn-danger d-flex align-items-center text-white" data-bs-toggle="modal" data-bs-target="#confirmDevolucionModal" data-href="index.php?action=returnSell&idOperation=<?php echo $operation->id; ?>&idSell=<?php echo $_GET['id']; ?>">
                             <span>Devolución</span>
                             <i class="bi bi-arrow-return-left ms-2"></i>
                         </button>
 						</td> 
+                        <?php endif;?>
+                    </tr>
 					</tr>
 					<?php endforeach; ?>
 				</tbody>

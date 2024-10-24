@@ -204,7 +204,7 @@
             $('#total_with_discount').text(totalWithDiscount.toFixed(2));
             $('#totalSell').val(totalWithDiscount.toFixed(2));
         }
-
+ 
         $('#discount').on('input', updateTotal);
         updateTotal(); 
 

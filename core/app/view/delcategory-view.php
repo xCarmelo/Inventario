@@ -24,7 +24,7 @@ try {
     else
     {
         $category->del();
-        Core::redir("./index.php?view=categories&success=Categoria deshabilitada correctamente");
+        Core::redir("./index.php?view=categories&success=Categoria elimada correctamente");
     }
 
 

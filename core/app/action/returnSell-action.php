@@ -11,7 +11,7 @@ if(isset($_GET['idSell']) && isset($_GET['idOperation']) && isset($_GET['idSell'
     $sell->update_total();
 
     $operation->operation_type_id = 4;
-    $operation->reason_for_return = $_GET['motivo'];
+    $operation->reason_for_return = $_GET['motivo'] . " (devolución de venta)";
     $operation->id_sell = $_GET['idSell'];
     $operation->updateOperation(); 
 

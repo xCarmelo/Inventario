@@ -36,8 +36,10 @@ class OperationData {
     }
 
     public function del() {
+        date_default_timezone_set('America/Managua'); 
+        $this->created_at = date("Y-m-d H:i:s");
         $con = Database::getCon(); // Obtiene la conexión a la base de datos
-        $sql = "UPDATE " . self::$tablename . " SET operation_type_id = ?, reason_for_return = ? WHERE id=?";
+        $sql = "UPDATE " . self::$tablename . " SET operation_type_id = ?, reason_for_return = ?, created_at = ? WHERE id=?";
         $stmt = $con->prepare($sql); // Prepara la consulta SQL
         
         if ($stmt === false) {
@@ -45,7 +47,7 @@ class OperationData {
         }
         
         $filtro = 4;
-        $stmt->bind_param("isi", $filtro, $this->reason_for_return, $this->id); // Asocia el parámetro ID
+        $stmt->bind_param("issi", $filtro, $this->reason_for_return, $this->created_at, $this->id); // Asocia el parámetro ID
         
         if (!$stmt->execute()) { // Ejecuta la consulta y verifica si hubo un error
             throw new Exception("Error al eliminar el registro");
@@ -56,6 +58,8 @@ class OperationData {
     
 
     public function update(){
+        date_default_timezone_set('America/Managua'); 
+        $this->created_at = date("Y-m-d H:i:s");
         $sql = "UPDATE " . self::$tablename . " SET product_id=?, q=? WHERE id=?";
         $con = Database::getCon();
         $stmt = $con->prepare($sql);
@@ -65,10 +69,12 @@ class OperationData {
     }
 
     public function updateOperation(){
-        $sql = "UPDATE " . self::$tablename . " SET operation_type_id=?, reason_for_return=? WHERE id=?";
+        date_default_timezone_set('America/Managua'); 
+        $this->created_at = date("Y-m-d H:i:s");
+        $sql = "UPDATE " . self::$tablename . " SET operation_type_id=?, reason_for_return=?, created_at = ? WHERE id=?";
         $con = Database::getCon();
         $stmt = $con->prepare($sql);
-        $stmt->bind_param("isi", $this->operation_type_id, $this->reason_for_return, $this->id);
+        $stmt->bind_param("issi", $this->operation_type_id, $this->reason_for_return, $this->created_at, $this->id);
         $stmt->execute();
         return $stmt;
     }

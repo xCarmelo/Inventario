@@ -236,7 +236,7 @@
             $('#resultMessage').text(successMessage);
             $('#resultModal').modal('show');
         } else if (errorMessage) {
-            $('#resultMessage').text(errorMessage);
+            $('#resultMessage').text(errorMessage); 
             $('#resultModal').modal('show');
         }
 
@@ -245,6 +245,7 @@
             const params = new URLSearchParams(url.search);
 
             params.delete('result');
+            params.delete('error');
             params.delete('success'); // Add this line to remove the 'success' parameter as well
 
             const newUrl = url.pathname + '?' + params.toString();

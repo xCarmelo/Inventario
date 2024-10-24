@@ -2,7 +2,7 @@
 class OperationTypeData {
     public static $tablename = "operation_type";
 
-    public function __construct(){
+    public function __construct(){ 
         $this->name = "";
     }
 
@@ -72,7 +72,7 @@ class OperationTypeData {
     public static function getAll(){
         $sql = "SELECT * FROM " . self::$tablename . " ORDER BY created_at DESC";
         $con = Database::getCon();
-        $stmt = $con->prepare($sql);
+        $stmt = $con->prepare($sql); 
         $stmt->execute();
         $result = $stmt->get_result();
         $array = array();
