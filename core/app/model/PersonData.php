@@ -147,7 +147,7 @@ class PersonData {
         $stmt->execute();
         $result = $stmt->get_result();
         $array = array();
-        while ($r = $result->fetch_array()) {
+        while ($r = $result->fetch_array()) { 
             $person = new PersonData();
             $person->id = $r['id'];
             $person->name = $r['name'];
@@ -160,6 +160,40 @@ class PersonData {
             $array[] = $person;
         }
         return $array;
+    }
+    public static function getClientsFiend($name, $lastname, $user_id = 0, $kind = 1) {
+        $sql = "SELECT * FROM " . self::$tablename . " WHERE kind=? AND name=? AND lastname=?";
+        $con = Database::getCon();
+        $stmt = $con->prepare($sql);
+
+        $stmt->bind_param("iss", 
+            $kind, 
+            $name,
+            $lastname
+        );
+
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        // Si no hay registros, retorna false
+        if ($result->num_rows == 0) {
+            return false;
+        }
+
+        // Obtiene el registro devuelto
+        $row = $result->fetch_assoc();
+
+        // Verifica si $user_id es mayor que 0 y si el id es el mismo
+        if ($user_id > 0) {
+            if ($row['id'] == $user_id) {
+                return false; // Si el id es el mismo, retorna false
+            } else {
+                return true;  // Si es diferente, retorna true
+            }
+        }
+
+        // Si $user_id no es mayor que 0, retorna true si hay registros
+        return true;
     }
 
     public static function getProviders() {
@@ -198,6 +232,7 @@ class PersonData {
             $person->id = $r['id'];
             $person->name = $r['name'];
             $person->email1 = $r['email1'];
+            $person->active = $r['active'];
             $person->created_at = $r['created_at'];
             $array[] = $person;
         }
@@ -212,12 +247,13 @@ class PersonData {
         $stmt->bind_param("s", $like); 
         $stmt->execute();
         $result = $stmt->get_result();
-        $array = array();
+        $array = array();   
         while ($r = $result->fetch_array()) {
             $person = new PersonData();
             $person->id = $r['id'];
             $person->name = $r['name'];
             $person->email1 = $r['email1'];
+            $person->active = $r['active'];
             $person->created_at = $r['created_at'];
             $array[] = $person;
         }

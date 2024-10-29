@@ -139,6 +139,7 @@ class CategoryData {
             $category = new CategoryData();
             $category->id = $r['id'];
             $category->name = $r['name'];
+            $category->is_active = $r['is_active'];
             $category->created_at = $r['created_at'];
             $array[] = $category;
         }

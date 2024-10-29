@@ -1,43 +1,50 @@
 <?php
 
-    function validate_data($data) { 
-		$errors = [];
-		$valid = true;
+function validate_data($data) {  
+    $errors = [];
+    $valid = true;
 
-		// Validaciones para cada campo
-		if (!preg_match("/^[A-Za-záéíóúÁÉÍÓÚñÑ\s]{2,255}$/", $data['name'])) {
-			$valid = false;
-			$errors['name'] = "El nombre debe tener al menos 2 caracteres.";
-		}
-	
-		if (!preg_match("/^[A-Za-záéíóúÁÉÍÓÚñÑ\s]{2,50}$/", $data['lastname'])) {
-			$valid = false;
-			$errors['lastname'] = "El apellido debe tener al menos 2 caracteres.";
-		}
-	
-		if (!preg_match("/^[a-zA-Z0-9\s,-]{5,50}$/", $data['address1'])) {
-			$valid = false;
-			$errors['address1'] = "La dirección debe tener al menos 5 caracteres.";
-		}
-	
-		if (!filter_var($data['email1'], FILTER_VALIDATE_EMAIL)) {
-			$valid = false;
-			$errors['email1'] = "Ingrese un correo electrónico válido.";
-		}
-	
-		if (!preg_match("/^[0-9]{8}$/", $data['phone1'])) {
-			$valid = false;
-			$errors['phone1'] = "El número de teléfono debe tener 8 dígitos.";
-		}
+    if (PersonData::getClientsFiend($data['name'], $data['lastname'])) {
+        $valid = false;
+        $errors['name'] = "Este cliente ya existe.";
+        $errors['lastname'] = "Este cliente ya existe."; 
+    }
 
-        if (!$valid) {
-			$_SESSION['errors'] = $errors;
-			$_SESSION['form_data'] = $_POST;
-			header("Location: index.php?view=newclient&result=error"); 
-			exit();
-		}
-		else return $errors;
-    } 
+    // Validaciones para cada campo con mensajes mejorados
+    if (!preg_match("/^[A-Za-záéíóúÁÉÍÓÚñÑ\s]{2,255}$/", $data['name'])) {
+        $valid = false;
+        $errors['name'] = "El nombre debe contener solo letras y espacios, con un mínimo de 2 y un máximo de 255 caracteres.";
+    }
+
+    if (!preg_match("/^[A-Za-záéíóúÁÉÍÓÚñÑ\s]{2,50}$/", $data['lastname'])) {    
+        $valid = false;
+        $errors['lastname'] = "El apellido debe contener solo letras y espacios, con un mínimo de 2 y un máximo de 50 caracteres.";
+    }
+
+    if (!preg_match("/^[A-Za-záéíóúÁÉÍÓÚñÑ0-9\s,-]{5,100}$/", $data['address1'])) {
+        $valid = false;
+        $errors['address1'] = "La dirección debe contener letras, números, espacios, guiones y comas, con un mínimo de 5 y un máximo de 100 caracteres.";
+    }
+
+    if (!filter_var($data['email1'], FILTER_VALIDATE_EMAIL)) {
+        $valid = false;
+        $errors['email1'] = "El correo electrónico debe ser válido y en un formato estándar (ejemplo@dominio.com).";
+    }
+
+    if (!preg_match("/^[0-9]{8}$/", $data['phone1'])) {
+        $valid = false;
+        $errors['phone1'] = "El número de teléfono debe tener exactamente 8 dígitos numéricos.";
+    }
+
+    if (!$valid) {
+        $_SESSION['errors'] = $errors;
+        $_SESSION['form_data'] = $_POST;
+        header("Location: index.php?view=newclient&result=error"); 
+        exit();
+    }
+    else return $errors;
+}
+
 
 	if (count($_POST) > 0) {
 		$user = new PersonData(); 

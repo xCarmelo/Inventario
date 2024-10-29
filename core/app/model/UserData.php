@@ -125,7 +125,7 @@ class UserData {
         $sql = "UPDATE " . self::$tablename . " SET is_active = ? WHERE id = ?";
         $con = Database::getCon();
         $stmt = $con->prepare($sql);
-
+ 
         if ($stmt === false) {
             throw new Exception("Error en la preparación de la consulta");
         }

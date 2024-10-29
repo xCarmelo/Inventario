@@ -17,7 +17,7 @@ $boxes = BoxData::getAll();
 $products = SellData::getSellsUnBoxed();
 if(count($boxes)>0){
 $total_total = 0;
-?>
+?> 
 <br>
 <div class="table-responsive">
     <table class="table table-bordered table-hover">
@@ -27,29 +27,44 @@ $total_total = 0;
             <th>Total</th>
             <th>Fecha</th>
         </thead>
-        <?php foreach($boxes as $box): ?>
-        <?php $sells = SellData::getByBoxId($box->id); ?>
-        <tr>
-            <td style="width:30px;">
-                <a href="./index.php?view=b&id=<?php echo $box->id; ?>" class="btn btn-default btn-xs"><i class="bi bi-arrow-right"></i></a>
-            </td>
-            <td>Corte de caja #<?php echo $box->id;?></td>
-            <td>
-                <?php
+        <?php 
+            foreach($boxes as $box): 
+                $sells = SellData::getByBoxId($box->id);
                 $total = 0;
+                $hasOperations = false;
+
+                // Verificar si hay operaciones para cada venta en el box
                 foreach($sells as $sell){
                     $operations = OperationData::getAllProductsBySellId($sell->id);
-                    foreach($operations as $operation){
-                        $total += $operation->q * $operation->new_price;
+                    
+                    // Si hay al menos una operación, procesamos el total y marcamos que hay operaciones
+                    if (!empty($operations)) {
+                        $hasOperations = true;
+                        foreach($operations as $operation){
+                            $total += $operation->q * $operation->new_price;
+                        }
                     }
                 }
+
+                // Si no se encontró ninguna operación, omitimos este registro
+                if (!$hasOperations) {
+                    continue;
+                }
+            ?>
+                <tr>
+                    <td style="width:30px;">
+                        <a href="./index.php?view=b&id=<?php echo $box->id; ?>" class="btn btn-default btn-xs"><i class="bi bi-arrow-right"></i></a>
+                    </td>
+                    <td>Corte de caja #<?php echo $box->id; ?></td> 
+                    <td><b>C$ <?php echo number_format($total, 2, ".", ","); ?></b></td>
+                    <td><?php echo $box->created_at; ?></td>
+                </tr>
+            <?php 
                 $total_total += $total;
-                echo "<b>C$ ".number_format($total, 2, ".", ",")."</b>";
-                ?>
-            </td>
-            <td><?php echo $box->created_at; ?></td>
-        </tr>
-        <?php endforeach; ?>
+            endforeach; 
+            ?>
+
+
     </table>
 </div>
 <h1>Total: <?php echo "C$ ".number_format($total_total,2,".",","); ?></h1>

@@ -33,15 +33,15 @@ $user = PersonData::getById($_GET["id"]);
                                     <?php echo isset($_SESSION['errors']['lastname']) ? $_SESSION['errors']['lastname'] : ''; ?>
                                 </div>
                             </div>
-
+ 
                             <div class="col-md-4">
-                                <label for="validationCustom03" class="form-label">Dirección*</label>
-                                <input value="<?php echo isset($_SESSION['form_data']['address1']) ? $_SESSION['form_data']['address1'] : $user->address1; ?>" type="text" name="address1" class="form-control <?php echo isset($_SESSION['errors']['address1']) ? 'is-invalid' : ''; ?>" id="validationCustom03" placeholder="Dirección" pattern="^[A-Za-záéíóúÁÉÍÓÚñÑ0-9\s,-]{5,50}$" title="Ingresa una dirección válida (solo letras, números, espacios, guiones y comas) de al menos 5 caracteres" required>
-                                <div class="invalid-feedback">
-                                    <?php echo isset($_SESSION['errors']['address1']) ? $_SESSION['errors']['address1'] : ''; ?>
+                                    <label for="validationCustom03" class="form-label">Dirección*</label>
+                                    <input value="<?php echo isset($_SESSION['form_data']['address1']) ? $_SESSION['form_data']['address1'] : $user->address1; ?>" type="text" name="address1" class="form-control <?php echo isset($_SESSION['errors']['address1']) ? 'is-invalid' : ''; ?>" id="validationCustom03" placeholder="Dirección" pattern="^[A-Za-záéíóúÁÉÍÓÚñÑ0-9\s,-]{5,100}$" title="Ingresa una dirección válida (solo letras, números, espacios, guiones y comas) de al menos 5 caracteres" required>
+                                    <div class="invalid-feedback">
+                                        <?php echo isset($_SESSION['errors']['address1']) ? $_SESSION['errors']['address1'] : ''; ?>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
                         <div class="row">
                             <div class="col-md-4">
@@ -79,7 +79,7 @@ $user = PersonData::getById($_GET["id"]);
         </div>
     </div>
 </div>
-
+ 
  
 <!-- Modal de éxito -->
 <?php if (isset($_SESSION['success'])) : ?>
@@ -93,7 +93,7 @@ $user = PersonData::getById($_GET["id"]);
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                El proveedor se agregó correctamente.
+                El proveedor se actualizo correctamente.
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>

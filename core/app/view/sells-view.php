@@ -16,8 +16,10 @@ if (isset($_GET["sd"]) && isset($_GET["ed"]) && $_GET["sd"] != "" && $_GET["ed"]
         $sells = SellData::getAllByDateBCOp($_GET["client_id"], $_GET["sd"], $_GET["ed"], 2);
     }
 } else {
-    $sells = SellData::getSells(); // Obtener todas las ventas si no hay filtros 
+    $sells = SellData::getSells(); // Obtener todas las ventas si no hay filtros  
 }
+
+if(isset($_POST['option']))$sells = SellData::getSells(); 
 
 // Calcular el total de páginas
 $total = count($sells);
@@ -28,28 +30,43 @@ $sells = array_slice($sells, $offset, $limit); // Paginación de los datos
 <div class="row">
     <div class="col-md-12">
         <h1><i class="bi bi-cart"></i> Lista de Ventas</h1>
-        <form class="mt-3">
-            <input type="hidden" name="view" value="sellreports"> 
-            <div class="row">
-                <div class="col-md-3 col-sm-6 mb-2">
-                    <select name="client_id" class="form-select">
-                        <option value="">-- TODOS --</option>
-                        <?php foreach ($clients as $p): ?>
-                        <option value="<?php echo $p->id; ?>" <?php echo isset($_GET["client_id"]) && $_GET["client_id"] == $p->id ? 'selected' : ''; ?>><?php echo $p->name; ?></option>
-                        <?php endforeach; ?>
-                    </select>
+        <div class="row">
+    <div class="col-md-10">
+            <form class="mt-3">
+                <input type="hidden" name="view" value="sells">  
+                <div class="row">
+                    <div class="col-md-3 col-sm-6 mb-2">
+                        <select name="client_id" class="form-select">
+                            <option value="">-- TODOS --</option>
+                            <?php foreach ($clients as $p): ?>
+                            <option value="<?php echo $p->id; ?>" <?php echo isset($_GET["client_id"]) && $_GET["client_id"] == $p->id ? 'selected' : ''; ?>><?php echo $p->name; ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                    <div class="col-md-3 col-sm-6 mb-2">
+                        <input type="date" name="sd" value="<?php echo isset($_GET["sd"]) ? $_GET["sd"] : ''; ?>" class="form-control">
+                    </div>
+                    <div class="col-md-3 col-sm-6 mb-2">
+                        <input type="date" name="ed" value="<?php echo isset($_GET["ed"]) ? $_GET["ed"] : ''; ?>" class="form-control">
+                    </div>
+                    <div class="col-md-3 col-sm-6 mb-2">
+                        <button type="submit" class="btn btn-success w-100 text-white">Procesar</button>
+                    </div>
                 </div>
-                <div class="col-md-3 col-sm-6 mb-2">
-                    <input type="date" name="sd" value="<?php echo isset($_GET["sd"]) ? $_GET["sd"] : ''; ?>" class="form-control">
-                </div>
-                <div class="col-md-3 col-sm-6 mb-2">
-                    <input type="date" name="ed" value="<?php echo isset($_GET["ed"]) ? $_GET["ed"] : ''; ?>" class="form-control">
-                </div>
-                <div class="col-md-3 col-sm-6 mb-2">
-                    <button type="submit" class="btn btn-success w-100">Procesar</button>
-                </div>
-            </div>
-        </form>
+            </form>
+        </div>
+
+        <!-- Form con icono de refresh -->
+        <div class="col-md-2">
+            <form class="mt-3" action="index.php?view=sells" method="post">
+                <input type="text" value="all" hidden name="option">
+                <button type="submit" class="btn btn-primary w-100">
+                    <i class="bi bi-arrow-clockwise"></i> Refresh
+                </button>
+            </form>
+        </div>
+    </div>
+
 
         <div class="clearfix"></div>
 
@@ -165,7 +182,7 @@ $sells = array_slice($sells, $offset, $limit); // Paginación de los datos
             </div>
 
         <?php } else { ?>
-        <div class="jumbotron">
+        <div class="jumbotron mt-4">
             <h2>No hay ventas</h2>
             <p>No se encontraron resultados para el rango seleccionado.</p>
         </div>

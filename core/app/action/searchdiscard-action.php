@@ -55,17 +55,21 @@
                                             <input id="discardReason_<?php echo $product->id; ?>" type="text" name="reason" placeholder="Motivo del descarte" value="<?php echo htmlspecialchars($reason); ?>">
                                         </td>
                                         <td><?php echo htmlspecialchars($q); ?></td>
-                                        <td style="width:250px;">
-                                            <form class="discard-form" method="post" action="index.php?view=addtodiscard">
-                                                <input type="hidden" name="product_id" value="<?php echo $product->id; ?>">
-                                                <input type="hidden" name="reason" id="reason_<?php echo $product->id; ?>" value="">
-                                                <div class="input-group">
-                                                    <input type="number" class="form-control" required name="q" placeholder="Cantidad ..." pattern="[0-9]+" title="Ingresa una cantidad válida" min="1">
-                                                    <div class="input-group-append">
-                                                        <button type="submit" class="btn btn-primary"><i class="glyphicon glyphicon-plus-sign"></i> Agregar</button>
-                                                    </div>
-                                                </div>
-                                            </form>
+                                        <td style="width: 250px;">
+                                        <form class="discard-form" method="post" action="index.php?view=addtodiscard">
+                                            <input type="hidden" name="product_id" value="<?php echo $product->id; ?>">
+                                            <input type="hidden" name="reason" id="reason_<?php echo $product->id; ?>" value="">
+ 
+                                            <div class="input-group">
+                                            <input type="number" class="form-control" required name="q" placeholder="Cantidad ..." pattern="[0-9]+" title="Ingresa una cantidad válida" min="1">
+
+                                            <div class="input-group-append">
+                                                <button type="submit" class="btn btn-primary">
+                                                <i class="glyphicon glyphicon-plus-sign"></i> Agregar
+                                                </button>
+                                            </div>
+                                            </div>
+                                        </form>
                                         </td>
                                     </tr>
                                 <?php else: $products_in_cero++; ?>
@@ -96,6 +100,24 @@
     </div>
 </div>
 
+<!-- Modal de Alerta -->
+<div class="modal fade" id="alertModal" tabindex="-1" aria-labelledby="alertModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="alertModalLabel">Alerta</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                El motivo del descarte no puede estar vacío. Por favor, ingrésalo antes de continuar.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
     $(document).ready(function() {
         // Al enviar el formulario, asegurarse de que el motivo de descarte se envíe correctamente
@@ -105,9 +127,13 @@
             let productId = $(this).find("input[name='product_id']").val();
             let discardReason = $(`#discardReason_${productId}`).val(); // Tomar el valor del motivo de descarte
 
-            $(this).find(`#reason_${productId}`).val(discardReason); // Asignar el motivo al campo hidden
-
-            $(this).off("submit").submit(); // Enviar el formulario después de asignar
+            if (discardReason.trim() === "") {
+                // Si el motivo está vacío, mostrar el modal de alerta
+                $('#alertModal').modal('show');
+            } else {
+                $(this).find(`#reason_${productId}`).val(discardReason); // Asignar el motivo al campo hidden
+                $(this).off("submit").submit(); // Enviar el formulario después de asignar
+            }
         });
 
         // Manejo del modal para ampliar imágenes

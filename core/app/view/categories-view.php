@@ -64,7 +64,7 @@
                         $categories = CategoryData::getLike($_SESSION['SearchItemcategories']);
                     }
                     else
-                    $categories = CategoryData::getAll();
+                    $categories = CategoryData::getAll(); 
 
                     if (count($categories) > 0) {
                         $totalCategories = count($categories);

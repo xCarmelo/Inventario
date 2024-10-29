@@ -45,7 +45,6 @@
                                         <th>Imagen</th>
                                         <th>Nombre</th>
                                         <th>Disponible</th>
-                                        <th>Acciones</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -60,11 +59,11 @@
                                             </td>
                                             <td><?php echo $product->name; ?></td>
                                             <td><?php echo OperationData::getQYesF($product->id); ?></td>
-                                            <td style="width:93px;">
+                                            <!-- <td style="width:93px;">
                                                 <a href="index.php?view=history&product_id=<?php echo $product->id; ?>" class="btn btn-success btn-sm">
                                                     <i class="glyphicon glyphicon-time"></i> Historial
                                                 </a>
-                                            </td>
+                                            </td> -->
                                         </tr>
                                     <?php endif; endforeach; ?>
                                 </tbody>

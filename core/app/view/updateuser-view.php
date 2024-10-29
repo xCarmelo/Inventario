@@ -1,53 +1,54 @@
 <?php
-    function validate_data($data) {  
-		$errors = [];
-		$valid = true;
+function validate_data($data) {  
+    $errors = [];
+    $valid = true;
 
-		// Validaciones para cada campo
-		if (!preg_match("/^[A-Za-záéíóúÁÉÍÓÚñÑ\s]{2,255}$/", $data['name'])) {
-			$valid = false;
-			$errors['name'] = "El nombre debe tener al menos 2 caracteres.";
-		} 
-	
-		if (!preg_match("/^[A-Za-záéíóúÁÉÍÓÚñÑ\s]{2,50}$/", $data['lastname'])) {
-			$valid = false;
-			$errors['lastname'] = "El apellido debe tener al menos 2 caracteres.";
-		}
-
-		if (!preg_match("/^[a-zA-Z0-9\s,-]{2,50}$/", $data['username'])) {
-			$valid = false;
-			$errors['username'] = "El nombre de usuario debe tener al menos 2 caracteres, sin acento.";
-		}
-
-		if(UserData::searchuser($data['username']) && $data['username2'] != $data['username']) 
-		{
-			$valid = false;
-			$errors['username'] = "Este usuario ya existe.";
-		}
-	
-		if (!filter_var($data['email'], FILTER_VALIDATE_EMAIL)) { 
-			$valid = false;
-			$errors['email'] = "Ingrese un correo electrónico válido.";
-		}
-	
-		if (!preg_match("/^[0-9]{8}$/", $data['phone'])) {
-			$valid = false;
-			$errors['phone'] = "El número de teléfono debe tener 8 dígitos.";
-		}
-
-		if (!preg_match("/^(?=.*\d)[A-Za-z\d]{5,}$/", $data['password'])) {
-			$valid = false;
-			$errors['password'] = "La contraseña debe tener al menos 8 caracteres y contener al menos un número.";
-		}
-
-        if (!$valid) {
-			$_SESSION['errors'] = $errors;
-			$_SESSION['form_data'] = $_POST;
-			header("Location: index.php?view=edituser&id=". $data['user_id'] . "&result=error");  
-			exit();
-		}
-		else return $errors;
+    // Validaciones para cada campo
+    if (!preg_match("/^[A-Za-záéíóúÁÉÍÓÚñÑ\s]{2,255}$/", $data['name'])) {
+        $valid = false;
+        $errors['name'] = "El nombre debe tener entre 2 y 255 caracteres y solo puede contener letras y espacios.";
     } 
+
+    if (!preg_match("/^[A-Za-záéíóúÁÉÍÓÚñÑ\s]{2,50}$/", $data['lastname'])) {
+        $valid = false;
+        $errors['lastname'] = "El apellido debe tener entre 2 y 50 caracteres y solo puede contener letras y espacios.";
+    }
+
+    if (!preg_match("/^[a-zA-Z0-9\s,-]{2,50}$/", $data['username'])) {
+        $valid = false;
+        $errors['username'] = "El nombre de usuario debe tener entre 2 y 50 caracteres, y puede incluir letras, números, espacios, comas y guiones.";
+    }
+
+    if (UserData::searchuser($data['username']) && $data['username2'] != $data['username']) {
+        $valid = false;
+        $errors['username'] = "Este nombre de usuario ya existe. Por favor, elija uno diferente.";
+    }
+    
+    if (!filter_var($data['email'], FILTER_VALIDATE_EMAIL)) { 
+        $valid = false;
+        $errors['email'] = "Ingrese un correo electrónico válido. Asegúrese de que siga el formato correcto (ejemplo@dominio.com).";
+    }
+
+    if (!preg_match("/^[0-9]{8}$/", $data['phone'])) {
+        $valid = false;
+        $errors['phone'] = "El número de teléfono debe tener exactamente 8 dígitos y no puede incluir caracteres adicionales.";
+    }
+
+    if (!preg_match("/^(?=.*\d)[A-Za-z\d]{8,}$/", $data['password'])) {
+        $valid = false;
+        $errors['password'] = "La contraseña debe tener al menos 8 caracteres y contener al menos un número.";
+    }
+
+    // Manejo de errores
+    if (!$valid) {
+        $_SESSION['errors'] = $errors;
+        $_SESSION['form_data'] = $_POST;
+        header("Location: index.php?view=edituser&id=". $data['user_id'] . "&result=error");  
+        exit();
+    } else {
+        return $errors;
+    }
+}
 
 
 if(count($_POST)>0){

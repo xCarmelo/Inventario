@@ -2,7 +2,7 @@
     <div class="row">
         <div class="col-12">
             <h1><i class="bi bi-trash"></i> Descarte</h1>
-            <p class="mt-4"><b>Buscar producto por nombre o por código:</b></p>
+            <p class="mt-4"><b>Buscar producto por nombre </b></p>
             <form id="searchp">
                 <div class="row">
                     <div class="col-md-6 col-12 mb-2 mb-md-0">

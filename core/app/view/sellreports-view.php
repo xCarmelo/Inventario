@@ -20,7 +20,7 @@ if (isset($_GET["sd"]) && isset($_GET["ed"]) && $_GET["sd"] != "" && $_GET["ed"]
     $operations = array_slice($operations, $offset, $limit);
 }
 ?>
-<section class="content">
+<section class="content"> 
     <div class="container">
         <div class="row">
             <div class="col-12">

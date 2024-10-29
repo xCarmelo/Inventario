@@ -29,7 +29,7 @@
                 <div class="row">
                     <div class="col-md-6 mt-2">
                         <label for="validationCustom03" class="form-label">Dirección*</label>
-                        <input value="<?php echo isset($_SESSION['form_data']['address1']) ? $_SESSION['form_data']['address1'] : ''; ?>" type="text" name="address1" class="form-control <?php echo isset($_SESSION['errors']['address1']) ? 'is-invalid' : ''; ?>" id="validationCustom03" placeholder="Dirección" pattern="^[A-Za-záéíóúÁÉÍÓÚñÑ0-9\s,-]{5,50}$" title="Ingresa una dirección válida (solo letras, números, espacios, guiones y comas) de al menos 5 caracteres" required>
+                        <input  value="<?php echo isset($_SESSION['form_data']['address1']) ? $_SESSION['form_data']['address1'] : ''; ?>"  type="text" name="address1" class="form-control <?php echo isset($_SESSION['errors']['address1']) ? 'is-invalid' : ''; ?>" id="validationCustom03" placeholder="Dirección" pattern="^[A-Za-záéíóúÁÉÍÓÚñÑ0-9\s,-]{5,100}$" title="Ingresa una dirección válida (solo letras, números, espacios, guiones y comas) de al menos 5 caracteres" required>
                         <div class="invalid-feedback">
                             <?php echo isset($_SESSION['errors']['address1']) ? $_SESSION['errors']['address1'] : ''; ?>
                         </div>
@@ -37,7 +37,7 @@
 
                     <div class="col-md-6 mt-2">
                         <label for="validationCustom04" class="form-label">Email*</label>
-                        <input value="<?php echo isset($_SESSION['form_data']['email1']) ? $_SESSION['form_data']['email1'] : ''; ?>" type="email" name="email1" class="form-control <?php echo isset($_SESSION['errors']['email1']) ? 'is-invalid' : ''; ?>" id="validationCustom04" placeholder="Email" required>
+                        <input max="320" value="<?php echo isset($_SESSION['form_data']['email1']) ? $_SESSION['form_data']['email1'] : ''; ?>" type="email" name="email1" class="form-control <?php echo isset($_SESSION['errors']['email1']) ? 'is-invalid' : ''; ?>" id="validationCustom04" placeholder="Email" required>
                         <div class="invalid-feedback">
                             <?php echo isset($_SESSION['errors']['email1']) ? $_SESSION['errors']['email1'] : ''; ?>
                         </div>
@@ -102,7 +102,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    Hubo un error al agregar el usuario. Por favor, inténtalo de nuevo.
+                    Hubo un error al agregar el cliente. Por favor, inténtalo de nuevo.
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
@@ -124,7 +124,7 @@
         // Mostrar el modal de error si está presente
         var errorModal = $('#errorModal');
         if (errorModal.length > 0) {
-            errorModal.modal('show');
+            errorModal.modal('show'); 
         }
 
         // Si existe un parámetro 'result' en la URL, eliminar solo ese parámetro

@@ -201,13 +201,12 @@ class OperationData {
         return Model::many($result, new OperationData());
     }
 
-    public static function getAllProductsBySellId($sell_id){
+    public static function getAllProductsBySellId($sell_id, $filtro = 4){
         $sql = "SELECT * FROM " . self::$tablename . " WHERE sell_id=? and operation_type_id != ? ORDER BY created_at DESC";
         $con = Database::getCon();
         $stmt = $con->prepare($sql);
-        $filtro = 4;
-        $stmt->bind_param("ii", $sell_id, $filtro);
-        $stmt->execute();
+        $stmt->bind_param("ii", $sell_id, $filtro);                                                                         
+        $stmt->execute();                     
         $result = $stmt->get_result();
         return Model::many($result, new OperationData());
     }

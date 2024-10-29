@@ -1,8 +1,42 @@
-<div class="container">
+
+
+<div class="container"> 
     <div class="row">
         <div class="col-12">
             <h1><i class="bi bi-cart"></i> COMPRAS</h1>
             <div class="clearfix"></div>
+
+            <div class="col-md-10">
+                <!-- Filtro por fecha -->
+                <div class="row">
+                    <!-- Formulario de filtro por fecha -->
+                    <form method="GET" action="index.php" class="col-md-10 my-3 mt-5 d-flex">
+                        <input type="hidden" name="view" value="res">
+                        <div class="row w-100">
+                            <div class="col-md-5">
+                                <input type="date" name="sd" id="sd" class="form-control" value="<?php echo isset($_GET['sd']) ? $_GET['sd'] : ''; ?>">
+                            </div>
+                            <div class="col-md-5">
+                                <input type="date" name="ed" id="ed" class="form-control" value="<?php echo isset($_GET['ed']) ? $_GET['ed'] : ''; ?>">
+                            </div>
+                            <div class="col-md-2 align-self-end">
+                                <button type="submit" class="btn btn-success w-200 text-white form-control">Filtrar</button>
+                            </div>
+                        </div>
+                    </form>
+
+                    <!-- Form con icono de refresh -->
+                    <div class="col-md-2 d-flex justify-content-center align-items-center pt-4">
+                        <form action="index.php?view=res" method="post">
+                            <input type="text" value="all" hidden name="option">
+                            <button type="submit" class="btn btn-primary w-100 mt-1">
+                                <i class="bi bi-arrow-clockwise"></i> Refresh
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
             <div class="card mt-5">
                 <div class="card-header">
                     COMPRAS
@@ -15,8 +49,13 @@
                     $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
                     $offset = ($page - 1) * $limit;
 
-                    // Obtener la lista de compras
-                    $products = SellData::getRes();
+                    // Obtener la lista de compras con filtro de fecha
+                    if (isset($_GET['sd']) && isset($_GET['ed'])) {
+                        $products = SellData::getAllByDateOp($_GET['sd'], $_GET['ed'], 1);
+                    } else {
+                        $products = SellData::getRes();
+                    }
+
                     $total = count($products); // Total de productos
                     $totalPages = ceil($total / $limit);
                     $products = array_slice($products, $offset, $limit); // Aplicar la paginación
@@ -133,126 +172,6 @@
                     <?php
                     }
                     ?>
-                </div>
-            </div>
         </div>
     </div>
 </div>
-
-
-<!-- Modal de Confirmación --> 
-<div class="modal fade" id="confirmDevolucionModal" tabindex="-1" aria-labelledby="confirmDevolucionModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header"> 
-                <h5 class="modal-title" id="confirmDevolucionModalLabel">Confirmar devolución</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <p>¿Estás seguro que deseas realizar la devolución de la compra? Esta acción no se puede deshacer.</p>
-                <!-- Campo de texto para el motivo de la devolución -->
-                <div class="form-group">
-                    <label for="motivoDevolucion" class="mb-2"><strong>Motivo de la devolución</strong></label>
-                    <input type="text" id="motivoDevolucion" class="form-control" placeholder="Escribe el motivo de la devolución">
-                    <!-- Aquí aparecerá el mensaje de error -->
-                    <small id="motivoError" class="text-danger" style="display:none;">Debes ingresar el motivo de la devolución</small>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                <a id="confirmDeleteBtn" class="btn btn-danger" href="#">Confirmar</a>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Modal para mensajes de éxito o error -->
-<div class="modal fade" id="resultModal" tabindex="-1" aria-labelledby="resultModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="resultModalLabel">Resultado</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <p id="resultMessage"></p>
-            </div>
-            <div class="modal-footer"> 
-                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cerrar</button>
-            </div>
-        </div>
-    </div>
-</div>  
-
-<!-- Script para cambiar el límite de paginación -->
-<script>
-    $(document).ready(function() {
-        // Selecciona el modal y el botón de confirmación
-        var $confirmDevolucionModal = $('#confirmDevolucionModal');
-        var $confirmDeleteBtn = $('#confirmDeleteBtn');
-        var $motivoInput = $('#motivoDevolucion'); 
-        var $motivoError = $('#motivoError'); // Elemento para mostrar el error
-
-        $('#limitSelect').on('change', function() {
-            var limit = $(this).val();
-            window.location.href = "?view=res&page=1&limit=" + limit;
-        });
-
-         // Evento que se dispara cuando el modal se muestra
-         $confirmDevolucionModal.on('show.bs.modal', function (event) {
-            var $button = $(event.relatedTarget);
-            var url = $button.data('href');
-            
-            // Cuando se haga clic en el botón "Confirmar", se valida el motivo
-            $confirmDeleteBtn.off('click').on('click', function (e) {
-                e.preventDefault(); 
-                var motivo = $.trim($motivoInput.val());
-
-                // Verifica si el campo de motivo está vacío
-                if (motivo === '') {
-                    $motivoError.show(); // Muestra el mensaje de error
-                    return;
-                } else {
-                    $motivoError.hide(); // Oculta el mensaje de error si no está vacío
-                }
-
-                // Agrega el motivo como parámetro a la URL y redirige
-                var nuevaUrl = url + '&motivo=' + encodeURIComponent(motivo);
-                window.location.href = nuevaUrl; 
-            });
-        });
-
-        // Oculta el mensaje de error cuando se comienza a escribir en el campo
-        $motivoInput.on('input', function() {
-            $motivoError.hide();
-        });
-
-         // Mostrar el resultado según los parámetros de la URL
-        const urlParams = new URLSearchParams(window.location.search);
-        const successMessage = urlParams.get('success');
-        const errorMessage = urlParams.get('error');
-
-        if (successMessage) {
-            $('#resultMessage').text(successMessage);
-            $('#resultModal').modal('show');
-        } else if (errorMessage) {
-            $('#resultMessage').text(errorMessage); 
-            $('#resultModal').modal('show');
-        }
-
-        mama = () => {
-            const url = new URL(window.location.href);
-            const params = new URLSearchParams(url.search);
-
-            params.delete('result');
-            params.delete('error');
-            params.delete('success'); // Add this line to remove the 'success' parameter as well
-
-            const newUrl = url.pathname + '?' + params.toString();
-            window.history.replaceState({}, document.title, newUrl);
-        };
-
-        mama();
-    });
-</script>
-<?php unset($_SESSION['errors']); ?>

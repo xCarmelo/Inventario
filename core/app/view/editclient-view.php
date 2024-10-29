@@ -35,13 +35,13 @@ if ($id === false) {
                         </div>
 
                         <div class="col-md-4">
-                            <label for="validationCustom03" class="form-label">Dirección*</label>
-                            <input value="<?php echo isset($_SESSION['form_data']['address1']) ? $_SESSION['form_data']['address1'] : $user->address1; ?>" type="text" name="address1" class="form-control <?php echo isset($_SESSION['errors']['address1']) ? 'is-invalid' : ''; ?>" id="validationCustom03" placeholder="Dirección" pattern="^[A-Za-záéíóúÁÉÍÓÚñÑ0-9\s,-]{5,50}$" title="Ingresa una dirección válida (solo letras, números, espacios, guiones y comas) de al menos 5 caracteres" required>
-                            <div class="invalid-feedback">
-                                <?php echo isset($_SESSION['errors']['address1']) ? $_SESSION['errors']['address1'] : ''; ?>
+                                <label for="validationCustom03" class="form-label">Dirección*</label>
+                                <input value="<?php echo isset($_SESSION['form_data']['address1']) ? $_SESSION['form_data']['address1'] : $user->address1; ?>" type="text" name="address1" class="form-control <?php echo isset($_SESSION['errors']['address1']) ? 'is-invalid' : ''; ?>" id="validationCustom03" placeholder="Dirección" pattern="^[A-Za-záéíóúÁÉÍÓÚñÑ0-9\s,-]{5,100}$" title="Ingresa una dirección válida (solo letras, números, espacios, guiones y comas) de al menos 5 caracteres" required>
+                                <div class="invalid-feedback">
+                                    <?php echo isset($_SESSION['errors']['address1']) ? $_SESSION['errors']['address1'] : ''; ?>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
                     <div class="row">
                         <div class="col-md-4">

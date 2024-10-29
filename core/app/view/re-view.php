@@ -13,7 +13,7 @@
                         <button type="submit" class="btn btn-primary w-100 fw-bold"><i class="glyphicon glyphicon-search"></i> Buscar</button>
                     </div>
                 </div>
-            </form>
+            </form> 
         </div>
     </div>
 
@@ -62,7 +62,7 @@
                                     <td><?php echo $q; ?></td>
                                     <td>
                                         <input type="hidden" name="product_id" value="<?php echo $product->id; ?>">
-                                        <input type="number" class="form-control" required name="q" placeholder="Cantidad de producto ...">
+                                        <input type="number" class="form-control" required min="1" name="q" placeholder="Cantidad de producto ...">
                                     </td>
                                     <td>
                                         <button type="submit" class="btn btn-success"><i class="glyphicon glyphicon-refresh"></i> Agregar</button>

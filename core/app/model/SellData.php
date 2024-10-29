@@ -101,7 +101,7 @@ class SellData {
         $con = Database::getCon();
         $stmt = $con->prepare("SELECT * FROM ".self::$tablename." WHERE id = ?");
         $stmt->bind_param("i", $id);
-        $stmt->execute();
+        $stmt->execute(); 
         $query = $stmt->get_result();
         return Model::one($query, new SellData());
     }

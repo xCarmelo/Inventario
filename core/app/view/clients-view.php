@@ -10,7 +10,7 @@
                     <i class="bi bi-person-plus-fill me-2"></i> Nuevo Cliente
                 </a>
             </div>
-            <?php endif; ?>
+            <?php endif; ?> 
 
             <br>
             <!-- Formulario de búsqueda --> 
@@ -109,7 +109,7 @@
                             <tbody>
                                 <?php foreach ($curr_clients as $client): 
                                     if($client->active == $filtro_active_user):
-                                    ?>
+                                    ?> 
                                     
                                 <tr>
                                     <td><?php echo $client->name . ' ' . $client->lastname; ?></td>
@@ -222,7 +222,7 @@
             </div>
         </div>
     </div>
-</div>  
+</div>   
 
 
 <!-- Modal de Confirmación para Habilitar cliente -->
@@ -239,7 +239,7 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                 <a id="confirmHabilitarBtn" class="btn btn-primary" href="#">Habilitar</a>
-            </div>
+            </div> 
         </div>
     </div>
 </div>
