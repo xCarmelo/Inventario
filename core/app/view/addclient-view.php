@@ -21,9 +21,9 @@ function validate_data($data) {
         $errors['lastname'] = "El apellido debe contener solo letras y espacios, con un mínimo de 2 y un máximo de 50 caracteres.";
     }
 
-    if (!preg_match("/^[A-Za-záéíóúÁÉÍÓÚñÑ0-9\s,-]{5,100}$/", $data['address1'])) {
+    if (!preg_match("/^[A-Za-záéíóúÁÉÍÓÚñÑ0-9\s,-]{5,500}$/", $data['address1'])) {
         $valid = false;
-        $errors['address1'] = "La dirección debe contener letras, números, espacios, guiones y comas, con un mínimo de 5 y un máximo de 100 caracteres.";
+        $errors['address1'] = "La dirección debe contener letras, números, espacios, guiones y comas, con un mínimo de 5 y un máximo de 500 caracteres.";
     }
 
     if (!filter_var($data['email1'], FILTER_VALIDATE_EMAIL)) {
@@ -33,9 +33,9 @@ function validate_data($data) {
 
     if (!preg_match("/^[0-9]{8}$/", $data['phone1'])) {
         $valid = false;
-        $errors['phone1'] = "El número de teléfono debe tener exactamente 8 dígitos numéricos.";
-    }
-
+        $errors['phone1'] = "Ingresa un número de teléfono válido (8 dígitos)";
+    } 
+ 
     if (!$valid) {
         $_SESSION['errors'] = $errors;
         $_SESSION['form_data'] = $_POST;

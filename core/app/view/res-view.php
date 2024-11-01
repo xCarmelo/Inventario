@@ -1,41 +1,57 @@
-
+<?php 
+$providers = PersonData::getProviders(); 
+?>
 
 <div class="container"> 
     <div class="row">
         <div class="col-12">
-            <h1><i class="bi bi-cart"></i> COMPRAS</h1>
+            <h1><i class="bi bi-cart"></i> COMPRAS</h1> 
             <div class="clearfix"></div>
 
+            <div class="row">
             <div class="col-md-10">
-                <!-- Filtro por fecha -->
-                <div class="row">
-                    <!-- Formulario de filtro por fecha -->
-                    <form method="GET" action="index.php" class="col-md-10 my-3 mt-5 d-flex">
-                        <input type="hidden" name="view" value="res">
-                        <div class="row w-100">
-                            <div class="col-md-5">
-                                <input type="date" name="sd" id="sd" class="form-control" value="<?php echo isset($_GET['sd']) ? $_GET['sd'] : ''; ?>">
-                            </div>
-                            <div class="col-md-5">
-                                <input type="date" name="ed" id="ed" class="form-control" value="<?php echo isset($_GET['ed']) ? $_GET['ed'] : ''; ?>">
-                            </div>
-                            <div class="col-md-2 align-self-end">
-                                <button type="submit" class="btn btn-success w-200 text-white form-control">Filtrar</button>
-                            </div>
+                <form class="mt-3" id="salesForm">
+                    <input type="hidden" name="view" value="res">  
+                    <div class="row">
+                        <div class="col-md-3 col-sm-6 mb-2">
+                        <label for="startDate" class="form-label">Proveedores</label>
+                            <select name="provider_id" class="form-select">
+                                <option value="">-- TODOS --</option>
+                                <?php foreach ($providers as $p): 
+                                    if ($p->active != 0)
+                                    ?>
+                                    
+                                <option value="<?php echo $p->id; ?>" <?php echo isset($_GET["provider_id"]) && $_GET["provider_id"] == $p->id ? 'selected' : ''; ?>><?php echo $p->name; ?></option>
+                                <?php endforeach; ?>
+                            </select>
                         </div>
-                    </form>
-
-                    <!-- Form con icono de refresh -->
-                    <div class="col-md-2 d-flex justify-content-center align-items-center pt-4">
-                        <form action="index.php?view=res" method="post">
-                            <input type="text" value="all" hidden name="option">
-                            <button type="submit" class="btn btn-primary w-100 mt-1">
-                                <i class="bi bi-arrow-clockwise"></i> Refresh
-                            </button>
-                        </form>
+                        <div class="col-md-3 col-sm-6 mb-2">
+                            <label for="startDate" class="form-label">Fecha Inicial</label>
+                            <input type="date" name="sd" id="startDate" value="<?php echo isset($_GET["sd"]) ? $_GET["sd"] : ''; ?>" class="form-control">
+                        </div>
+                        <div class="col-md-3 col-sm-6 mb-2">
+                            <label for="endDate" class="form-label">Fecha Final</label>
+                            <input type="date" name="ed" id="endDate" value="<?php echo isset($_GET["ed"]) ? $_GET["ed"] : ''; ?>" class="form-control">
+                        </div>
+                        <div class="col-md-3 col-sm-6 mb-2">
+                            <label for="endDate" class="form-label">.</label>
+                            <button type="button" id="processButton" class="btn btn-success w-100 text-white">Procesar</button>
+                        </div>
                     </div>
-                </div>
+                </form>
             </div>
+
+            <!-- Form con icono de refresh -->
+            <div class="col-md-2">
+            <label for="endDate" class="form-label">.</label>
+                <form class="mt-3" action="index.php?view=res" method="post">
+                    <input type="text" value="all" hidden name="option">
+                    <button type="submit" class="btn btn-primary w-100" >
+                        <i class="bi bi-arrow-clockwise"></i> Refresh
+                    </button>
+                </form>
+            </div>
+        </div>
 
             <div class="card mt-5">
                 <div class="card-header">
@@ -51,7 +67,11 @@
 
                     // Obtener la lista de compras con filtro de fecha
                     if (isset($_GET['sd']) && isset($_GET['ed'])) {
-                        $products = SellData::getAllByDateOp($_GET['sd'], $_GET['ed'], 1);
+                        if ($_GET["provider_id"] == "") {
+                            $products  = SellData::getAllByDateOp($_GET["sd"], $_GET["ed"], 1);
+                        } else {
+                            $products  = SellData::getAllByDateBCOp($_GET["provider_id"], $_GET["sd"], $_GET["ed"], 1);
+                        }
                     } else {
                         $products = SellData::getRes();
                     }
@@ -175,3 +195,41 @@
         </div>
     </div>
 </div>
+
+<!-- Modal para advertir sobre fechas vacías -->
+<div class="modal fade" id="dateWarningModal" tabindex="-1" aria-labelledby="dateWarningModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="dateWarningModalLabel">Advertencia</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Debes rellenar ambas fechas antes de procesar.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+    //codigo para validar que las fechas esten llenas 
+    $('#processButton').on('click', function() {
+            // Obtener los valores de las fechas
+            var startDate = $('input[name="sd"]').val();
+            var endDate = $('input[name="ed"]').val();
+
+            // Validar si las fechas están vacías
+            if (!startDate || !endDate) {
+                // Mostrar el modal de advertencia
+                $('#dateWarningModal').modal('show');
+            } else {
+                // Si las fechas son válidas, enviar el formulario
+                $('#salesForm').submit();
+            }
+        });
+    });
+</script>

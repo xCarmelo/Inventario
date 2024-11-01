@@ -26,13 +26,16 @@ if (isset($_GET["sd"]) && isset($_GET["ed"]) && $_GET["sd"] != "" && $_GET["ed"]
                     <input type="hidden" name="view" value="discardreports">
                     <div class="row">
                         <div class="col-md-3 col-sm-6 mb-2">
+                        <label for="startDate" class="form-label">Fecha Inicial</label>
                             <input type="date" name="sd" value="<?php echo isset($_GET["sd"]) ? $_GET["sd"] : ''; ?>" class="form-control">
                         </div>
                         <div class="col-md-3 col-sm-6 mb-2">
+                        <label for="startDate" class="form-label">Fecha Final</label>
                             <input type="date" name="ed" value="<?php echo isset($_GET["ed"]) ? $_GET["ed"] : ''; ?>" class="form-control">
                         </div>
                         <div class="col-md-3 col-sm-6 mb-2">
-                            <button type="submit" class="btn btn-success w-100">Procesar</button>
+                            <label for="startDate" class="form-label">.</label>
+                            <button type="submit" class="btn btn-success w-100 text-white">Procesar</button>
                         </div>
                     </div>
                 </form>

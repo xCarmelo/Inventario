@@ -16,7 +16,7 @@
                 <div class="form-group">
                     <label for="inputEmail1" class="col-lg-2 control-label">Nombre*</label>
                     <div class="col-md-6 mt-3">
-                        <input placeholder="Categoria" type="text" name="categoria" required pattern="^[a-zA-Z0-9áéíóúñÁÉÍÓÚÑ\s]{3,30}$" title="La categoría debe contener entre 3 y 30 caracteres alfanuméricos." class="form-control" />
+                        <input placeholder="Categoria" type="text" name="categoria" required pattern="^[a-zA-Z0-9áéíóúñÁÉÍÓÚÑ\s]{3,30}$" title="La categoría debe contener entre 3 y 30 caracteres alfanuméricos" class="form-control" />
                     <div class="input-group mt-3 mb-3">
                         <div class="input-group-append ">
                             <?php if(isset($_SESSION['error_msg'])) { ?>

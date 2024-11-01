@@ -29,43 +29,48 @@ $sells = array_slice($sells, $offset, $limit); // Paginación de los datos
 
 <div class="row">
     <div class="col-md-12">
-        <h1><i class="bi bi-cart"></i> Lista de Ventas</h1>
+    <h1><i class="bi bi-cart"></i> Lista de Ventas</h1>
         <div class="row">
-    <div class="col-md-10">
-            <form class="mt-3">
-                <input type="hidden" name="view" value="sells">  
-                <div class="row">
-                    <div class="col-md-3 col-sm-6 mb-2">
-                        <select name="client_id" class="form-select">
-                            <option value="">-- TODOS --</option>
-                            <?php foreach ($clients as $p): ?>
-                            <option value="<?php echo $p->id; ?>" <?php echo isset($_GET["client_id"]) && $_GET["client_id"] == $p->id ? 'selected' : ''; ?>><?php echo $p->name; ?></option>
-                            <?php endforeach; ?>
-                        </select>
+            <div class="col-md-10">
+                <form class="mt-3" id="salesForm">
+                    <input type="hidden" name="view" value="sells">  
+                    <div class="row">
+                        <div class="col-md-3 col-sm-6 mb-2">
+                        <label for="startDate" class="form-label">Clientes</label>
+                            <select name="client_id" class="form-select">
+                                <option value="">-- TODOS --</option>
+                                <?php foreach ($clients as $p): ?>
+                                <option value="<?php echo $p->id; ?>" <?php echo isset($_GET["client_id"]) && $_GET["client_id"] == $p->id ? 'selected' : ''; ?>><?php echo $p->name; ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                        <div class="col-md-3 col-sm-6 mb-2">
+                            <label for="startDate" class="form-label">Fecha Inicial</label>
+                            <input type="date" name="sd" id="startDate" value="<?php echo isset($_GET["sd"]) ? $_GET["sd"] : ''; ?>" class="form-control">
+                        </div>
+                        <div class="col-md-3 col-sm-6 mb-2">
+                            <label for="endDate" class="form-label">Fecha Final</label>
+                            <input type="date" name="ed" id="endDate" value="<?php echo isset($_GET["ed"]) ? $_GET["ed"] : ''; ?>" class="form-control">
+                        </div>
+                        <div class="col-md-3 col-sm-6 mb-2">
+                            <label for="endDate" class="form-label">.</label>
+                            <button type="button" id="processButton" class="btn btn-success w-100 text-white">Procesar</button>
+                        </div>
                     </div>
-                    <div class="col-md-3 col-sm-6 mb-2">
-                        <input type="date" name="sd" value="<?php echo isset($_GET["sd"]) ? $_GET["sd"] : ''; ?>" class="form-control">
-                    </div>
-                    <div class="col-md-3 col-sm-6 mb-2">
-                        <input type="date" name="ed" value="<?php echo isset($_GET["ed"]) ? $_GET["ed"] : ''; ?>" class="form-control">
-                    </div>
-                    <div class="col-md-3 col-sm-6 mb-2">
-                        <button type="submit" class="btn btn-success w-100 text-white">Procesar</button>
-                    </div>
-                </div>
-            </form>
-        </div>
+                </form>
+            </div>
 
-        <!-- Form con icono de refresh -->
-        <div class="col-md-2">
-            <form class="mt-3" action="index.php?view=sells" method="post">
-                <input type="text" value="all" hidden name="option">
-                <button type="submit" class="btn btn-primary w-100">
-                    <i class="bi bi-arrow-clockwise"></i> Refresh
-                </button>
-            </form>
+            <!-- Form con icono de refresh -->
+            <div class="col-md-2">
+            <label for="endDate" class="form-label">.</label>
+                <form class="mt-3" action="index.php?view=sells" method="post">
+                    <input type="text" value="all" hidden name="option">
+                    <button type="submit" class="btn btn-primary w-100" >
+                        <i class="bi bi-arrow-clockwise"></i> Refresh
+                    </button>
+                </form>
+            </div>
         </div>
-    </div>
 
 
         <div class="clearfix"></div>
@@ -238,8 +243,43 @@ $sells = array_slice($sells, $offset, $limit); // Paginación de los datos
     </div>
 </div> 
 
+
+<!-- Modal para advertir sobre fechas vacías -->
+<div class="modal fade" id="dateWarningModal" tabindex="-1" aria-labelledby="dateWarningModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="dateWarningModalLabel">Advertencia</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Debes rellenar ambas fechas antes de procesar.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
 <script>
     $(document).ready(function() {
+
+        //codigo para validar que las fechas esten llenas 
+        $('#processButton').on('click', function() {
+            // Obtener los valores de las fechas
+            var startDate = $('input[name="sd"]').val();
+            var endDate = $('input[name="ed"]').val();
+
+            // Validar si las fechas están vacías
+            if (!startDate || !endDate) {
+                // Mostrar el modal de advertencia
+                $('#dateWarningModal').modal('show');
+            } else {
+                // Si las fechas son válidas, enviar el formulario
+                $('#salesForm').submit();
+            }
+        });
+
         // Selecciona el modal y el botón de confirmación
         var $confirmDevolucionModal = $('#confirmDevolucionModal');
         var $confirmDeleteBtn = $('#confirmDeleteBtn');

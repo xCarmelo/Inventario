@@ -7,11 +7,19 @@
                 NUEVO PROVEEDOR
             </div>
             <div class="card-body">
-                <form class="form-horizontal" method="post" id="addprovider" action="index.php?view=addprovider" role="form">
+            <form class="form-horizontal" method="post" id="addprovider" action="index.php?view=addprovider" role="form">
                 <div class="row">
                     <div class="col-md-6">
                         <label for="validationCustom01" class="form-label">Nombre*</label>
-                        <input value="<?php echo isset($_SESSION['form_data']['name']) ? $_SESSION['form_data']['name'] : ''; ?>" type="text" name="name" class="form-control <?php echo isset($_SESSION['errors']['name']) ? 'is-invalid' : ''; ?>" id="validationCustom01" placeholder="Nombre" pattern="^[A-Za-záéíóúÁÉÍÓÚñÑ\s]{2,80}$" title="Ingresa un nombre válido (solo letras, espacios y acentos) de al menos 2 caracteres" required>
+                        <input value="<?php echo isset($_SESSION['form_data']['name']) ? $_SESSION['form_data']['name'] : ''; ?>" 
+                            type="text" 
+                            name="name" 
+                            class="form-control <?php echo isset($_SESSION['errors']['name']) ? 'is-invalid' : ''; ?>" 
+                            id="validationCustom01" 
+                            placeholder="Nombre" 
+                            pattern="^[A-Za-záéíóúÁÉÍÓÚñÑ\s]{2,255}$" 
+                            title="El nombre debe tener entre 2 y 255 caracteres y solo puede contener letras y espacios." 
+                            required>
                         <div class="invalid-feedback">
                             <?php echo isset($_SESSION['errors']['name']) ? $_SESSION['errors']['name'] : ''; ?>
                         </div>
@@ -19,7 +27,15 @@
 
                     <div class="col-md-6">
                         <label for="validationCustom02" class="form-label">Apellido*</label>
-                        <input value="<?php echo isset($_SESSION['form_data']['lastname']) ? $_SESSION['form_data']['lastname'] : ''; ?>" type="text" name="lastname" class="form-control <?php echo isset($_SESSION['errors']['lastname']) ? 'is-invalid' : ''; ?>" id="validationCustom02" placeholder="Apellido" pattern="^[A-Za-záéíóúÁÉÍÓÚñÑ\s]{2,50}$" title="Ingresa un apellido válido (solo letras, espacios y acentos) de al menos 2 caracteres" required>
+                        <input value="<?php echo isset($_SESSION['form_data']['lastname']) ? $_SESSION['form_data']['lastname'] : ''; ?>" 
+                            type="text" 
+                            name="lastname" 
+                            class="form-control <?php echo isset($_SESSION['errors']['lastname']) ? 'is-invalid' : ''; ?>" 
+                            id="validationCustom02" 
+                            placeholder="Apellido" 
+                            pattern="^[A-Za-záéíóúÁÉÍÓÚñÑ\s]{2,50}$" 
+                            title="El apellido debe tener entre 2 y 50 caracteres y solo puede contener letras y espacios." 
+                            required>
                         <div class="invalid-feedback">
                             <?php echo isset($_SESSION['errors']['lastname']) ? $_SESSION['errors']['lastname'] : ''; ?>
                         </div>
@@ -29,7 +45,15 @@
                 <div class="row">
                     <div class="col-md-6 mt-2">
                         <label for="validationCustom03" class="form-label">Dirección*</label>
-                        <input value="<?php echo isset($_SESSION['form_data']['address1']) ? $_SESSION['form_data']['address1'] : ''; ?>" type="text" name="address1" class="form-control <?php echo isset($_SESSION['errors']['address1']) ? 'is-invalid' : ''; ?>" id="validationCustom03" placeholder="Dirección" pattern="^[A-Za-záéíóúÁÉÍÓÚñÑ0-9\s,-]{5,100}$" title="Ingresa una dirección válida (solo letras, números, espacios, guiones y comas) de al menos 5 caracteres" required>
+                        <input value="<?php echo isset($_SESSION['form_data']['address1']) ? $_SESSION['form_data']['address1'] : ''; ?>" 
+                            type="text" 
+                            name="address1" 
+                            class="form-control <?php echo isset($_SESSION['errors']['address1']) ? 'is-invalid' : ''; ?>" 
+                            id="validationCustom03" 
+                            placeholder="Dirección" 
+                            pattern="^[A-Za-záéíóúÁÉÍÓÚñÑ0-9\s,-]{5,100}$" 
+                            title="La dirección debe tener entre 5 y 100 caracteres. Solo se permiten letras, números, espacios, comas y guiones." 
+                            required>
                         <div class="invalid-feedback">
                             <?php echo isset($_SESSION['errors']['address1']) ? $_SESSION['errors']['address1'] : ''; ?>
                         </div>
@@ -37,7 +61,14 @@
 
                     <div class="col-md-6 mt-2">
                         <label for="validationCustom04" class="form-label">Email*</label>
-                        <input value="<?php echo isset($_SESSION['form_data']['email1']) ? $_SESSION['form_data']['email1'] : ''; ?>" type="email" name="email1" class="form-control <?php echo isset($_SESSION['errors']['email1']) ? 'is-invalid' : ''; ?>" id="validationCustom04" placeholder="Email" required>
+                        <input value="<?php echo isset($_SESSION['form_data']['email1']) ? $_SESSION['form_data']['email1'] : ''; ?>" 
+                            type="email" 
+                            name="email1" 
+                            class="form-control <?php echo isset($_SESSION['errors']['email1']) ? 'is-invalid' : ''; ?>" 
+                            id="validationCustom04" 
+                            placeholder="Email" 
+                            required
+                            title="Ingrese un correo electrónico válido en formato usuario@dominio.com.">
                         <div class="invalid-feedback">
                             <?php echo isset($_SESSION['errors']['email1']) ? $_SESSION['errors']['email1'] : ''; ?>
                         </div>
@@ -47,21 +78,30 @@
                 <div class="row">
                     <div class="col-md-6 mt-2">
                         <label for="validationCustom05" class="form-label">Teléfono*</label>
-                        <input value="<?php echo isset($_SESSION['form_data']['phone1']) ? $_SESSION['form_data']['phone1'] : ''; ?>" type="text" name="phone1" class="form-control <?php echo isset($_SESSION['errors']['phone1']) ? 'is-invalid' : ''; ?>" id="validationCustom05" placeholder="Teléfono" pattern="[0-9]{8}" title="Ingresa un número de teléfono válido (8 dígitos)" required>
+                        <input value="<?php echo isset($_SESSION['form_data']['phone1']) ? $_SESSION['form_data']['phone1'] : ''; ?>" 
+                            type="text" 
+                            name="phone1" 
+                            class="form-control <?php echo isset($_SESSION['errors']['phone1']) ? 'is-invalid' : ''; ?>" 
+                            id="validationCustom05" 
+                            placeholder="Teléfono" 
+                            pattern="[0-9]{8}" 
+                            title="El número de teléfono debe tener exactamente 8 dígitos y solo puede contener números." 
+                            required>
                         <div class="invalid-feedback">
                             <?php echo isset($_SESSION['errors']['phone1']) ? $_SESSION['errors']['phone1'] : ''; ?>
                         </div>
                     </div>
                 </div>
 
-                    <div class="col-12">
-                        <p class="alert alert-info mt-4">* Campos obligatorios</p>
-                    </div>
+                <div class="col-12">
+                    <p class="alert alert-info mt-4">* Campos obligatorios</p>
+                </div>
 
-                    <div class="col-12">
-                        <button type="submit" class="btn btn-primary">Agregar Proveedor</button>
-                    </div>
-                </form>
+                <div class="col-12">
+                    <button type="submit" class="btn btn-primary">Agregar Proveedor</button>
+                </div>
+            </form>
+
 
                 
                 <?php

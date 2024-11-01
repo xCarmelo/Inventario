@@ -25,19 +25,19 @@ function validate_data($data) {
     // Validación de precio de entrada
     if (!preg_match("/^[0-9]{1,10}(\.[0-9]{1,3})?$/", $data['price_in'])) {
         $valid = false;
-        $errors['price_in'] = "El precio de entrada debe ser un número positivo con hasta 10 dígitos y sin decimales.";
+        $errors['price_in'] = "El precio de entrada debe ser un número positivo con hasta 10 dígitos";
     }
 
     // Validación de precio de salida
     if (!preg_match("/^[0-9]{1,10}(\.[0-9]{1,3})?$/", $data['price_out'])) {
         $valid = false;
-        $errors['price_out'] = "El precio de salida debe ser un número positivo con hasta 10 dígitos y sin decimales.";
+        $errors['price_out'] = "El precio de salida debe ser un número positivo con hasta 10 dígitos";
     }
 
     // Validación de categoría
     if (!preg_match("/^[1-9][0-9]*$/", $data['category_id'])) {
         $valid = false;
-        $errors['category_id'] = "Debes seleccionar una categoría válida. El ID de la categoría debe ser un número entero positivo.";
+        $errors['category_id'] = "Debes seleccionar una categoría válida";
     }
 
     // Validación de presentación

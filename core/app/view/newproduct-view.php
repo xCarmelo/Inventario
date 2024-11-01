@@ -9,87 +9,105 @@ $categories = CategoryData::getAll();
         <div class="card">
             <div class="card-header text-white">Agregar Producto</div>
             <div class="card-body">
-                <form class="row g-3" method="post" enctype="multipart/form-data" id="addproduct" action="index.php?view=addproduct" role="form">
+            <form class="row g-3" method="post" enctype="multipart/form-data" id="addproduct" action="index.php?view=addproduct" role="form">
                 <div class="col-md-6">
-                        <label for="image" class="form-label" accept="image/jpeg,image/png">Imagen</label>
-                        <input type="file" name="image" id="image" class="form-control <?php echo isset($_SESSION['errors']['image']) ? 'is-invalid' : ''; ?>">
-                        <div class="invalid-feedback">
-                            <?php echo isset($_SESSION['errors']['image']) ? $_SESSION['errors']['image'] : ''; ?>
-                        </div>
+                    <label for="image" class="form-label" accept="image/jpeg,image/png">Imagen</label>
+                    <input type="file" name="image" id="image" class="form-control <?php echo isset($_SESSION['errors']['image']) ? 'is-invalid' : ''; ?>">
+                    <div class="invalid-feedback">
+                        <?php echo isset($_SESSION['errors']['image']) ? $_SESSION['errors']['image'] : ''; ?>
                     </div>
+                </div>
 
-                    <div class="col-md-6">
-                        <label for="name" class="form-label">Nombre*</label>
-                        <input type="text" name="name" id="name" class="form-control <?php echo isset($_SESSION['errors']['name']) ? 'is-invalid' : ''; ?>" value="<?php echo isset($_SESSION['form_data']['name']) ? $_SESSION['form_data']['name'] : ''; ?>" placeholder="Nombre del Producto" pattern="^[A-Za-zÁÉÍÓÚÑáéíóúñ\s0-9\-\'\.]{1,50}$" title="Ingresa el nombre del producto" required>
-                        <div class="invalid-feedback">
-                            <?php echo isset($_SESSION['errors']['name']) ? $_SESSION['errors']['name'] : ''; ?>
-                        </div>
+                <div class="col-md-6">
+                    <label for="name" class="form-label">Nombre*</label>
+                    <input type="text" name="name" id="name" class="form-control <?php echo isset($_SESSION['errors']['name']) ? 'is-invalid' : ''; ?>" 
+                        value="<?php echo isset($_SESSION['form_data']['name']) ? $_SESSION['form_data']['name'] : ''; ?>" 
+                        placeholder="Nombre del Producto" 
+                        pattern="^[A-Za-zÁÉÍÓÚÑáéíóúñ\s0-9\-\'\.]{1,100}$" 
+                        title="El nombre del producto solo puede contener letras, números, espacios, guiones y puntos. Debe tener entre 1 y 100 caracteres."
+                        required>
+                    <div class="invalid-feedback">
+                        <?php echo isset($_SESSION['errors']['name']) ? $_SESSION['errors']['name'] : ''; ?>
                     </div>
+                </div>
 
-                    <div class="col-md-6">
-                        <label for="category_id" class="form-label">Categoría</label>
-                        <select name="category_id" class="form-control <?php echo isset($_SESSION['errors']['category_id']) ? 'is-invalid' : ''; ?>">
-                            <option value="0">-- NINGUNA --</option>
-                            <?php foreach($categories as $category): ?>
-                                <option value="<?php echo $category->id;?>" <?php echo isset($_SESSION['form_data']['category_id']) && $_SESSION['form_data']['category_id'] == $category->id ? 'selected' : ''; ?>>
-                                    <?php echo $category->name;?>
-                                </option>
-                            <?php endforeach; ?>
-                        </select>
-                        <div class="invalid-feedback">
-                            <?php echo isset($_SESSION['errors']['category_id']) ? $_SESSION['errors']['category_id'] : ''; ?>
-                        </div>
+                <div class="col-md-6">
+                    <label for="category_id" class="form-label">Categoría*</label>
+                    <select name="category_id" class="form-control <?php echo isset($_SESSION['errors']['category_id']) ? 'is-invalid' : ''; ?>">
+                        <option value="0">-- NINGUNA --</option>
+                        <?php foreach($categories as $category): ?>
+                            <option value="<?php echo $category->id; ?>" <?php echo isset($_SESSION['form_data']['category_id']) && $_SESSION['form_data']['category_id'] == $category->id ? 'selected' : ''; ?>>
+                                <?php echo $category->name; ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                    <div class="invalid-feedback">
+                        <?php echo isset($_SESSION['errors']['category_id']) ? $_SESSION['errors']['category_id'] : ''; ?>
                     </div>
+                </div>
 
-                    <div class="col-md-6">
-                        <label for="price_in" class="form-label">Precio de Entrada*</label>
-                        <input type="text" id="miNumero" name="price_in" id="price_in" class="form-control <?php echo isset($_SESSION['errors']['price_in']) ? 'is-invalid' : ''; ?>" value="<?php echo isset($_SESSION['form_data']['price_in']) ? $_SESSION['form_data']['price_in'] : ''; ?>" placeholder="Precio de entrada" pattern="^[0-9]{1,10}(\.[0-9]{1,3})?$" title="Ingresa el precio de entrada como un número" required>
-                        <div class="invalid-feedback">
-                            <?php echo isset($_SESSION['errors']['price_in']) ? $_SESSION['errors']['price_in'] : ''; ?>
-                        </div>
+                <div class="col-md-6">
+                    <label for="price_in" class="form-label">Precio de Entrada*</label>
+                    <input type="text" name="price_in" id="price_in" class="form-control <?php echo isset($_SESSION['errors']['price_in']) ? 'is-invalid' : ''; ?>" 
+                        value="<?php echo isset($_SESSION['form_data']['price_in']) ? $_SESSION['form_data']['price_in'] : ''; ?>" 
+                        placeholder="Precio de entrada" 
+                        pattern="^[0-9]{1,10}(\.[0-9]{1,3})?$" 
+                        title="El precio de entrada debe ser un número positivo de hasta 10 dígitos"
+                        required>
+                    <div class="invalid-feedback">
+                        <?php echo isset($_SESSION['errors']['price_in']) ? $_SESSION['errors']['price_in'] : ''; ?>
                     </div>
+                </div>
 
-                    <div class="col-md-6">
-                        <label for="price_out" class="form-label">Precio de Salida*</label>
-                        <input type="text" id="miNumero" name="price_out" id="price_out" class="form-control <?php echo isset($_SESSION['errors']['price_out']) ? 'is-invalid' : ''; ?>" value="<?php echo isset($_SESSION['form_data']['price_out']) ? $_SESSION['form_data']['price_out'] : ''; ?>" placeholder="Precio de salida" pattern="^[0-9]{1,10}(\.[0-9]{1,3})?$" title="Ingresa un número positivo" required>
-                        <div class="invalid-feedback">
-                            <?php echo isset($_SESSION['errors']['price_out']) ? $_SESSION['errors']['price_out'] : ''; ?>
-                        </div>
-                    </div> 
-
-                    <div class="col-md-6">
-                        <label for="presentation" class="form-label">Presentación</label>
-                        <input type="text" name="presentation" id="presentation" class="form-control <?php echo isset($_SESSION['errors']['presentation']) ? 'is-invalid' : ''; ?>" value="<?php echo isset($_SESSION['form_data']['presentation']) ? $_SESSION['form_data']['presentation'] : ''; ?>" placeholder="Presentación del Producto" min="0" pattern="^[A-Za-zÁÉÍÓÚÑáéíóúñ\s\-\'\.0-9]{2,50}$" title="Presentación del Producto">
-                        <div class="invalid-feedback">
-                            <?php echo isset($_SESSION['errors']['presentation']) ? $_SESSION['errors']['presentation'] : ''; ?>
-                        </div>
+                <div class="col-md-6">
+                    <label for="price_out" class="form-label">Precio de Salida*</label>
+                    <input type="text" name="price_out" id="price_out" class="form-control <?php echo isset($_SESSION['errors']['price_out']) ? 'is-invalid' : ''; ?>" 
+                        value="<?php echo isset($_SESSION['form_data']['price_out']) ? $_SESSION['form_data']['price_out'] : ''; ?>" 
+                        placeholder="Precio de salida" 
+                        pattern="^[0-9]{1,10}(\.[0-9]{1,3})?$" 
+                        title="El precio de salida debe ser un número positivo de hasta 10 dígitos."
+                        required>
+                    <div class="invalid-feedback">
+                        <?php echo isset($_SESSION['errors']['price_out']) ? $_SESSION['errors']['price_out'] : ''; ?>
                     </div>
+                </div>
 
-                    <div class="col-md-6">
-                        <label for="inventary_min" class="form-label">Mínima en Inventario</label>
-                        <input type="number" name="inventary_min" id="inventary_min" class="form-control <?php echo isset($_SESSION['errors']['inventary_min']) ? 'is-invalid' : ''; ?>" value="<?php echo isset($_SESSION['form_data']['inventary_min']) ? $_SESSION['form_data']['inventary_min'] : ''; ?>" placeholder="Mínima en Inventario" pattern="^[1-9][0-9]{0,3}$" title="El inventario mínimo debe ser un número entero positivo entre 1 y 9999.">
-                        <div class="invalid-feedback">
-                            <?php echo isset($_SESSION['errors']['inventary_min']) ? $_SESSION['errors']['inventary_min'] : ''; ?>
-                        </div>
-                    </div>
+                <div class="col-md-6">
+                    <input hidden type="text" value="Sin presentacion" name="presentation">
+                </div>
 
-                    <div class="col-md-12">
-                        <label for="description" class="form-label">Descripción</label>
-                        <textarea name="description" id="description" class="form-control <?php echo isset($_SESSION['errors']['description']) ? 'is-invalid' : ''; ?>" placeholder="Descripción del Producto" pattern="^[A-Za-zÁÉÍÓÚÑáéíóúñ\s0-9\-\'\.\,!?¡¿]{3,1000}$" title="Descripción del Producto"><?php echo isset($_SESSION['form_data']['description']) ? $_SESSION['form_data']['description'] : ''; ?></textarea>
-                        <div class="invalid-feedback">
-                            <?php echo isset($_SESSION['errors']['description']) ? $_SESSION['errors']['description'] : ''; ?>
-                        </div>
+                <div class="col-md-6">
+                    <label for="inventary_min" class="form-label">Mínima en Inventario*</label>
+                    <input type="number" name="inventary_min" id="inventary_min" class="form-control <?php echo isset($_SESSION['errors']['inventary_min']) ? 'is-invalid' : ''; ?>" 
+                        value="<?php echo isset($_SESSION['form_data']['inventary_min']) ? $_SESSION['form_data']['inventary_min'] : ''; ?>" 
+                        placeholder="Mínima en Inventario" 
+                        pattern="^[1-9][0-9]{0,3}$" 
+                        title="El inventario mínimo debe ser un número entero positivo entre 1 y 9999.">
+                    <div class="invalid-feedback">
+                        <?php echo isset($_SESSION['errors']['inventary_min']) ? $_SESSION['errors']['inventary_min'] : ''; ?>
                     </div>
+                </div>
 
+                <div class="col-md-12">
+                    <label for="description" class="form-label">Descripción*</label>
+                    <textarea name="description" id="description" class="form-control <?php echo isset($_SESSION['errors']['description']) ? 'is-invalid' : ''; ?>" 
+                            placeholder="Descripción del Producto" 
+                            pattern="^[A-Za-zÁÉÍÓÚÑáéíóúñ\s0-9\-'\.,!?¡¿]{3,1000}$" 
+                            title="La descripción puede contener letras, números, signos de puntuación básicos y debe tener entre 3 y 1000 caracteres."><?php echo isset($_SESSION['form_data']['description']) ? $_SESSION['form_data']['description'] : ''; ?></textarea>
+                    <div class="invalid-feedback">
+                        <?php echo isset($_SESSION['errors']['description']) ? $_SESSION['errors']['description'] : ''; ?>
+                    </div>
+                </div>
 
-                    <div class="col-12">
-                        <p class="alert alert-info">* Campos obligatorios</p>
-                    </div>
-                    
-                    <div class="col-12">
-                        <button type="submit" class="btn btn-primary">Agregar Producto</button>
-                    </div>
-                </form>
+                <div class="col-12">
+                    <p class="alert alert-info">* Campos obligatorios</p>
+                </div>
+
+                <div class="col-12">
+                    <button type="submit" class="btn btn-primary">Agregar Producto</button>
+                </div>
+            </form>
+
             </div>
         </div>
     </div>

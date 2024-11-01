@@ -196,7 +196,7 @@
       <ul class="nav-submenu collapse" id="reportes-submenu">
         <li class="nav-subitem">
           <a class="nav-link" href="./?view=reports">
-            <i class="bi bi-clipboard-data"></i> INVENTARIO 
+            <i class="bi bi-clipboard-data"></i> MOVIMIENTOS 
           </a>
         </li>
         <?php } ?>

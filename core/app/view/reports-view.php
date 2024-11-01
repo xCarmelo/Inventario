@@ -6,11 +6,12 @@ $product_id = isset($_GET['product_id']) ? $_GET['product_id'] : "";
     <div class="container">
         <div class="row">
             <div class="col-12">
-                <h1><i class="bi bi-file-earmark-bar-graph"></i> Reportes</h1>
+                <h1><i class="bi bi-file-earmark-bar-graph"></i> Movimientos</h1>
                 <form class="mt-5">
-                    <input type="hidden" name="view" value="reports">
+                    <input type="hidden" name="view" value="reports"> 
                     <div class="row">
                         <div class="col-md-3 col-sm-6 mb-2">
+                        <label for="startDate" class="form-label">Productos</label>
                             <select name="product_id" class="form-control">
                                 <option value="">--  TODOS --</option>
                                 <?php foreach($products as $p): ?>
@@ -19,13 +20,16 @@ $product_id = isset($_GET['product_id']) ? $_GET['product_id'] : "";
                             </select>
                         </div>
                         <div class="col-md-3 col-sm-6 mb-2">
+                            <label for="startDate" class="form-label">Fecha Inicial</label>
                             <input type="date" name="sd" value="<?php if(isset($_GET["sd"])) { echo $_GET["sd"]; } ?>" class="form-control">
                         </div>
                         <div class="col-md-3 col-sm-6 mb-2">
+                            <label for="startDate" class="form-label">Fecha Final</label>
                             <input type="date" name="ed" value="<?php if(isset($_GET["ed"])) { echo $_GET["ed"]; } ?>" class="form-control">
                         </div>
                         <div class="col-md-3 col-sm-6 mb-2">
-                            <input type="submit" class="btn btn-success btn-block w-100" value="Procesar">
+                            <label for="startDate" class="form-label">.</label>
+                            <input type="submit" class="btn btn-success btn-block w-100 text-white" value="Procesar">
                         </div>
                     </div>
                 </form>

@@ -5,7 +5,7 @@
             <div class="clearfix"></div>
             <br>
             <div class="card">
-                <div class="card-header">INVENTARIO</div>
+                <div class="card-header">INVENTARIO</div> 
 
                 <?php
                 $limit = isset($_GET['limit']) ? intval($_GET['limit']) : 10;

@@ -51,7 +51,7 @@ if ($id === false) {
                     </div>
                     
                     <div class="col-md-6">
-                        <label for="validationCustom04" class="form-label">Contraseña</label>
+                        <label for="validationCustom04" class="form-label">Contraseña*</label>
                         <input title="La contraseña debe tener al menos 8 caracteres y contener al menos un número." type="text" pattern="^(?=.*\d)[A-Za-z\d]{5,}$" name="password" value="<?php echo $user->password; ?>" class="form-control <?php echo isset($_SESSION['errors']['password']) ? 'is-invalid' : ''; ?>" id="validationCustom04" placeholder="password" required>
                         <div class="invalid-feedback">
                             <?php echo isset($_SESSION['errors']['password']) ? $_SESSION['errors']['password'] : ''; ?>

@@ -24,7 +24,7 @@ try {
     else
     {
         $product->del();
-        Core::redir("./index.php?view=products&success=producto habilitado correctamente");
+        Core::redir("./index.php?view=products&success=producto eliminado correctamente");
     }
 
 

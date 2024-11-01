@@ -44,7 +44,7 @@ $categories = CategoryData::getAll();
                         <?php echo isset($_SESSION['errors']['name']) ? $_SESSION['errors']['name'] : ''; ?>
                     </div>
                     <div class="col-md-12 mt-5">
-                        <label for="category_id" class="form-label">Categoría</label>
+                        <label for="category_id" class="form-label">Categoría*</label>
                         <select name="category_id" class="form-control <?php echo isset($_SESSION['errors']['category_id']) ? 'is-invalid' : ''; ?>">
                             <option value="0">-- NINGUNA --</option>
                             <?php foreach($categories as $category): ?>
@@ -77,15 +77,11 @@ $categories = CategoryData::getAll();
                 </div>
 
                 <div class="col-md-6">
-                    <label for="presentation" class="form-label">Presentación</label>
-                    <input type="text" name="presentation" id="presentation" class="form-control <?php echo isset($_SESSION['errors']['presentation']) ? 'is-invalid' : ''; ?>" value="<?php echo isset($_SESSION['form_data']['presentation']) ? $_SESSION['form_data']['presentation'] : $product->presentation; ?>" placeholder="Presentación del Producto">
-                    <div class="invalid-feedback">
-                        <?php echo isset($_SESSION['errors']['presentation']) ? $_SESSION['errors']['presentation'] : ''; ?>
-                    </div>
+                    <input hidden type="text" value="Sin presentacion" name="presentation" id="presentation" class="form-control <?php echo isset($_SESSION['errors']['presentation']) ? 'is-invalid' : ''; ?>" value="<?php echo isset($_SESSION['form_data']['presentation']) ? $_SESSION['form_data']['presentation'] : $product->presentation; ?>" placeholder="Presentación del Producto">
                 </div>
 
                 <div class="col-md-6">
-                    <label for="inventary_min" class="form-label">Mínima en Inventario</label>
+                    <label for="inventary_min" class="form-label">Mínima en Inventario*</label>
                     <input type="number" name="inventary_min" id="inventary_min" class="form-control <?php echo isset($_SESSION['errors']['inventary_min']) ? 'is-invalid' : ''; ?>" value="<?php echo isset($_SESSION['form_data']['inventary_min']) ? $_SESSION['form_data']['inventary_min'] : $product->inventary_min; ?>" placeholder="Mínima en Inventario">
                     <div class="invalid-feedback">
                         <?php echo isset($_SESSION['errors']['inventary_min']) ? $_SESSION['errors']['inventary_min'] : ''; ?>
@@ -105,7 +101,7 @@ $categories = CategoryData::getAll();
                 </div> 
 
                 <div class="col-md-12">
-                    <label for="description" class="form-label">Descripción</label>
+                    <label for="description" class="form-label">Descripción*</label>
                     <textarea name="description" id="description" class="form-control <?php echo isset($_SESSION['errors']['description']) ? 'is-invalid' : ''; ?>" placeholder="Descripción del Producto"><?php echo isset($_SESSION['form_data']['description']) ? $_SESSION['form_data']['description'] : $product->description; ?></textarea>
                     <div class="invalid-feedback">
                         <?php echo isset($_SESSION['errors']['description']) ? $_SESSION['errors']['description'] : ''; ?>

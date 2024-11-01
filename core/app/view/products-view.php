@@ -9,7 +9,7 @@
                 <i class="bi bi-plus-lg me-2"></i> Agregar Producto
             </a> 
         </div>
-        <?php endif; ?>
+        <?php endif; ?> 
         <br>
 
         <!-- Formulario de búsqueda --> 
@@ -69,11 +69,24 @@
                     $products = ProductData::getAll();
                 /****************************************** */
 
+                
+                // Filtrar productos eliminados si es necesario
+                if ($filtro_active_user == 0) {
+                    $products = array_filter($products, function($product) {
+                        return $product->is_active == 0; // Solo productos eliminados
+                    });
+                } else {
+                    $products = array_filter($products, function($product) {
+                        return $product->is_active == 1; // Solo productos activos
+                    });
+                }
+
                 if (count($products) > 0) {
+                   
                     $totalProducts = count($products);
                     $totalPages = ceil($totalProducts / $limit);
                     $offset = ($page - 1) * $limit;
-                    $curr_products = ProductData::getAllByPage($products[$offset]->id, $limit);
+                    $curr_products = array_slice($products, $offset, $limit); // Obtener los productos de la página actual
                 ?>
 
                 <!-- Selección del límite de productos y número de página -->

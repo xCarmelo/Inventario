@@ -15,23 +15,23 @@ function validate_data($data) {
         }
     }
 
-    if (!preg_match("/^[A-Za-zÁÉÍÓÚÑáéíóúñ\s0-9\-'\.]{1,50}$/", $data['name'])) {
+    if (!preg_match("/^[A-Za-zÁÉÍÓÚÑáéíóúñ\s0-9\-'\.]{1,100}$/", $data['name'])) {
         $valid = false;
-        $errors['name'] = "El nombre del producto solo puede contener letras, números, espacios, guiones y puntos. Debe tener entre 1 y 50 caracteres.";
+        $errors['name'] = "El nombre del producto solo puede contener letras, números, espacios, guiones y puntos. Debe tener entre 1 y 100 caracteres.";
     }
     
     if (!preg_match("/^[0-9]{1,10}(\.[0-9]{1,3})?$/", $data['price_in'])) {
         $valid = false;
-        $errors['price_in'] = "El precio de entrada debe ser un número positivo de hasta 10 dígitos y sin decimales.";
+        $errors['price_in'] = "El precio de entrada debe ser un número positivo de hasta 10 dígitos.";
     }
     if (!preg_match("/^[0-9]{1,10}(\.[0-9]{1,3})?$/", $data['price_out'])) {
         $valid = false;
-        $errors['price_out'] = "El precio de salida debe ser un número positivo de hasta 10 dígitos y sin decimales.";
+        $errors['price_out'] = "El precio de salida debe ser un número positivo de hasta 10 dígitos";
     }
     
     if (!preg_match("/^[1-9][0-9]*$/", $data['category_id'])) {
         $valid = false;
-        $errors['category_id'] = "Debes seleccionar una categoría válida. Solo se permiten números enteros positivos.";
+        $errors['category_id'] = "Debes seleccionar una categoría válida.";
     }
 
     if (!preg_match("/^[A-Za-zÁÉÍÓÚÑáéíóúñ\s\-'\.0-9]{2,50}$/", $data['presentation'])) {
