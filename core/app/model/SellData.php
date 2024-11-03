@@ -133,7 +133,7 @@ class SellData {
     public static function getAllByPage($start_from, $limit) {
         $sql = "SELECT * FROM " . self::$tablename . " WHERE id <= $start_from LIMIT $limit";
         $query = Executor::doit($sql);
-        return Model::many($query[0], new SellData());
+        return Model::many($query[0], new SellData()); 
     }
 
     public static function getAllByDateOp($start, $end, $op) {

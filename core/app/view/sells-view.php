@@ -32,7 +32,7 @@ $sells = array_slice($sells, $offset, $limit); // Paginación de los datos
     <h1><i class="bi bi-cart"></i> Lista de Ventas</h1>
         <div class="row">
             <div class="col-md-10">
-                <form class="mt-3" id="salesForm">
+                <form class="mt-5" id="salesForm">
                     <input type="hidden" name="view" value="sells">  
                     <div class="row">
                         <div class="col-md-3 col-sm-6 mb-2">
@@ -60,9 +60,10 @@ $sells = array_slice($sells, $offset, $limit); // Paginación de los datos
                 </form>
             </div>
 
-            <!-- Form con icono de refresh -->
+            <!-- Form con icono de refresh --> 
             <div class="col-md-2">
-            <label for="endDate" class="form-label">.</label>
+            <label for="endDate" class="form-label" style="color:#ebedef;">.</label><br>
+            <label for="endDate" class="form-label" style="color:#ebedef;">.</label>
                 <form class="mt-3" action="index.php?view=sells" method="post">
                     <input type="text" value="all" hidden name="option">
                     <button type="submit" class="btn btn-primary w-100" >
@@ -83,19 +84,19 @@ $sells = array_slice($sells, $offset, $limit); // Paginación de los datos
             </div>  
 
             <div class="d-flex justify-content-between mb-3 mt-3 ms-3">
-            <div>
-                <b>Mostrar:</b>
-                <select id="limitSelect" class="form-select d-inline-block w-auto" onchange="this.form.submit()">
-                    <option value="10" <?php echo $limit == 10 ? 'selected' : ''; ?>>10</option>
-                    <option value="25" <?php echo $limit == 25 ? 'selected' : ''; ?>>25</option>
-                    <option value="50" <?php echo $limit == 50 ? 'selected' : ''; ?>>50</option>
-                </select>
-                <b>Ventas por página</b>
+                <div>
+                    <b>Mostrar:</b>
+                    <select id="limitSelect" class="form-select d-inline-block w-auto" onchange="this.form.submit()">
+                        <option value="10" <?php echo $limit == 10 ? 'selected' : ''; ?>>10</option>
+                        <option value="25" <?php echo $limit == 25 ? 'selected' : ''; ?>>25</option>
+                        <option value="50" <?php echo $limit == 50 ? 'selected' : ''; ?>>50</option>
+                    </select>
+                    <b>Ventas por página</b>
+                </div>
+                <div>
+                    <p class="mb-0 me-3">Estas en la página <?php echo $page; ?> de <?php echo $totalPages; ?></p>
+                </div>
             </div>
-            <div>
-                <p class="mb-0 me-3">Estas en la página <?php echo $page; ?> de <?php echo $totalPages; ?></p>
-            </div>
-        </div>
 
             <div class="card-body">
                 <div class="table-responsive">
@@ -157,10 +158,10 @@ $sells = array_slice($sells, $offset, $limit); // Paginación de los datos
                         <ul class="pagination">
                             <?php if ($page > 1): ?>
                                 <li class="page-item">
-                                    <a class="page-link" href="index.php?view=products&limit=<?php echo $limit; ?>&page=1">««</a>
+                                    <a class="page-link" href="index.php?view=sells&limit=<?php echo $limit; ?>&page=1">««</a>
                                 </li>
                                 <li class="page-item">
-                                    <a class="page-link" href="index.php?view=products&limit=<?php echo $limit; ?>&page=<?php echo $page - 1; ?>">‹</a>
+                                    <a class="page-link" href="index.php?view=sells&limit=<?php echo $limit; ?>&page=<?php echo $page - 1; ?>">‹</a>
                                 </li>
                             <?php endif; ?>
 
@@ -169,16 +170,16 @@ $sells = array_slice($sells, $offset, $limit); // Paginación de los datos
                             $endPage = min($totalPages, $page + 2);
                             for ($i = $startPage; $i <= $endPage; $i++): ?>
                                 <li class="page-item <?php echo ($i == $page) ? 'active' : ''; ?>">
-                                    <a class="page-link" href="index.php?view=products&limit=<?php echo $limit; ?>&page=<?php echo $i; ?>"><?php echo $i; ?></a>
+                                    <a class="page-link" href="index.php?view=sells&limit=<?php echo $limit; ?>&page=<?php echo $i; ?>"><?php echo $i; ?></a>
                                 </li>
                             <?php endfor; ?>
 
                             <?php if ($page < $totalPages): ?>
                                 <li class="page-item">
-                                    <a class="page-link" href="index.php?view=products&limit=<?php echo $limit; ?>&page=<?php echo $page + 1; ?>">›</a>
+                                    <a class="page-link" href="index.php?view=sells&limit=<?php echo $limit; ?>&page=<?php echo $page + 1; ?>">›</a>
                                 </li>
                                 <li class="page-item">
-                                    <a class="page-link" href="index.php?view=products&limit=<?php echo $limit; ?>&page=<?php echo $totalPages; ?>">»»</a>
+                                    <a class="page-link" href="index.php?view=sells&limit=<?php echo $limit; ?>&page=<?php echo $totalPages; ?>">»»</a>
                                 </li>
                             <?php endif; ?>
                         </ul>

@@ -34,10 +34,11 @@ function validate_data($data) {
         $errors['phone'] = "El número de teléfono debe tener exactamente 8 dígitos y solo puede contener números.";
     }
 
-    if (!preg_match("/^(?=.*\d)[A-Za-z\d]{8,}$/", $data['password'])) {
+    if (!preg_match("/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*(),.?\":{}|<>])[A-Za-z\d!@#$%^&*(),.?\":{}|<>]{8,}$/", $data['password'])) {
         $valid = false;
-        $errors['password'] = "La contraseña debe tener al menos 8 caracteres y contener al menos un número.";
+        $errors['password'] = "La contraseña debe tener al menos 8 caracteres, incluyendo una letra mayúscula, una letra minúscula, un número y un carácter especial.";
     }
+    
 
     if (!$valid) {
         $_SESSION['errors'] = $errors;

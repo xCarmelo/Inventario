@@ -6,9 +6,9 @@
                 <i class="bi bi-clock-history"></i> Historial
             </a>
             <?php if($_SESSION['is_admin'] === 1): ?>
-            <button class="btn btn-success mx-4 rounded" data-bs-toggle="modal" data-bs-target="#confirmProcessModal">
-                Procesar Ventas <i class="bi bi-arrow-right"></i>
-            </button>
+                <button class="btn btn-success mx-4 rounded" id="processSalesBtn">
+                    Procesar Ventas <i class="bi bi-arrow-right"></i>
+                </button>
             <button class="btn btn-info rounded" data-bs-toggle="modal" data-bs-target="#initialBalanceModal">
                 Saldo Inicial <i class="bi bi-cash-coin"></i>
             </button>
@@ -109,28 +109,8 @@
             </div>
         <?php } ?>
         
-        <!-- Mini tabla para Saldo Inicial y Total -->
-        <div class="container mt-5">
-        <div class="row justify-content-star">
-            <div class="col-md-7">
-            <table class="table table-bordered">
-                <tbody>
-                <tr>
-                    <td class="text-info text-lg"><h5>Saldo Inicial:</h5></td>
-                    <td class="text-end text-info" style="font-size: 20px;">C$ <span id="initialBalanceDisplay">0.00</span></td>
-                </tr>
-                <tr>
-                    <td class="text-success"><h5>Total Incluyendo Saldo Inicial:</h5></td>
-                    <td class="text-end text-success" style="font-size: 20px;">C$ <span id="totalDisplay"><?php echo isset($total_total) ? number_format($total_total, 2, ".", ",") : '0.00'; ?></span></td>
-                </tr>
-                </tbody>
-            </table>
-            </div>
-        </div>
-        </div>
-        
-        <!-- Paginación centrada debajo de la tabla -->
-        <?php if ($totalSells > 0): ?>
+                <!-- Paginación centrada debajo de la tabla -->
+                <?php if ($totalSells > 0): ?>
             <div class="d-flex justify-content-center mt-3">
                 <nav aria-label="Page navigation">
                     <ul class="pagination">
@@ -164,10 +144,30 @@
                 </nav>
             </div>
         <?php endif; ?>
+
+        <!-- Mini tabla para Saldo Inicial y Total -->
+        <div class="container mt-5">
+        <div class="row justify-content-star">
+            <div class="col-md-7">
+            <table class="table table-bordered">
+                <tbody>
+                <tr>
+                    <td class="text-info text-lg"><h5>Saldo Inicial:</h5></td>
+                    <td class="text-end text-info" style="font-size: 20px;">C$ <span id="initialBalanceDisplay">0.00</span></td>
+                </tr>
+                <tr>
+                    <td class="text-success"><h5>Total Incluyendo Saldo Inicial:</h5></td>
+                    <td class="text-end text-success" style="font-size: 20px;">C$ <span id="totalDisplay"><?php echo isset($total_total) ? number_format($total_total, 2, ".", ",") : '0.00'; ?></span></td>
+                </tr>
+                </tbody>
+            </table>
+            </div>
+        </div>
+        </div>
     </div>
 </div>
 
-<!-- Modal para confirmar el procesamiento de ventas -->
+<!-- Modal para confirmar el procesamiento de ventas (solo se muestra si hay ventas) -->
 <div class="modal fade" id="confirmProcessModal" tabindex="-1" aria-labelledby="confirmProcessModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -185,6 +185,25 @@
         </div>
     </div>
 </div>
+
+<!-- Modal de advertencia cuando no hay ventas -->
+<div class="modal fade" id="validationModal" tabindex="-1" aria-labelledby="validationModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="validationModalLabel">Advertencia</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                No hay ventas para procesar.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <!-- Modal para ingresar el saldo inicial -->
 <div class="modal fade" id="initialBalanceModal" tabindex="-1" aria-labelledby="initialBalanceModalLabel" aria-hidden="true">
@@ -273,13 +292,20 @@
             }
         });
 
-        $('#confirmProcessModal').on('show.bs.modal', function(event) {
-                    var button = $(event.relatedTarget); // Botón que activó el modal
-                    var url = button.data('href'); // Extraer la URL del atributo data-href
+        // Obtener el número total de ventas no procesadas y validar para procesar 
+        const processSalesBtn = document.getElementById("processSalesBtn");
+        const totalSells = <?php echo $totalSells; ?>; // Número total de ventas no procesadas
 
-                    var modal = $(this);
-                    modal.find('#confirmProcessBtn').attr('href', url);
-                });
+        // Agregar evento de click al botón de "Procesar Ventas"
+        processSalesBtn.addEventListener("click", function(event) {
+            if (totalSells > 0) {
+                // Si hay ventas, abre el modal de confirmación de proceso
+                new bootstrap.Modal(document.getElementById('confirmProcessModal')).show();
+            } else {
+                // Si no hay ventas, abre el modal de advertencia
+                new bootstrap.Modal(document.getElementById('validationModal')).show();
+            }
+        });
 
                 mama = () => {
                 const url = new URL(window.location.href);

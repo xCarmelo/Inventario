@@ -51,14 +51,22 @@
                                 <?php echo isset($_SESSION['errors']['phone']) ? $_SESSION['errors']['phone'] : ''; ?>
                             </div>
                         </div>
-
-                            <div class="col-md-6 mt-2"> 
-                                <label for="password" class="form-label">Contraseña*</label>
-                                <input pattern="^(?=.*\d)[A-Za-z\d]{5,}$"  min="5" value="<?php echo isset($_SESSION['form_data']['password']) ? $_SESSION['form_data']['password'] : ''; ?>" type="text" name="password" class="form-control <?php echo isset($_SESSION['errors']['password']) ? 'is-invalid' : ''; ?>" id="password" placeholder="Contraseña" title="La contraseña debe tener al menos 8 caracteres y contener al menos un número." required>
-                                <div class="invalid-feedback">
-                                    <?php echo isset($_SESSION['errors']['password']) ? $_SESSION['errors']['password'] : ''; ?>
-                                </div>
+                        <div class="col-md-6 mt-2"> 
+                            <label for="password" class="form-label">Contraseña*</label>
+                            <input pattern="^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&amp;*(),.?&quot;:{}|&lt;&gt;])[A-Za-z\d!@#$%^&amp;*(),.?&quot;:{}|&lt;&gt;]{8,}$"
+                                minlength="8"
+                                value="<?php echo isset($_SESSION['form_data']['password']) ? $_SESSION['form_data']['password'] : ''; ?>"
+                                type="password"
+                                name="password"
+                                class="form-control <?php echo isset($_SESSION['errors']['password']) ? 'is-invalid' : ''; ?>"
+                                id="password"
+                                placeholder="Contraseña"
+                                title="La contraseña debe tener al menos 8 caracteres, incluyendo una letra mayúscula, una letra minúscula, un número y un carácter especial."
+                                required>
+                            <div class="invalid-feedback">
+                                <?php echo isset($_SESSION['errors']['password']) ? $_SESSION['errors']['password'] : ''; ?>
                             </div>
+                        </div>
                     </div>
 
                     <div class="col-md-6">

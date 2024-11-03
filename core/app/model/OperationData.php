@@ -105,6 +105,51 @@ class OperationData {
         return Model::many($query[0], new OperationData());
     }
 
+    //metodos para la vista discard
+
+    public static function getAllDiscard() {
+        $sql = "SELECT * FROM ".self::$tablename." WHERE operation_type_id = 3";
+        $query = Executor::doit($sql);
+        return Model::many($query[0], new OperationData());
+    }
+
+        // Método para obtener registros descartados con paginación
+        public static function getAllDiscardPaginated($limit, $offset) {
+            $sql = "SELECT * FROM ".self::$tablename." WHERE operation_type_id = 3 LIMIT $limit OFFSET $offset";
+            $query = Executor::doit($sql);
+            return Model::many($query[0], new OperationData());
+        }
+
+    // Método para contar el total de registros descartados
+    public static function countAllDiscard() {
+        $sql = "SELECT COUNT(*) as total FROM ".self::$tablename." WHERE operation_type_id = 3";
+        $query = Executor::doit($sql);
+
+        // Verificar si se obtuvo un resultado válido
+        if ($query[0] && $query[0]->num_rows > 0) {
+            $result = $query[0]->fetch_object(); // Usar fetch_object para obtener un objeto
+            return $result->total; // Acceder a la propiedad total del objeto
+        }
+
+        return 0; // Retornar 0 si no hay resultados
+    }
+
+    // Método para obtener registros descartados por rango de fechas
+    public static function getAllByDateOpp($startDate, $endDate, $operationTypeId, $limit, $offset) {
+        $sql = "SELECT * FROM ".self::$tablename." WHERE operation_type_id = $operationTypeId AND created_at BETWEEN '$startDate' AND '$endDate' LIMIT $limit OFFSET $offset";
+        $query = Executor::doit($sql);
+        return Model::many($query[0], new OperationData());
+    }
+
+    // Método para contar registros descartados por rango de fechas
+    public static function countByDateOp($startDate, $endDate, $operationTypeId) {
+        $sql = "SELECT COUNT(*) as total FROM ".self::$tablename." WHERE operation_type_id = $operationTypeId AND created_at BETWEEN '$startDate' AND '$endDate'";
+        $query = Executor::doit($sql);
+        return $query[0][0]->total;
+    }
+
+    //****** */
+
     public static function getAll(){
         $sql = "SELECT * FROM " . self::$tablename;
         $con = Database::getCon();
@@ -114,7 +159,7 @@ class OperationData {
         return Model::many($result, new OperationData());
     }
 
-    public static function getAllByDateOfficial($start, $end){
+    public static function getAllByDateOfficial($start, $end, $all = 0){
         $sql = "SELECT * FROM " . self::$tablename . " WHERE date(created_at) >= ? AND date(created_at) <= ? ORDER BY created_at DESC";
         $con = Database::getCon();
         $stmt = $con->prepare($sql);
@@ -124,12 +169,29 @@ class OperationData {
             $stmt = $con->prepare($sql);
             $stmt->bind_param("s", $start);
         }
+
+        if ($all == 1) {
+            $sql = "SELECT * FROM " . self::$tablename . " ORDER BY created_at DESC";
+            $stmt = $con->prepare($sql);
+        }
+
         $stmt->execute();
         $result = $stmt->get_result();
         return Model::many($result, new OperationData());
     }
 
-    public static function getAllByDateOfficialBP($product, $start, $end){
+    public static function getAllByOperations()
+    {
+        $con = Database::getCon();
+        $sql = "SELECT * FROM " . self::$tablename . " ORDER BY created_at DESC";
+        $stmt = $con->prepare($sql);
+
+        $stmt->execute();
+        $result = $stmt->get_result();
+        return Model::many($result, new OperationData());
+    }
+
+    public static function getAllByDateOfficialBP($product, $start, $end, $all = 0){
         $sql = "SELECT * FROM " . self::$tablename . " WHERE date(created_at) >= ? AND date(created_at) <= ? AND product_id=? ORDER BY created_at DESC";
         $con = Database::getCon();
         $stmt = $con->prepare($sql);
@@ -139,6 +201,19 @@ class OperationData {
             $stmt = $con->prepare($sql);
             $stmt->bind_param("si", $start, $product);
         }
+       
+        if ($start == $end) {
+            $sql = "SELECT * FROM " . self::$tablename . " WHERE date(created_at) = ? AND product_id=? ORDER BY created_at DESC";
+            $stmt = $con->prepare($sql);
+            $stmt->bind_param("si", $start, $product);
+        }
+
+        if ($all == 1) {
+            $sql = "SELECT * FROM " . self::$tablename . " WHERE product_id=? ORDER BY created_at DESC";
+            $stmt->bind_param("i", $product);
+            $stmt = $con->prepare($sql);
+        }
+
         $stmt->execute();
         $result = $stmt->get_result();
         return Model::many($result, new OperationData()); 

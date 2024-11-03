@@ -9,7 +9,7 @@ class DiscardData {
     }
 
     public function getPerson() {
-        return PersonData::getById($this->person_id);
+        return PersonData::getById($this->person_id); 
     }
 
     public function getUser() {
@@ -49,10 +49,9 @@ class DiscardData {
 
     public static function getAll() {
         $sql = "SELECT * FROM ".self::$tablename." WHERE operation_type_id = 3";
-        $query = Database::getCon()->query($sql);
-        return $query->fetch_all(MYSQLI_ASSOC);
+        $query = Executor::doit($sql);
+        return Model::many($query[0], new OperationData());
     }
-
     
 }
 ?>

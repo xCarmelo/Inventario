@@ -52,11 +52,20 @@ if ($id === false) {
                     
                     <div class="col-md-6">
                         <label for="validationCustom04" class="form-label">Contraseña*</label>
-                        <input title="La contraseña debe tener al menos 8 caracteres y contener al menos un número." type="text" pattern="^(?=.*\d)[A-Za-z\d]{5,}$" name="password" value="<?php echo $user->password; ?>" class="form-control <?php echo isset($_SESSION['errors']['password']) ? 'is-invalid' : ''; ?>" id="validationCustom04" placeholder="password" required>
+                        <input title="La contraseña debe tener al menos 8 caracteres, incluyendo una letra mayúscula, una letra minúscula, un número y un carácter especial."
+                            type="password"
+                            pattern="^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&amp;*(),.?&quot;:{}|&lt;&gt;])[A-Za-z\d!@#$%^&amp;*(),.?&quot;:{}|&lt;&gt;]{8,}$"
+                            name="password"
+                            value="<?php echo $user->password; ?>"
+                            class="form-control <?php echo isset($_SESSION['errors']['password']) ? 'is-invalid' : ''; ?>"
+                            id="validationCustom04"
+                            placeholder="password"
+                            required>
                         <div class="invalid-feedback">
                             <?php echo isset($_SESSION['errors']['password']) ? $_SESSION['errors']['password'] : ''; ?>
                         </div>
-                    </div> 
+                    </div>
+
 
                     <div class="col-md-6">
                         <label for="validationCustom05" class="form-label">Teléfono*</label>
