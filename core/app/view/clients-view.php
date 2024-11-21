@@ -57,14 +57,14 @@
                 <div class="card-body">
                     <?php
                     $page = isset($_GET['page']) ? $_GET['page'] : 1;
-                    $limit = isset($_GET['limit']) ? $_GET['limit'] : 10;
+                    $limit = isset($_GET['limit']) ? $_GET['limit'] : 10; 
 
                     if(isset($_SESSION['SearchItemclients']))
                     {
-                        $clients = PersonData::getLike($_SESSION['SearchItemclients']);
+                        $clients = PersonData::getClient($_SESSION['SearchItemclients']);
                     }
                     else
-                    $clients = PersonData::getClients();
+                    $clients = PersonData::getClients(); 
 
                     if (count($clients) > 0) {
                         $totalClients = count($clients);

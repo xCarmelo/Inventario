@@ -12,7 +12,7 @@
     
         // Verificar si la categoría ya existe
         if (CategoryData::searchCategory($categoria)) {
-            $_SESSION['error_msg'] = "La categoría ya existe.";
+            $_SESSION['error_msg'] = "La categoría ya existe, puede que este activa o inactiva.";
             $_SESSION['errors'] = [$_SESSION['error_msg']]; // Asegúrate de que esto esté en la sesión
             print "<script>window.location='index.php?view=newcategory&result=error';</script>";
             exit;   

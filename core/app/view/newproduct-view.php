@@ -7,19 +7,19 @@ $categories = CategoryData::getAll();
         <h1>Nuevo Producto</h1>
 
         <div class="card">
-            <div class="card-header text-white">Agregar Producto</div>
+            <div class="card-header text-white">Agregar Producto</div> 
             <div class="card-body">
             <form class="row g-3" method="post" enctype="multipart/form-data" id="addproduct" action="index.php?view=addproduct" role="form">
                 <div class="col-md-6">
                     <label for="image" class="form-label" accept="image/jpeg,image/png">Imagen</label>
-                    <input type="file" name="image" id="image" class="form-control <?php echo isset($_SESSION['errors']['image']) ? 'is-invalid' : ''; ?>">
+                    <input title="Solo se permiten archivos jpeg, JPG y PNG" type="file" name="image" id="image" class="form-control <?php echo isset($_SESSION['errors']['image']) ? 'is-invalid' : ''; ?>">
                     <div class="invalid-feedback">
                         <?php echo isset($_SESSION['errors']['image']) ? $_SESSION['errors']['image'] : ''; ?>
                     </div>
                 </div>
 
                 <div class="col-md-6">
-                    <label for="name" class="form-label">Nombre*</label>
+                    <label for="name" class="form-label">Nombre*</label> 
                     <input type="text" name="name" id="name" class="form-control <?php echo isset($_SESSION['errors']['name']) ? 'is-invalid' : ''; ?>" 
                         value="<?php echo isset($_SESSION['form_data']['name']) ? $_SESSION['form_data']['name'] : ''; ?>" 
                         placeholder="Nombre del Producto" 
@@ -35,11 +35,12 @@ $categories = CategoryData::getAll();
                     <label for="category_id" class="form-label">Categoría*</label>
                     <select name="category_id" class="form-control <?php echo isset($_SESSION['errors']['category_id']) ? 'is-invalid' : ''; ?>">
                         <option value="0">-- NINGUNA --</option>
-                        <?php foreach($categories as $category): ?>
+                        <?php foreach($categories as $category): if($category->is_active == 1 ):?>
+                                
                             <option value="<?php echo $category->id; ?>" <?php echo isset($_SESSION['form_data']['category_id']) && $_SESSION['form_data']['category_id'] == $category->id ? 'selected' : ''; ?>>
                                 <?php echo $category->name; ?>
                             </option>
-                        <?php endforeach; ?>
+                        <?php endif; endforeach; ?>
                     </select>
                     <div class="invalid-feedback">
                         <?php echo isset($_SESSION['errors']['category_id']) ? $_SESSION['errors']['category_id'] : ''; ?>
@@ -107,7 +108,7 @@ $categories = CategoryData::getAll();
                     <button type="submit" class="btn btn-primary">Agregar Producto</button>
                 </div>
             </form>
-
+ 
             </div>
         </div>
     </div>

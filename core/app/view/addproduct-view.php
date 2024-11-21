@@ -4,14 +4,14 @@ function validate_data($data) {
     $valid = true;
 
     // Validación de la imagen
-    if (isset($_FILES['image']) && $_FILES['image']['size'] != 0) { 
+    if (isset($_FILES['image']) && $_FILES['image']['size'] != 0) {  
         $allowed_types = ['image/jpeg', 'image/png', 'image/jpg'];
         if ($_FILES['image']['size'] > 10485760) {
             $valid = false;
-            $errors['image'] = 'La imagen es demasiado grande (máximo 10MB). Solo se permiten JPG y PNG.';
+            $errors['image'] = 'La imagen es demasiado grande (máximo 10MB). Solo se permiten JPG, jpeg y PNG.';
         } elseif (!in_array($_FILES['image']['type'], $allowed_types)) {
             $valid = false;
-            $errors['image'] = 'Tipo de archivo no válido. Solo se permiten archivos JPG y PNG.';
+            $errors['image'] = 'Tipo de archivo no válido. Solo se permiten archivos jpeg, JPG y PNG.';
         }
     }
 

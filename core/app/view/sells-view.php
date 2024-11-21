@@ -136,7 +136,7 @@ $sells = array_slice($sells, $offset, $limit); // Paginación de los datos
                                 <td style="width:30px;">
                                 <button class="btn btn-xs btn-danger d-flex align-items-center text-white" data-bs-toggle="modal" data-bs-target="#confirmDevolucionModal" data-href="index.php?view=delsell&id=<?php echo $sell->id; ?>">
                                     <span>Devolución</span>
-                                    <i class="bi bi-arrow-return-left ms-2"></i>
+                                    <i class="bi bi-arrow-return-left ms-2"></i> 
                                 </button>
 
 

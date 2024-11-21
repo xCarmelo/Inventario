@@ -226,7 +226,7 @@
 </div>
 
 <!-- Modal para mensaje de validación -->
-<div class="modal fade" id="validationModal" tabindex="-1" aria-labelledby="validationModalLabel" aria-hidden="true">
+<div class="modal fade" id="validationModalSaldo" tabindex="-1" aria-labelledby="validationModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -288,7 +288,7 @@
             } else {
                  // Mostrar el modal de validación si el saldo inicial no es válido
                 $('#validationMessage').text('Por favor, ingrese un número válido y positivo.');
-                $('#validationModal').modal('show');
+                $('#validationModalSaldo').modal('show');
             }
         });
 

@@ -7,7 +7,9 @@
                 <div class="row"> 
                     <div class="col-md-6 col-12 mb-2 mb-md-0">
                         <input type="hidden" name="view" value="re">
-                        <input type="text" name="product" class="form-control" placeholder="Nombre del producto">
+                        <input title="El nombre del producto solo puede contener letras, números, espacios, guiones y puntos. Debe tener entre 1 y 100 caracteres." pattern="^[A-Za-zÁÉÍÓÚÑáéíóúñ\s0-9\-'\.]{1,100}$" type="text" name="product" class="form-control" placeholder="Nombre del producto">
+                        <!-- Contenedor para el mensaje de error -->
+                        <small id="product_code_error" class="text-danger" style="display:none;">Formato inválido. Solo se permiten letras, números, espacios, guiones, comillas simples y puntos (máximo 100 caracteres).</small>
                     </div>
                     <div class="col-md-3 col-12"> 
                         <button type="submit" class="btn btn-primary w-100 fw-bold"><i class="glyphicon glyphicon-search"></i> Buscar</button>

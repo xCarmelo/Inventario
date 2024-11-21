@@ -12,18 +12,18 @@ function validate_data($data) {
             $errors['image'] = 'La imagen es demasiado grande. El tamaño máximo permitido es de 1 MB.';
         } elseif (!in_array($_FILES['image']['type'], $allowed_types)) {
             $valid = false;
-            $errors['image'] = 'Tipo de archivo no válido. Solo se permiten formatos JPG y PNG.';
+            $errors['image'] = 'Tipo de archivo no válido. Solo se permiten formatos jpeg, JPG y PNG.';
         }
     }
 
     // Validación de nombre
-    if (!preg_match("/^[A-Za-zÁÉÍÓÚÑáéíóúñ\s0-9\-'\.]{3,50}$/", $data['name'])) {
+    if (!preg_match("/^[A-Za-zÁÉÍÓÚÑáéíóúñ\s0-9\-'\.]{3,100}$/", $data['name'])) {
         $valid = false;
         $errors['name'] = "El nombre del producto debe tener entre 3 y 50 caracteres y solo puede contener letras, números, espacios, guiones y puntos.";
     }
 
     // Validación de precio de entrada
-    if (!preg_match("/^[0-9]{1,10}(\.[0-9]{1,3})?$/", $data['price_in'])) {
+    if (!preg_match("/^[0-9]{1,10}(\.[0-9]{1,3})?$/", $data['price_in'])) { 
         $valid = false;
         $errors['price_in'] = "El precio de entrada debe ser un número positivo con hasta 10 dígitos";
     }

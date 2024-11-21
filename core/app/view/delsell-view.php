@@ -14,7 +14,7 @@ try {
 	$operations = OperationData::getAllProductsBySellId($_GET["id"]); 
 	
 	foreach ($operations as $op) { 
-		$op->reason_for_return = $_GET['motivo'] . "(devolución de venta)";
+		$op->reason_for_return = $_GET['motivo'] . " (devolución de venta)";
 		$op->del();
 	}
 	

@@ -72,7 +72,7 @@
 
                                                             newPriceInput.on("keyup", function() {
                                                                 let newPrice = parseInt(newPriceInput.val(), 10); // Convertir a entero
-                                                                let priceProductInput = $("#priceProduct");
+                                                                let priceProductInput = $("#priceProduct"); 
 
                                                                 if (newPrice > 0) {
                                                                     priceProductInput.val(newPrice);
@@ -118,6 +118,25 @@
     </div>
 </div>
 
+<!-- Modal para Alerta de Precio -->
+<div class="modal fade" id="priceAlertModal" tabindex="-1" aria-labelledby="priceAlertLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="priceAlertLabel">Alerta de Precio</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                El precio a vender no puede ser menor o igual a 0. Por favor, ingresa un valor válido.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 
 <script>
     var images = document.getElementsByClassName('custom-modal-trigger');
@@ -134,4 +153,22 @@
             modal.hide();
         });
     }
+
+    $(document).ready(function () {
+    const newPriceInput = $("#newprice");
+    const priceAlertModal = new bootstrap.Modal(document.getElementById("priceAlertModal"));
+
+    $("form").on("submit", function (e) {
+        let newPrice = parseInt(newPriceInput.val(), 10); // Convertir el valor del precio a entero
+        
+        // Si el precio es <= 0, se muestra el modal y se cancela el envío
+        if (isNaN(newPrice) || newPrice <= 0) {
+            e.preventDefault(); // Evita que el formulario se envíe
+            priceAlertModal.show(); // Muestra el modal de alerta
+            return false;
+        }
+    });
+});
+
+
 </script>

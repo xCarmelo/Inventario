@@ -7,7 +7,9 @@
             <div class="row">
                 <div class="col-md-6 col-12 mb-2 mb-md-0">
                     <input type="hidden" name="view" value="sell">
-                    <input type="text" id="product_code" name="product" class="form-control" placeholder="Nombre">
+                    <input title="El nombre del producto solo puede contener letras, números, espacios, guiones y puntos. Debe tener entre 1 y 100 caracteres." pattern="^[A-Za-zÁÉÍÓÚÑáéíóúñ\s0-9\-'\.]{1,100}$" type="text" id="product_code" name="product" class="form-control" placeholder="Nombre">
+                    <!-- Contenedor para el mensaje de error -->
+                    <small id="product_code_error" class="text-danger" style="display:none;">Formato inválido. Solo se permiten letras, números, espacios, guiones, comillas simples y puntos (máximo 100 caracteres).</small>
                 </div>
                 <div class="col-md-3 col-12">
                     <button type="submit" class="btn btn-primary w-100  fw-bold"><i class="glyphicon glyphicon-search"></i> Buscar</button>
@@ -19,24 +21,33 @@
     <div id="show_search_results"></div> 
     <script>
         $(document).ready(function(){
-            $("#searchp").on("submit",function(e){
-                e.preventDefault();
-                $.get("./?action=searchproduct",$("#searchp").serialize(),function(data){
-                    $("#show_search_results").html(data); 
-                });-
-                $("#product_code").val("");
+        $("#searchp").on("submit", function(e){
+            e.preventDefault();
+
+            // Validación del campo product_code
+            var productCodeInput = $("#product_code")[0];
+            if (!productCodeInput.checkValidity()) {
+                $("#product_code_error").show(); // Muestra el mensaje de error
+                return;
+            } else {
+                $("#product_code_error").hide(); // Oculta el mensaje de error si es válido
+            }
+
+            // Lógica para buscar el producto
+            $.get("./?action=searchproduct", $("#searchp").serialize(), function(data){
+                $("#show_search_results").html(data);
             });
+
+            $("#product_code").val("");
         });
 
-        $(document).ready(function(){
-            $("#product_code").keydown(function(e){
-                if(e.which==17 || e.which==74){
-                    e.preventDefault();
-                }else{
-                    console.log(e.which);
-                }
-            }); 
+        // También podrías ocultar el mensaje cuando el usuario empiece a escribir
+        $("#product_code").on("input", function() {
+            if (this.checkValidity()) {
+                $("#product_code_error").hide();
+            }
         });
+    });
     </script>
 
     <?php if(isset($_SESSION["errors"])): ?>

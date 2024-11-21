@@ -254,6 +254,33 @@ class PersonData {
             $person->name = $r['name'];
             $person->email1 = $r['email1'];
             $person->active = $r['active'];
+            $person->phone1 = $r['phone1'];
+            $person->address1 = $r['address1'];
+            $person->lastname = $r['lastname'];
+            $person->created_at = $r['created_at'];
+            $array[] = $person;
+        }
+        return $array;
+    }
+
+    public static function getClient($q) {
+        $sql = "SELECT * FROM " . self::$tablename . " WHERE name LIKE ? and kind = 1";
+        $con = Database::getCon();
+        $stmt = $con->prepare($sql);
+        $like = "%" . $q . "%";
+        $stmt->bind_param("s", $like); 
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $array = array();   
+        while ($r = $result->fetch_array()) {
+            $person = new PersonData();
+            $person->id = $r['id'];
+            $person->name = $r['name'];
+            $person->email1 = $r['email1'];
+            $person->phone1 = $r['phone1'];
+            $person->address1 = $r['address1'];
+            $person->active = $r['active'];
+            $person->lastname = $r['lastname'];
             $person->created_at = $r['created_at'];
             $array[] = $person;
         }
