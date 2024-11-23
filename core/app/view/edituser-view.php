@@ -69,7 +69,7 @@ if ($id === false) {
 
                     <div class="col-md-6">
                         <label for="validationCustom05" class="form-label">Teléfono*</label>
-                        <input value="<?php echo $user->phone; ?>" type="text" name="phone" class="form-control <?php echo isset($_SESSION['errors']['phone']) ? 'is-invalid' : ''; ?>" id="validationCustom05" placeholder="Teléfono" pattern="[0-9]{8}" title="Ingresa un número de teléfono válido (8 dígitos)" required>
+                        <input value="<?php echo $user->phone; ?>" type="number" name="phone" class="form-control <?php echo isset($_SESSION['errors']['phone']) ? 'is-invalid' : ''; ?>" id="validationCustom05" placeholder="Teléfono" pattern="[0-9]{8}" title="Ingresa un número de teléfono válido (8 dígitos)" required>
                         <div class="invalid-feedback">
                             <?php echo isset($_SESSION['errors']['phone']) ? $_SESSION['errors']['phone'] : ''; ?>
                         </div>
