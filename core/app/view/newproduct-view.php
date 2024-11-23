@@ -49,7 +49,7 @@ $categories = CategoryData::getAll();
 
                 <div class="col-md-6">
                     <label for="price_in" class="form-label">Precio de Entrada*</label>
-                    <input type="text" name="price_in" id="price_in" class="form-control <?php echo isset($_SESSION['errors']['price_in']) ? 'is-invalid' : ''; ?>" 
+                    <input  oninput="if (this.value.indexOf('.') !== -1) { this.value = this.value.slice(0, this.value.indexOf('.')); }" type="text" name="price_in" id="price_in" class="form-control <?php echo isset($_SESSION['errors']['price_in']) ? 'is-invalid' : ''; ?>" 
                         value="<?php echo isset($_SESSION['form_data']['price_in']) ? $_SESSION['form_data']['price_in'] : ''; ?>" 
                         placeholder="Precio de entrada" 
                         pattern="^[0-9]{1,10}(\.[0-9]{1,3})?$" 
@@ -62,7 +62,7 @@ $categories = CategoryData::getAll();
 
                 <div class="col-md-6">
                     <label for="price_out" class="form-label">Precio de Salida*</label>
-                    <input type="text" name="price_out" id="price_out" class="form-control <?php echo isset($_SESSION['errors']['price_out']) ? 'is-invalid' : ''; ?>" 
+                    <input  oninput="if (this.value.indexOf('.') !== -1) { this.value = this.value.slice(0, this.value.indexOf('.')); }" type="text" name="price_out" id="price_out" class="form-control <?php echo isset($_SESSION['errors']['price_out']) ? 'is-invalid' : ''; ?>" 
                         value="<?php echo isset($_SESSION['form_data']['price_out']) ? $_SESSION['form_data']['price_out'] : ''; ?>" 
                         placeholder="Precio de salida" 
                         pattern="^[0-9]{1,10}(\.[0-9]{1,3})?$" 
@@ -79,7 +79,7 @@ $categories = CategoryData::getAll();
 
                 <div class="col-md-6">
                     <label for="inventary_min" class="form-label">Mínima en Inventario*</label>
-                    <input type="number" name="inventary_min" id="inventary_min" class="form-control <?php echo isset($_SESSION['errors']['inventary_min']) ? 'is-invalid' : ''; ?>" 
+                    <input  oninput="if (this.value.indexOf('.') !== -1) { this.value = this.value.slice(0, this.value.indexOf('.')); }" type="number" name="inventary_min" id="inventary_min" class="form-control <?php echo isset($_SESSION['errors']['inventary_min']) ? 'is-invalid' : ''; ?>" 
                         value="<?php echo isset($_SESSION['form_data']['inventary_min']) ? $_SESSION['form_data']['inventary_min'] : ''; ?>" 
                         placeholder="Mínima en Inventario" 
                         pattern="^[1-9][0-9]{0,3}$" 

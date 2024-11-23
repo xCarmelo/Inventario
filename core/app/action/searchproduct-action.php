@@ -31,13 +31,13 @@
                                 $product_id_to_find = $product->id;
 
                                 // Convertir el precio a un entero en PHP
-                                $newprice = floatval($product->price_out); 
+                                $newprice = intval($product->price_out); 
 
                                 if (isset($_SESSION["cart"]) && is_array($_SESSION["cart"])) {
                                     $cart = $_SESSION["cart"];
                                     foreach ($cart as $item) {
                                         if ($item["product_id"] == $product_id_to_find) {
-                                            $newprice = $item["newprice"];
+                                            $newprice = intval($item["newprice"]);
                                             break;
                                         }
                                     }
@@ -55,12 +55,12 @@
                                         <td><?php echo $product->description; ?></td>
                                         <td>C$ <?php echo number_format($product->price_out); ?></td>
                                         <td>
-                                        <input id="newprice" type="number" step="0.01" min="0" value="<?php echo number_format($newprice, 2, '.', ''); ?>" />
+                                        <input id="newprice" type="number" value="<?php echo $newprice; ?>" placeholder="<?php echo $newprice; ?>" pattern="^[1-9]\d*$" oninput="if (this.value.indexOf('.') !== -1) { this.value = this.value.slice(0, this.value.indexOf('.')); }">
                                         </td>
                                         <td><?php echo $q; ?></td>
                                         <td style="width:250px;">
                                             <form method="post" action="index.php?view=addtocart">
-                                            <input id="priceProduct" type="hidden" name="newprice" value="<?php echo number_format($newprice, 2, '.', ''); ?>">
+                                                <input id="priceProduct" type="hidden" name="newprice" value="<?php echo $newprice; ?>">
                                                 <input type="hidden" name="product_id" value="<?php echo $product->id; ?>">
                                                 <div class="input-group">
                                                     <script>
@@ -71,7 +71,7 @@
                                                             $("#priceProduct").val(newPriceInput.val());
 
                                                             newPriceInput.on("keyup", function() {
-                                                                let newPrice = newPriceInput.val(); 
+                                                                let newPrice = parseInt(newPriceInput.val(), 10); // Convertir a entero
                                                                 let priceProductInput = $("#priceProduct"); 
 
                                                                 if (newPrice > 0) {
@@ -156,31 +156,19 @@
 
     $(document).ready(function () {
     const newPriceInput = $("#newprice");
-    const priceProductInput = $("#priceProduct");
+    const priceAlertModal = new bootstrap.Modal(document.getElementById("priceAlertModal"));
 
-    newPriceInput.on("keyup", function() {
-    let newPrice = parseFloat(newPriceInput.val()); // Obtener el valor como número
-    let priceProductInput = $("#priceProduct"); 
-
-    if (!isNaN(newPrice) && newPrice > 0) {
-        // Formatear el precio a dos decimales
-        priceProductInput.val(newPrice.toFixed(2));
-    }
-});
-
-    // Validar al enviar el formulario
     $("form").on("submit", function (e) {
-        let newPrice = parseFloat(newPriceInput.val());
+        let newPrice = parseInt(newPriceInput.val(), 10); // Convertir el valor del precio a entero
+        
+        // Si el precio es <= 0, se muestra el modal y se cancela el envío
         if (isNaN(newPrice) || newPrice <= 0) {
-            e.preventDefault(); // Evita el envío del formulario si el precio no es válido
-            const priceAlertModal = new bootstrap.Modal(
-                document.getElementById("priceAlertModal")
-            );
-            priceAlertModal.show();
+            e.preventDefault(); // Evita que el formulario se envíe
+            priceAlertModal.show(); // Muestra el modal de alerta
+            return false;
         }
     });
 });
-
 
 
 </script>

@@ -35,7 +35,7 @@
 
             // Lógica para buscar el producto
             $.get("./?action=searchproduct", $("#searchp").serialize(), function(data){
-                $("#show_search_results").html(data); 
+                $("#show_search_results").html(data);
             });
 
             $("#product_code").val("");
@@ -106,8 +106,8 @@
                                 <td><?php echo $p["q"]; ?></td>
                                 <td><?php echo $product->unit; ?></td>  
                                 <td><?php echo $product->name; ?></td>
-                                <td><b>C$<?php echo $p["newprice"];  ?></b></td>
-                                <td><b>C$<?php $pt = $p["newprice"] * $p["q"]; $total += $pt; echo $pt; ?></b></td>
+                                <td><b>C$<?php echo number_format($p["newprice"]); ?></b></td>
+                                <td><b>C$<?php $pt = $p["newprice"] * $p["q"]; $total += $pt; echo number_format($pt); ?></b></td>
                                 <td><a href="index.php?view=clearcart&product_id=<?php echo $product->id; ?>" class="btn btn-danger"><i class="glyphicon glyphicon-remove"></i> Cancelar</a></td>
                             </tr>
                             <?php endforeach; ?>

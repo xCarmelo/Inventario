@@ -215,7 +215,7 @@
             </div>
             <div class="modal-body">
                 <label for="initialBalanceInput">Saldo Inicial (C$):</label>
-                <input type="number" id="initialBalanceInput" class="form-control" min="0" title="Por favor, ingresa un número válido y positivo para el saldo inicial.">
+                <input type="number" id="initialBalanceInput" class="form-control" min="0" title="Por favor, ingresa un número válido y positivo para el saldo inicial." pattern="^[1-9]\d*$" oninput="if (this.value.indexOf('.') !== -1) { this.value = this.value.slice(0, this.value.indexOf('.')); }">
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
