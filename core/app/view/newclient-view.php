@@ -71,7 +71,7 @@
                     <div class="col-md-6 mt-2">
                         <label for="validationCustom05" class="form-label">Teléfono*</label>
                         <input value="<?php echo isset($_SESSION['form_data']['phone1']) ? $_SESSION['form_data']['phone1'] : ''; ?>" 
-                            type="text" name="phone1" 
+                            type="number" name="phone1" 
                             class="form-control <?php echo isset($_SESSION['errors']['phone1']) ? 'is-invalid' : ''; ?>" 
                             id="validationCustom05" placeholder="Teléfono" 
                             pattern="[0-9]{8}" 

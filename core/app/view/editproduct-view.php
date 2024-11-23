@@ -65,7 +65,7 @@ $categories = CategoryData::getAll();
     
                     <div class="col-md-12 mt-5">
                         <label for="price_in" class="form-label">Precio de Entrada*</label>
-                        <input  oninput="if (this.value.indexOf('.') !== -1) { this.value = this.value.slice(0, this.value.indexOf('.')); }" type="text" name="price_in" id="price_in" class="form-control <?php echo isset($_SESSION['errors']['price_in']) ? 'is-invalid' : ''; ?>" 
+                        <input  oninput="if (this.value.indexOf('.') !== -1) { this.value = this.value.slice(0, this.value.indexOf('.')); }" type="number" name="price_in" id="price_in" class="form-control <?php echo isset($_SESSION['errors']['price_in']) ? 'is-invalid' : ''; ?>" 
                         value="<?php echo isset($_SESSION['form_data']['price_in']) ? $_SESSION['form_data']['price_in'] : $product->price_in; ?>" 
                         placeholder="Precio de entrada" 
                         pattern="^[0-9]{1,10}(\.[0-9]{1,3})?$" 
@@ -80,7 +80,7 @@ $categories = CategoryData::getAll();
 
                 <div class="col-md-6">
                     <label for="price_out" class="form-label">Precio de Salida*</label>
-                    <input  oninput="if (this.value.indexOf('.') !== -1) { this.value = this.value.slice(0, this.value.indexOf('.')); }" type="text" name="price_out" id="price_out" class="form-control <?php echo isset($_SESSION['errors']['price_out']) ? 'is-invalid' : ''; ?>" 
+                    <input  oninput="if (this.value.indexOf('.') !== -1) { this.value = this.value.slice(0, this.value.indexOf('.')); }" type="number" name="price_out" id="price_out" class="form-control <?php echo isset($_SESSION['errors']['price_out']) ? 'is-invalid' : ''; ?>" 
                     value="<?php echo isset($_SESSION['form_data']['price_out']) ? $_SESSION['form_data']['price_out'] : $product->price_out; ?>" 
                     placeholder="Precio de salida" 
                     pattern="^[0-9]{1,10}(\.[0-9]{1,3})?$" 
