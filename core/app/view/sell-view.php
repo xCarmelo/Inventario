@@ -148,6 +148,7 @@
                 <table class="table table-bordered">
                     <tr>
                         <td><p>Total</p></td>
+                        <td hidden><p><b>C$ <span id="total_with_discount"><?php echo number_format($total); ?></span></b></p></td>
                         <td><p><b>C$ <span id="total_with_discount"><?php echo number_format($total); ?></span></b></p></td>
                     </tr>
                 </table>

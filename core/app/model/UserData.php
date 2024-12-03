@@ -208,6 +208,50 @@ class UserData {
             return false;
         }
     }
-}
 
+    public static function getUser($name, $lastname) {
+        $con = Database::getCon();
+        $stmt = $con->prepare("SELECT * FROM " . self::$tablename . " WHERE username = ? and lastname = ?");
+        $stmt->bind_param("ss", $name, $lastname);
+        $stmt->execute();
+        
+        $result = $stmt->get_result();
+        if ($result->num_rows > 0) {
+            return true; 
+        } else {
+            return false;
+        }
+    }
+
+    public static function getUserr($name, $lastname, $user_id = 0) {
+        $sql = "SELECT * FROM " . self::$tablename . " WHERE name=? AND lastname=?";
+        $con = Database::getCon();
+        $stmt = $con->prepare($sql);
+
+        $stmt->bind_param("is", 
+            $name,
+            $lastname
+        );
+
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        // Si no hay registros, retorna false
+        if ($result->num_rows == 0) {
+            return false;
+        }
+
+        // Obtiene el registro devuelto
+        $row = $result->fetch_assoc();
+
+        // Verifica si $user_id es mayor que 0 y si el id es el mismo
+        if ($user_id > 0) {
+            if ($row['id'] == $user_id) {
+                return false; // Si el id es el mismo, retorna false
+            } else {
+                return true;  // Si es diferente, retorna true
+            }
+        }
+}
+}
 ?>

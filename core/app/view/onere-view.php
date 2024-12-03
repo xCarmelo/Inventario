@@ -71,8 +71,8 @@ if(isset($_COOKIE["selled"])){
 						<td><?php echo $operation->q ;?></td>
 						<td><?php echo $product->name ;?></td>
 						<td><?php echo $product->description ;?></td> 
-						<td>C$ <?php echo number_format($product->price_in,2,".",",") ;?></td>
-						<td><b>C$ <?php echo number_format($operation->q*$product->price_in,2,".",","); $total+=$operation->q*$product->price_in;?></b></td>
+						<td>C$ <?php echo number_format($product->price_in,0) ;?></td>
+						<td><b>C$ <?php echo number_format($operation->q*$product->price_in,0); $total+=$operation->q*$product->price_in;?></b></td>
 						<td>
 						<button class="btn btn-xs btn-danger d-flex align-items-center text-white" data-bs-toggle="modal" data-bs-target="#confirmDevolucionModal" data-href="index.php?action=returnRe&idOperation=<?php echo $operation->id; ?>&idSell=<?php echo $_GET['id'];?>&entradas=<?php echo $operation->q; ?>">
                             <span>Devolución</span>
@@ -88,7 +88,7 @@ if(isset($_COOKIE["selled"])){
 		<br><br>
 		<div class="row">
 			<div class="col-md-4">
-				<h1>Total: C$ <?php echo number_format($total,2,'.',','); ?></h1>
+				<h1>Total: C$ <?php echo number_format($total,0); ?></h1>
 			</div>
 		</div>
 

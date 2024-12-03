@@ -72,9 +72,9 @@ if(isset($_COOKIE["selled"])){
 						<td><?php echo $operation->q ;?></td>
 						<td><?php echo $product->name ;?></td>
 						<td><?php echo $product->description ;?></td> 
-						<td>C$ <?php echo number_format($product->price_out,2,".",",") ;?></td>
-						<td>C$ <?php echo number_format($operation->new_price,2,".",",") ;?></td>
-						<td><b>C$ <?php echo number_format($operation->q*$operation->new_price,2,".",","); $total+=$operation->q*$product->price_out;?></b></td>
+						<td>C$ <?php echo number_format($product->price_out) ;?></td>
+						<td>C$ <?php echo number_format($operation->new_price) ;?></td>
+						<td><b>C$ <?php echo number_format($operation->q*$operation->new_price); $total+=$operation->q*$product->price_out;?></b></td>
 						<?php if ($_SESSION['is_admin'] === 1):?>
                         <td>
 						<button class="btn btn-xs btn-danger d-flex align-items-center text-white" data-bs-toggle="modal" data-bs-target="#confirmDevolucionModal" data-href="index.php?action=returnSell&idOperation=<?php echo $operation->id; ?>&idSell=<?php echo $_GET['id']; ?>">
@@ -97,7 +97,7 @@ if(isset($_COOKIE["selled"])){
 				<table class="table table-bordered">
 					<tr>
 						<td><h4>Total:</h4></td>
-						<td><h4>C$ <?php echo number_format($sell->total,2,'.',','); ?></h4></td>
+						<td><h4>C$ <?php echo number_format($sell->total); ?></h4></td>
 					</tr>
 				</table>
 			</div>

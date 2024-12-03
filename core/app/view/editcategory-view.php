@@ -66,7 +66,7 @@
         </div>
     </div>
 </div>
-<?php unset($_SESSION['success']); ?>
+
 <?php endif; ?>
 
 <?php if (isset($_SESSION['errors']) && !empty($_SESSION['errors'])) : ?>
@@ -107,7 +107,7 @@ $(document).ready(function() {
 
     // Cerrar el modal de éxito cuando se hace clic en el botón "Cerrar"
     $('#successCloseBtn').click(function() {
-        var successModal = bootstrap.Modal.getInstance(document.getElementById('successModal'));
+        var successModal = bootstrap.Modal.getInstance(document.getElementById('successModal')); 
         successModal.hide();
     });
 
@@ -117,8 +117,10 @@ $(document).ready(function() {
             url.searchParams.delete('result'); // Eliminar solo el parámetro 'result'
 
             // Actualizar la URL sin recargar la página, manteniendo otros parámetros como 'view'
-            window.history.replaceState({}, document.title, url.pathname + "?" + url.searchParams.toString());
+            window.history.replaceState({}, document.title, url.pathname + "?" + url.searchParams.toString()); 
         }
 });
 
 </script>
+
+<?php unset($_SESSION['errors']);unset($_SESSION['error_msg']);  unset($_SESSION['success']);?>

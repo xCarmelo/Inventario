@@ -14,6 +14,14 @@ function validate_data($data) {
         $errors['lastname'] = "El apellido debe tener entre 2 y 50 caracteres y solo puede contener letras y espacios.";
     }
 
+    if (UserData::getUser($data['name'], $data['lastname'])) {
+        $valid = false;
+        $errors['name'] = "Este nombre con este apellido ya existe. Elige uno diferente.";
+        $errors['lastname'] = "Este nombre con este apellido ya existe. Elige uno diferente.";
+    }
+
+
+
     if (!preg_match("/^[a-zA-Z0-9\s,-]{2,50}$/", $data['username'])) {
         $valid = false;
         $errors['username'] = "El nombre de usuario debe tener entre 2 y 50 caracteres, solo puede contener letras sin acentos, números, espacios, comas y guiones.";

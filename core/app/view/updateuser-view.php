@@ -1,7 +1,7 @@
 <?php
 function validate_data($data) {  
     $errors = [];
-    $valid = true;
+    $valid = true; 
 
     // Validaciones para cada campo
     if (!preg_match("/^[A-Za-záéíóúÁÉÍÓÚñÑ\s]{2,255}$/", $data['name'])) {
@@ -12,6 +12,12 @@ function validate_data($data) {
     if (!preg_match("/^[A-Za-záéíóúÁÉÍÓÚñÑ\s]{2,50}$/", $data['lastname'])) {
         $valid = false;
         $errors['lastname'] = "El apellido debe tener entre 2 y 50 caracteres y solo puede contener letras y espacios.";
+    }
+
+    if (UserData::getUserr($data['name'], $data['lastname'], $data['user_id'])) {
+        $valid = false;
+        $errors['name'] = "Este nombre con este apellido ya existe. Elige uno diferente.";
+        $errors['lastname'] = "Este nombre con este apellido ya existe. Elige uno diferente.";
     }
 
     if (!preg_match("/^[a-zA-Z0-9\s,-]{2,50}$/", $data['username'])) {

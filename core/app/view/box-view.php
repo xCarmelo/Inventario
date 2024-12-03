@@ -89,7 +89,7 @@
                                             $total = $sell->total;
                                         }
                                         $total_total += $total;
-                                        echo "<b>C$ " . number_format($total, 2, ".", ",") . "</b>";
+                                        echo "<b>C$ " . number_format($total,0) . "</b>";
                                         ?>
                                     </td>
                                     <td><?php echo $sell->created_at; ?></td>
@@ -157,7 +157,7 @@
                 </tr>
                 <tr>
                     <td class="text-success"><h5>Total Incluyendo Saldo Inicial:</h5></td>
-                    <td class="text-end text-success" style="font-size: 20px;">C$ <span id="totalDisplay"><?php echo isset($total_total) ? number_format($total_total, 2, ".", ",") : '0.00'; ?></span></td>
+                    <td class="text-end text-success" style="font-size: 20px;">C$ <span id="totalDisplay"><?php echo isset($total_total) ? number_format($total_total, 0) : '0.00'; ?></span></td>
                 </tr>
                 </tbody>
             </table>
@@ -245,52 +245,43 @@
 
 
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        const initialBalanceInput = document.getElementById('initialBalanceInput'); // Campo de input para el saldo inicial
-        const saveInitialBalanceBtn = document.getElementById('saveInitialBalanceBtn'); // Botón para guardar saldo inicial
-        const initialBalanceDisplay = document.getElementById('initialBalanceDisplay'); // Elemento para mostrar saldo inicial
-        const totalDisplay = document.getElementById('totalDisplay'); // Elemento para mostrar el total
+document.addEventListener("DOMContentLoaded", function() {
+    const initialBalanceInput = document.getElementById('initialBalanceInput'); // Campo de input para el saldo inicial
+    const saveInitialBalanceBtn = document.getElementById('saveInitialBalanceBtn'); // Botón para guardar saldo inicial
+    const initialBalanceDisplay = document.getElementById('initialBalanceDisplay'); // Elemento para mostrar saldo inicial
+    const totalDisplay = document.getElementById('totalDisplay'); // Elemento para mostrar el total
 
-        // Obtener el saldo inicial desde localStorage o establecer en 0 si no existe
-        let initialBalance = parseFloat(localStorage.getItem('initialBalance')) || 0;
-        initialBalanceDisplay.textContent = initialBalance.toFixed(2);
+    // Obtener el saldo inicial desde localStorage o establecer en 0 si no existe
+    let initialBalance = parseInt(localStorage.getItem('initialBalance'), 10) || 0; // Convertimos a entero para evitar decimales
+    initialBalanceDisplay.textContent = initialBalance; // Mostrar saldo inicial sin decimales
 
-        // Obtener el total actual excluyendo el saldo inicial (por ejemplo, basado en ventas)
-        let salesTotal = parseFloat(totalDisplay.textContent.replace(/,/g, '')) || 0;
+    // Obtener el total actual excluyendo el saldo inicial (por ejemplo, basado en ventas)
+    let salesTotal = parseInt(totalDisplay.textContent.replace(/,/g, ''), 10) || 0; // Convertimos a entero para evitar decimales
 
-        // Función para actualizar el total incluyendo el saldo inicial
-        function updateTotalDisplay() {
-            // Actualizar el total incluyendo el saldo inicial
-            let totalWithInitialBalance = salesTotal + initialBalance;
-            totalDisplay.textContent = totalWithInitialBalance.toFixed(2); // Mostrar con 2 decimales
+    // Función para actualizar el total incluyendo el saldo inicial
+    function updateTotalDisplay() {
+        let totalIncludingBalance = initialBalance + salesTotal;
+        totalDisplay.textContent = totalIncludingBalance.toLocaleString('es-NI'); // Formatear sin decimales
+    }
+
+    // Actualizar el total en la carga inicial
+    updateTotalDisplay();
+
+    // Guardar el saldo inicial en localStorage y actualizar la vista
+    saveInitialBalanceBtn.addEventListener("click", function() {
+        let newBalance = parseInt(initialBalanceInput.value, 10); // Convertimos a entero
+        if (!isNaN(newBalance) && newBalance >= 0) {
+            initialBalance = newBalance;
+            localStorage.setItem('initialBalance', initialBalance);
+            initialBalanceDisplay.textContent = initialBalance;
+            updateTotalDisplay();
+        } else {
+            const validationMessage = document.getElementById('validationMessage');
+            validationMessage.textContent = "El saldo inicial debe ser un número entero positivo.";
+            const validationModalSaldo = new bootstrap.Modal(document.getElementById('validationModalSaldo'));
+            validationModalSaldo.show();
         }
-
-        // Actualizar la primera vez
-        updateTotalDisplay();
-
-        // Validar que el saldo inicial sea un número positivo
-        function validateInitialBalance(value) {
-            return !isNaN(value) && value >= 0;
-        }
-
-        // Guardar el saldo inicial cuando se presiona el botón
-        saveInitialBalanceBtn.addEventListener('click', function() {
-            const newInitialBalance = parseFloat(initialBalanceInput.value);
-
-            if (validateInitialBalance(newInitialBalance)) {
-                // Actualizar el saldo inicial en localStorage
-                initialBalance = newInitialBalance;
-                localStorage.setItem('initialBalance', initialBalance);
-                initialBalanceDisplay.textContent = initialBalance.toFixed(2);
-
-                // Actualizar el total mostrado
-                updateTotalDisplay();
-            } else {
-                 // Mostrar el modal de validación si el saldo inicial no es válido
-                $('#validationMessage').text('Por favor, ingrese un número válido y positivo.');
-                $('#validationModalSaldo').modal('show');
-            }
-        });
+    });
 
         // Obtener el número total de ventas no procesadas y validar para procesar 
         const processSalesBtn = document.getElementById("processSalesBtn");

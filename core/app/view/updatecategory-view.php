@@ -34,8 +34,9 @@ if (count($_POST) > 0) {
     $resultado = $user->update();
     
     if ($resultado['success']) {
+        $_SESSION['success'] = 'Cliente actualizado correctamente.';
         // Redirigir si la operación fue exitosa
-		print "<script>window.location='index.php?view=editcategory&id=" . $_POST["user_id"] . "&result=success';</script>";
+        header("Location: index.php?view=editcategory&id=" . $_POST["user_id"] . "&result=success");
     } else {
         // Guardar mensaje de error en la sesión si falla
         $_SESSION['error_msg'] = $resultado['error'];
